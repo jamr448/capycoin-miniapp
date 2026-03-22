@@ -21,20 +21,18 @@ export default function Home() {
 
       console.log("Respuesta verify:", res);
 
-      if (res.finalPayload?.status === "success") {
+      if (
+        res.finalPayload?.status === "success" ||
+        res.finalPayload?.status === "verified"
+      ) {
         setStatus("⏳ Procesando claim...");
 
         let nullifier = "";
 
-        // ✅ Caso 1: payload normal
         if ("nullifier_hash" in res.finalPayload) {
           nullifier = res.finalPayload.nullifier_hash;
-        }
-
-        // ✅ Caso 2: payload con proofs (FIX TYPESCRIPT)
-        else if ("proofs" in res.finalPayload) {
+        } else if ("proofs" in res.finalPayload) {
           const proofs = res.finalPayload.proofs as any[];
-
           if (proofs.length > 0) {
             nullifier = proofs[0].nullifier_hash;
           }
@@ -42,7 +40,6 @@ export default function Home() {
 
         console.log("Nullifier:", nullifier);
 
-        // 🚨 Validación
         if (!nullifier) {
           setStatus("❌ Error obteniendo identidad");
           return;
@@ -80,7 +77,8 @@ export default function Home() {
     <main
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(180deg, #020617 0%, #0f172a 40%, #0369a1 100%)",
+        background:
+          "linear-gradient(180deg, #020617 0%, #0f172a 40%, #0369a1 100%)",
         color: "white",
         display: "flex",
         flexDirection: "column",
