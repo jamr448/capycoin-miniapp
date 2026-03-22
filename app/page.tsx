@@ -1,47 +1,65 @@
 "use client";
 
-import { MiniKit } from "@worldcoin/minikit-js";
 import { useState } from "react";
+import { MiniKit } from "@worldcoin/minikit-js";
 
 export default function Home() {
   const [status, setStatus] = useState("");
 
-  async function verify() {
-    if (!MiniKit.isInstalled()) {
-      setStatus("⚠️ Abre esto dentro de World App");
-      return;
-    }
-
+  const handleVerify = async () => {
     try {
       setStatus("🔐 Verificando...");
 
-      const result = await MiniKit.commandsAsync.verify({
+      const res = await MiniKit.commandsAsync.verify({
         action: "claimcapycoin",
       });
 
-      console.log(result);
+      console.log(res);
 
-      setStatus("✅ Verificación exitosa 🚀");
+      if (res.finalPayload?.status === "success") {
+        setStatus("✅ Verificado correctamente");
+      } else {
+        setStatus("❌ Verificación fallida");
+      }
 
     } catch (err) {
       console.error(err);
       setStatus("❌ Error en verificación");
     }
-  }
+  };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-black text-white p-6">
+    <main style={{
+      minHeight: "100vh",
+      background: "linear-gradient(180deg, #020617 0%, #0f172a 40%, #0369a1 100%)",
+      color: "white",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      fontFamily: "sans-serif"
+    }}>
+      
+      <img src="/logo.png" width={90} />
 
-      <h1 className="text-3xl font-bold mb-6">🪙 CAPYCOIN</h1>
+      <h1>Capycoin</h1>
 
-      <button
-        onClick={verify}
-        className="bg-green-500 px-6 py-3 rounded-xl text-lg"
+      <button 
+        onClick={handleVerify}
+        style={{
+          padding: "15px",
+          borderRadius: "25px",
+          background: "#22c55e",
+          color: "white",
+          border: "none",
+          width: "200px",
+          marginTop: "20px"
+        }}
       >
         Reclamar
       </button>
 
-      <p className="mt-4 text-center">{status}</p>
+      <p style={{ marginTop: "20px" }}>{status}</p>
 
     </main>
   );
