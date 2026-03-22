@@ -1,10 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MiniKit } from "@worldcoin/minikit-js";
 
 export default function Home() {
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("Cargando...");
+
+  useEffect(() => {
+    // 🔥 INICIALIZAR MINIKIT
+    MiniKit.install();
+    setStatus("Listo para verificar");
+  }, []);
 
   const handleVerify = async () => {
     try {
@@ -31,35 +37,21 @@ export default function Home() {
   return (
     <main style={{
       minHeight: "100vh",
-      background: "linear-gradient(180deg, #020617 0%, #0f172a 40%, #0369a1 100%)",
+      background: "#020617",
       color: "white",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      justifyContent: "center",
-      fontFamily: "sans-serif"
+      justifyContent: "center"
     }}>
       
-      <img src="/logo.png" width={90} />
-
       <h1>Capycoin</h1>
 
-      <button 
-        onClick={handleVerify}
-        style={{
-          padding: "15px",
-          borderRadius: "25px",
-          background: "#22c55e",
-          color: "white",
-          border: "none",
-          width: "200px",
-          marginTop: "20px"
-        }}
-      >
+      <button onClick={handleVerify}>
         Reclamar
       </button>
 
-      <p style={{ marginTop: "20px" }}>{status}</p>
+      <p>{status}</p>
 
     </main>
   );
