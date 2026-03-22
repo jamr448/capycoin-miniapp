@@ -23,8 +23,26 @@ export default function Home() {
       console.log(res);
 
       if (res.finalPayload?.status === "success") {
-        setStatus("✅ Verificado correctamente");
-      } else {
+  setStatus("⏳ Procesando claim...");
+
+  const response = await fetch("/api/claim", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      nullifier: res.finalPayload.nullifier_hash
+    }),
+  });
+
+  const data = await response.json();
+
+  if (data.success) {
+    setStatus("💰 Claim exitoso!");
+  } else {
+    setStatus("⛔ " + data.message);
+  }
+} else {
         setStatus("❌ Verificación fallida");
       }
 
