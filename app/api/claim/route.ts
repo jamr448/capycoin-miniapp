@@ -12,65 +12,43 @@ export async function POST(req: Request) {
       });
     }
 
-    // 🔍 BUSCAR USUARIO
+    // 🔍 Buscar usuario
     const { data: existing } = await supabase
       .from("claims")
       .select("*")
       .eq("nullifier", nullifier)
       .maybeSingle();
 
-    const now = Date.now(); // 🔥 número, más preciso
+    const now = Date.now();
+    const COOLDOWN = 86400;
 
-if (existing) {
-  const lastClaim = existing.last_claim
-    ? new Date(existing.last_claim).getTime()
-    : 0;
+    if (existing) {
+      const lastClaim = existing.last_claim
+        ? new Date(existing.last_claim).getTime()
+        : 0;
 
-  const diff = Math.floor((now - lastClaim) / 1000);
+      const diff = Math.floor((now - lastClaim) / 1000);
 
-  const COOLDOWN = 86400; // 24h
-
-  if (diff < COOLDOWN) {
-    const remaining = COOLDOWN - diff;
-
-    return NextResponse.json({
-      success: false,
-      message: "Debes esperar",
-      remaining,
-    });
-  }
-
-  // ✅ actualizar correctamente
-  const { error } = await supabase
-    .from("claims")
-    .update({ last_claim: new Date().toISOString() })
-    .eq("nullifier", nullifier);
-
-  if (error) {
-    return NextResponse.json({
-      success: false,
-      message: "Error al actualizar",
-    });
-  }
-
-  return NextResponse.json({
-    success: true,
-    message: "Claim exitoso",
-  });
-}
-
+      if (diff < COOLDOWN) {
         return NextResponse.json({
           success: false,
           message: "Debes esperar",
-          remaining,
+          remaining: COOLDOWN - diff,
         });
       }
 
-      // ✅ ACTUALIZAR TIEMPO
-      await supabase
+      // ✅ actualizar tiempo correctamente
+      const { error: updateError } = await supabase
         .from("claims")
-        .update({ last_claim: now })
+        .update({ last_claim: new Date() })
         .eq("nullifier", nullifier);
+
+      if (updateError) {
+        return NextResponse.json({
+          success: false,
+          message: "Error al actualizar",
+        });
+      }
 
       return NextResponse.json({
         success: true,
@@ -78,13 +56,20 @@ if (existing) {
       });
     }
 
-    // 🆕 PRIMER CLAIM
-    await supabase.from("claims").insert([
+    // 🆕 Primer claim
+    const { error: insertError } = await supabase.from("claims").insert([
       {
         nullifier,
-        last_claim: now,
+        last_claim: new Date(),
       },
     ]);
+
+    if (insertError) {
+      return NextResponse.json({
+        success: false,
+        message: "Error al guardar",
+      });
+    }
 
     return NextResponse.json({
       success: true,
