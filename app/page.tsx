@@ -88,7 +88,7 @@ export default function Home() {
         setTimeLeft(86400); // 24h
       } else {
         setStatus("⛔ " + data.message);
-        setTimeLeft(3600); // ejemplo fallback
+        setTimeLeft(86400); // ejemplo fallback
       }
     } catch {
       setStatus("❌ Error en claim");
