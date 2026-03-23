@@ -5,32 +5,51 @@ import { MiniKit } from "@worldcoin/minikit-js";
 
 export default function Home() {
 
-const [status, setStatus] = useState("Verifica tu identidad");
-const [remaining, setRemaining] = useState<number | null>(null);
-const [verified, setVerified] = useState(false);
-const [tab, setTab] = useState("claim");
+  const [status, setStatus] = useState("Verifica tu identidad");
+  const [remaining, setRemaining] = useState<number | null>(null);
+  const [verified, setVerified] = useState(false);
+  const [tab, setTab] = useState("claim");
 
+  // instalar MiniKit
   useEffect(() => {
     MiniKit.install();
   }, []);
 
-  // ⏱️ TIMER
+  // recuperar cooldown al abrir app
   useEffect(() => {
-  if (remaining === null) return;
+    const checkCooldown = async () => {
+      const nullifier = localStorage.getItem("capyNullifier");
 
-  const interval = setInterval(() => {
-    setRemaining((prev) => {
-      if (prev === null || prev <= 1) {
-        clearInterval(interval);
-        setStatus("🎉 Ya puedes reclamar!");
-        return null;
+      if (!nullifier) return;
+
+      const res = await fetch(`/api/claim?nullifier=${nullifier}`);
+      const data = await res.json();
+
+      if (data.remaining && data.remaining > 0) {
+        setRemaining(data.remaining);
       }
-      return prev - 1;
-    });
-  }, 1000);
+    };
 
-  return () => clearInterval(interval);
-}, [remaining]);
+    checkCooldown();
+  }, []);
+
+  // contador en vivo
+  useEffect(() => {
+    if (remaining === null) return;
+
+    const interval = setInterval(() => {
+      setRemaining((prev) => {
+        if (prev === null || prev <= 1) {
+          clearInterval(interval);
+          setStatus("🎉 Ya puedes reclamar!");
+          return null;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [remaining]);
 
   const formatTime = (t: number) => {
     const h = Math.floor(t / 3600);
@@ -42,7 +61,7 @@ const [tab, setTab] = useState("claim");
       .padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
-  // 🔐 VERIFICACIÓN
+  // 🔐 VERIFICAR IDENTIDAD
   const handleVerify = async () => {
     try {
       setStatus("🔐 Verificando...");
@@ -50,6 +69,18 @@ const [tab, setTab] = useState("claim");
       const res = await MiniKit.commandsAsync.verify({
         action: "claimcapycoin",
       });
+
+      let nullifier = "";
+
+      if ("nullifier_hash" in res.finalPayload) {
+        nullifier = res.finalPayload.nullifier_hash;
+      } else if ("proofs" in res.finalPayload) {
+        const proofs = res.finalPayload.proofs as any[];
+        nullifier = proofs[0]?.nullifier_hash;
+      }
+
+      // guardar usuario localmente
+      localStorage.setItem("capyNullifier", nullifier);
 
       if (
         res.finalPayload?.status === "success" ||
@@ -60,14 +91,17 @@ const [tab, setTab] = useState("claim");
       } else {
         setStatus("❌ Falló verificación");
       }
+
     } catch {
       setStatus("❌ Error");
     }
   };
 
-  // 💰 CLAIM
+  // 💰 RECLAMAR
   const handleClaim = async () => {
-    setRemaining(null); // limpia contador previo
+
+    setRemaining(null);
+
     try {
       setStatus("⏳ Procesando...");
 
@@ -87,7 +121,7 @@ const [tab, setTab] = useState("claim");
       const response = await fetch("/api/claim", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({ nullifier }),
       });
@@ -95,66 +129,70 @@ const [tab, setTab] = useState("claim");
       const data = await response.json();
 
       if (data.success) {
-  setStatus("💰 Claim exitoso!");
-  setRemaining(null); // 👈 NO iniciar contador aquí
-} else {
-  if (data.remaining) {
-    setStatus("⛔ Debes esperar");
-    setRemaining(data.remaining); // 👈 SOLO backend manda tiempo
-  } else {
-    setStatus("⛔ " + data.message);
-  }
-}
+        setStatus("💰 Claim exitoso!");
+      } else {
+
+        if (data.remaining) {
+          setStatus("⛔ Debes esperar");
+          setRemaining(data.remaining);
+        } else {
+          setStatus("⛔ " + data.message);
+        }
+
+      }
+
     } catch {
       setStatus("❌ Error en claim");
     }
   };
 
-  // 🔒 PANTALLA DE VERIFICACIÓN
+  // pantalla de verificación
   if (!verified) {
     return (
       <main style={styles.container}>
         <h1>Capycoin</h1>
+
         <button style={styles.button} onClick={handleVerify}>
           Verificar identidad
         </button>
+
         <p>{status}</p>
       </main>
     );
   }
 
-  // 🧩 APP PRINCIPAL
+  // app principal
   return (
     <main style={styles.container}>
-      {/* TABS */}
+
       <div style={styles.tabs}>
         <button onClick={() => setTab("claim")} style={styles.tab}>
           Reclamar
         </button>
+
         <button onClick={() => setTab("about")} style={styles.tab}>
           Acerca de
         </button>
       </div>
 
-      {/* CONTENIDO */}
       {tab === "claim" && (
         <>
           <h2>
-  {remaining !== null
-    ? `⏱️ ${formatTime(remaining)}`
-    : "🟢 Disponible para reclamar"}
-</h2>
+            {remaining !== null
+              ? `⏱️ ${formatTime(remaining)}`
+              : "🟢 Disponible para reclamar"}
+          </h2>
 
-         <button
-  style={{
-    ...styles.claimButton,
-    opacity: remaining ? 0.5 : 1,
-  }}
-  onClick={handleClaim}
-  disabled={remaining !== null}
->
-  {remaining !== null ? "Espera..." : "Reclamar"}
-</button>
+          <button
+            style={{
+              ...styles.claimButton,
+              opacity: remaining ? 0.5 : 1
+            }}
+            onClick={handleClaim}
+            disabled={remaining !== null}
+          >
+            {remaining !== null ? "Espera..." : "Reclamar"}
+          </button>
         </>
       )}
 
@@ -166,12 +204,13 @@ const [tab, setTab] = useState("claim");
       )}
 
       <p>{status}</p>
+
     </main>
   );
 }
 
-// 🎨 ESTILOS
 const styles: any = {
+
   container: {
     minHeight: "100vh",
     background: "#020617",
@@ -179,16 +218,18 @@ const styles: any = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
+
   button: {
     padding: "15px 25px",
     borderRadius: "20px",
     background: "#22c55e",
     border: "none",
     color: "white",
-    marginTop: "20px",
+    marginTop: "20px"
   },
+
   claimButton: {
     padding: "20px",
     borderRadius: "30px",
@@ -196,18 +237,21 @@ const styles: any = {
     border: "none",
     color: "white",
     marginTop: "40px",
-    width: "200px",
+    width: "200px"
   },
+
   tabs: {
     display: "flex",
     gap: "10px",
-    marginBottom: "20px",
+    marginBottom: "20px"
   },
+
   tab: {
     padding: "10px 20px",
     borderRadius: "20px",
     background: "#1e293b",
     color: "white",
-    border: "none",
-  },
+    border: "none"
+  }
+
 };

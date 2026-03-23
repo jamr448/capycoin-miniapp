@@ -83,3 +83,47 @@ export async function POST(req: Request) {
     });
   }
 }
+
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const nullifier = searchParams.get("nullifier");
+
+    if (!nullifier) {
+      return NextResponse.json({ success: false });
+    }
+
+    const { data } = await supabase
+      .from("claims")
+      .select("*")
+      .eq("nullifier", nullifier)
+      .maybeSingle();
+
+    if (!data) {
+      return NextResponse.json({
+        success: true,
+        remaining: 0,
+      });
+    }
+
+    const now = Date.now();
+    const lastClaim = new Date(data.last_claim).getTime();
+
+    const diff = Math.floor((now - lastClaim) / 1000);
+    const COOLDOWN = 86400;
+
+    if (diff >= COOLDOWN) {
+      return NextResponse.json({
+        success: true,
+        remaining: 0,
+      });
+    }
+
+    return NextResponse.json({
+      success: true,
+      remaining: COOLDOWN - diff,
+    });
+  } catch {
+    return NextResponse.json({ success: false });
+  }
+}
