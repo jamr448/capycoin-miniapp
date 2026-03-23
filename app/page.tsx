@@ -140,12 +140,21 @@ const [tab, setTab] = useState("claim");
       {tab === "claim" && (
         <>
           <h2>
-  ⏱️ {remaining !== null ? formatTime(remaining) : "Listo para reclamar"}
+  {remaining !== null
+    ? `⏱️ ${formatTime(remaining)}`
+    : "🟢 Disponible para reclamar"}
 </h2>
 
-          <button style={styles.claimButton} onClick={handleClaim}>
-            Reclamar
-          </button>
+         <button
+  style={{
+    ...styles.claimButton,
+    opacity: remaining ? 0.5 : 1,
+  }}
+  onClick={handleClaim}
+  disabled={remaining !== null}
+>
+  {remaining !== null ? "Espera..." : "Reclamar"}
+</button>
         </>
       )}
 
