@@ -13,49 +13,59 @@ export default function Home() {
 
   // instalar MiniKit
   useEffect(() => {
+    MiniKit.install();
 
-  const checkCooldown = async () => {
+    const checkCooldown = async () => {
 
-    const nullifier = localStorage.getItem("capyNullifier");
+      const nullifier = localStorage.getItem("capyNullifier");
 
-    if (!nullifier) return;
+      if (!nullifier) return;
 
-    const res = await fetch(`/api/claim?nullifier=${nullifier}`);
-    const data = await res.json();
+      const res = await fetch(`/api/claim?nullifier=${nullifier}`);
+      const data = await res.json();
 
-    if (data.remaining && data.remaining > 0) {
-      setRemaining(data.remaining);
-    }
+      if (data.remaining && data.remaining > 0) {
+        setRemaining(data.remaining);
+      }
 
-    if (data.balance !== undefined) {
-      setBalance(data.balance);
-    }
+      if (data.balance !== undefined) {
+        setBalance(data.balance);
+      }
 
-  };
+      setVerified(true);
+    };
 
-  checkCooldown();
+    checkCooldown();
 
-}, []);
+  }, []);
 
   // contador en vivo
   useEffect(() => {
+
     if (remaining === null) return;
 
     const interval = setInterval(() => {
+
       setRemaining((prev) => {
+
         if (prev === null || prev <= 1) {
           clearInterval(interval);
           setStatus("🎉 Ya puedes reclamar!");
           return null;
         }
+
         return prev - 1;
+
       });
+
     }, 1000);
 
     return () => clearInterval(interval);
+
   }, [remaining]);
 
   const formatTime = (t: number) => {
+
     const h = Math.floor(t / 3600);
     const m = Math.floor((t % 3600) / 60);
     const s = t % 60;
@@ -63,11 +73,14 @@ export default function Home() {
     return `${h.toString().padStart(2, "0")}:${m
       .toString()
       .padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+
   };
 
-  // 🔐 VERIFICAR IDENTIDAD
+  // verificar identidad
   const handleVerify = async () => {
+
     try {
+
       setStatus("🔐 Verificando...");
 
       const res = await MiniKit.commandsAsync.verify({
@@ -83,43 +96,43 @@ export default function Home() {
         nullifier = proofs[0]?.nullifier_hash;
       }
 
-      // guardar usuario localmente
       localStorage.setItem("capyNullifier", nullifier);
 
       if (
-  res.finalPayload?.status === "success" ||
-  (res.finalPayload as any)?.status === "verified"
-) {
+        res.finalPayload?.status === "success" ||
+        (res.finalPayload as any)?.status === "verified"
+      ) {
+
         setVerified(true);
         setStatus("✅ Verificado");
+
       } else {
+
         setStatus("❌ Falló verificación");
+
       }
 
-    } catch {
-      setStatus("❌ Error");
+    } catch (err) {
+
+      console.error(err);
+      setStatus("❌ Error verificando identidad");
+
     }
+
   };
 
-  // 💰 RECLAMAR
+  // reclamar
   const handleClaim = async () => {
 
-    setRemaining(null);
-
     try {
+
       setStatus("⏳ Procesando...");
 
-      const res = await MiniKit.commandsAsync.verify({
-        action: "claimcapycoin",
-      });
+      const nullifier = localStorage.getItem("capyNullifier");
 
-      let nullifier = "";
-
-      if ("nullifier_hash" in res.finalPayload) {
-        nullifier = res.finalPayload.nullifier_hash;
-      } else if ("proofs" in res.finalPayload) {
-        const proofs = res.finalPayload.proofs as any[];
-        nullifier = proofs[0]?.nullifier_hash;
+      if (!nullifier) {
+        setStatus("❌ Usuario no verificado");
+        return;
       }
 
       const response = await fetch("/api/claim", {
@@ -133,27 +146,41 @@ export default function Home() {
       const data = await response.json();
 
       if (data.success) {
+
         setStatus("💰 Claim exitoso!");
+        setBalance((prev) => prev + 100);
+
       } else {
 
         if (data.remaining) {
+
           setStatus("⛔ Debes esperar");
           setRemaining(data.remaining);
+
         } else {
+
           setStatus("⛔ " + data.message);
+
         }
 
       }
 
-    } catch {
+    } catch (err) {
+
+      console.error(err);
       setStatus("❌ Error en claim");
+
     }
+
   };
 
-  // pantalla de verificación
+  // pantalla verificación
   if (!verified) {
+
     return (
+
       <main style={styles.container}>
+
         <h1>Capycoin</h1>
 
         <button style={styles.button} onClick={handleVerify}>
@@ -161,15 +188,20 @@ export default function Home() {
         </button>
 
         <p>{status}</p>
+
       </main>
+
     );
+
   }
 
   // app principal
   return (
+
     <main style={styles.container}>
 
       <div style={styles.tabs}>
+
         <button onClick={() => setTab("claim")} style={styles.tab}>
           Reclamar
         </button>
@@ -177,47 +209,65 @@ export default function Home() {
         <button onClick={() => setTab("about")} style={styles.tab}>
           Acerca de
         </button>
+
       </div>
 
       {tab === "claim" && (
-  <>
-    <h2>💰 Tu balance</h2>
-    <p style={{fontSize: "22px"}}>0 CAPY</p>
 
-    <h2 style={{marginTop: "20px"}}>
-      {remaining !== null
-        ? `⏱️ ${formatTime(remaining)}`
-        : "🟢 Disponible para reclamar"}
-    </h2>
+        <>
 
-    <button
-      style={{
-        ...styles.claimButton,
-        opacity: remaining ? 0.5 : 1
-      }}
-      onClick={handleClaim}
-      disabled={remaining !== null}
-    >
-      {remaining !== null ? "Espera..." : "Reclamar"}
-    </button>
+          <h2>💰 Tu balance</h2>
 
-    <p style={{marginTop: "30px"}}>
-      🔥 11,150 usuarios reclamando
-    </p>
-  </>
-)}
+          <p style={{fontSize: "24px", fontWeight: "bold"}}>
+            {balance} CAPY
+          </p>
+
+          <h2 style={{marginTop: "20px"}}>
+
+            {remaining !== null
+              ? `⏱️ ${formatTime(remaining)}`
+              : "🟢 Disponible para reclamar"}
+
+          </h2>
+
+          <button
+            style={{
+              ...styles.claimButton,
+              opacity: remaining ? 0.5 : 1
+            }}
+            onClick={handleClaim}
+            disabled={remaining !== null}
+          >
+
+            {remaining !== null ? "Espera..." : "Reclamar"}
+
+          </button>
+
+          <p style={{marginTop: "30px"}}>
+            🔥 11,150 usuarios reclamando
+          </p>
+
+        </>
+
+      )}
 
       {tab === "about" && (
+
         <>
+
           <h2>Capycoin</h2>
           <p>Memecoin comunitaria en WorldChain 🚀</p>
+
         </>
+
       )}
 
       <p>{status}</p>
 
     </main>
+
   );
+
 }
 
 const styles: any = {
