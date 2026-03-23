@@ -84,12 +84,17 @@ export default function Home() {
       const data = await response.json();
 
       if (data.success) {
-        setStatus("💰 Claim exitoso!");
-        setTimeLeft(86400); // 24h
-      } else {
-        setStatus("⛔ " + data.message);
-        setTimeLeft(86400); // ejemplo fallback
-      }
+  setStatus("💰 Claim exitoso!");
+} else {
+  if (data.remaining) {
+    const hours = Math.floor(data.remaining / 3600);
+    const minutes = Math.floor((data.remaining % 3600) / 60);
+
+    setStatus(`⛔ Debes esperar ${hours}h ${minutes}m`);
+  } else {
+    setStatus("⛔ " + data.message);
+  }
+}
     } catch {
       setStatus("❌ Error en claim");
     }
