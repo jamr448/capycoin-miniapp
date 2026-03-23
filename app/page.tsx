@@ -176,25 +176,32 @@ export default function Home() {
       </div>
 
       {tab === "claim" && (
-        <>
-          <h2>
-            {remaining !== null
-              ? `⏱️ ${formatTime(remaining)}`
-              : "🟢 Disponible para reclamar"}
-          </h2>
+  <>
+    <h2>💰 Tu balance</h2>
+    <p style={{fontSize: "22px"}}>0 CAPY</p>
 
-          <button
-            style={{
-              ...styles.claimButton,
-              opacity: remaining ? 0.5 : 1
-            }}
-            onClick={handleClaim}
-            disabled={remaining !== null}
-          >
-            {remaining !== null ? "Espera..." : "Reclamar"}
-          </button>
-        </>
-      )}
+    <h2 style={{marginTop: "20px"}}>
+      {remaining !== null
+        ? `⏱️ ${formatTime(remaining)}`
+        : "🟢 Disponible para reclamar"}
+    </h2>
+
+    <button
+      style={{
+        ...styles.claimButton,
+        opacity: remaining ? 0.5 : 1
+      }}
+      onClick={handleClaim}
+      disabled={remaining !== null}
+    >
+      {remaining !== null ? "Espera..." : "Reclamar"}
+    </button>
+
+    <p style={{marginTop: "30px"}}>
+      🔥 11,150 usuarios reclamando
+    </p>
+  </>
+)}
 
       {tab === "about" && (
         <>
