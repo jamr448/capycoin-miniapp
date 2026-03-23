@@ -22,7 +22,9 @@ export async function POST(req: Request) {
     const now = new Date();
 
     if (existing) {
-      const lastClaim = new Date(existing.last_claim);
+      const lastClaim = existing.last_claim
+  ? new Date(existing.last_claim)
+  : new Date(0);
       const diff = (now.getTime() - lastClaim.getTime()) / 1000;
 
       // ⏱ 24 HORAS = 86400 segundos
