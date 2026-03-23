@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { MiniKit } from "@worldcoin/minikit-js";
 
 export default function Home() {
-  const [verified, setVerified] = useState(false);
-  const [status, setStatus] = useState("Verifica tu identidad");
-  const [tab, setTab] = useState("claim");
-  const [timeLeft, setTimeLeft] = useState(0);
+
+const [status, setStatus] = useState("Verifica tu identidad");
+const [remaining, setRemaining] = useState<number | null>(null);
+const [verified, setVerified] = useState(false);
+const [tab, setTab] = useState("claim");
 
   useEffect(() => {
     MiniKit.install();
@@ -15,12 +16,21 @@ export default function Home() {
 
   // ⏱️ TIMER
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (timeLeft > 0) setTimeLeft(timeLeft - 1);
-    }, 1000);
+  if (remaining === null) return;
 
-    return () => clearInterval(interval);
-  }, [timeLeft]);
+  const interval = setInterval(() => {
+    setRemaining((prev) => {
+      if (prev === null || prev <= 1) {
+        clearInterval(interval);
+        setStatus("🎉 Ya puedes reclamar!");
+        return null;
+      }
+      return prev - 1;
+    });
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, [remaining]);
 
   const formatTime = (t: number) => {
     const h = Math.floor(t / 3600);
@@ -85,12 +95,10 @@ export default function Home() {
 
       if (data.success) {
   setStatus("💰 Claim exitoso!");
+  setRemaining(86400); // inicia contador
 } else {
   if (data.remaining) {
-    const hours = Math.floor(data.remaining / 3600);
-    const minutes = Math.floor((data.remaining % 3600) / 60);
-
-    setStatus(`⛔ Debes esperar ${hours}h ${minutes}m`);
+    setRemaining(data.remaining);
   } else {
     setStatus("⛔ " + data.message);
   }
@@ -129,7 +137,9 @@ export default function Home() {
       {/* CONTENIDO */}
       {tab === "claim" && (
         <>
-          <h2>⏱️ {formatTime(timeLeft)}</h2>
+          <h2>
+  ⏱️ {remaining !== null ? formatTime(remaining) : "Listo para reclamar"}
+</h2>
 
           <button style={styles.claimButton} onClick={handleClaim}>
             Reclamar
