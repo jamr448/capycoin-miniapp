@@ -12,33 +12,49 @@ export async function POST(req: Request) {
       });
     }
 
-    // 🔍 VERIFICAR SI YA EXISTE
+    // 🔍 BUSCAR USUARIO
     const { data: existing } = await supabase
       .from("claims")
       .select("*")
       .eq("nullifier", nullifier)
-      .single();
+      .maybeSingle();
+
+    const now = new Date();
 
     if (existing) {
+      const lastClaim = new Date(existing.last_claim);
+      const diff = (now.getTime() - lastClaim.getTime()) / 1000;
+
+      // ⏱ 24 HORAS = 86400 segundos
+      if (diff < 86400) {
+        const remaining = Math.floor(86400 - diff);
+
+        return NextResponse.json({
+          success: false,
+          message: "Debes esperar",
+          remaining,
+        });
+      }
+
+      // ✅ ACTUALIZAR TIEMPO
+      await supabase
+        .from("claims")
+        .update({ last_claim: now })
+        .eq("nullifier", nullifier);
+
       return NextResponse.json({
-        success: false,
-        message: "Ya reclamaste",
+        success: true,
+        message: "Claim exitoso",
       });
     }
 
-    // ✅ INSERTAR NUEVO CLAIM
-    const { error } = await supabase.from("claims").insert([
+    // 🆕 PRIMER CLAIM
+    await supabase.from("claims").insert([
       {
         nullifier,
+        last_claim: now,
       },
     ]);
-
-    if (error) {
-      return NextResponse.json({
-        success: false,
-        message: "Error al guardar",
-      });
-    }
 
     return NextResponse.json({
       success: true,
