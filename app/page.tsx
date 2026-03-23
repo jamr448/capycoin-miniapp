@@ -67,6 +67,7 @@ const [tab, setTab] = useState("claim");
 
   // 💰 CLAIM
   const handleClaim = async () => {
+    setRemaining(null); // limpia contador previo
     try {
       setStatus("⏳ Procesando...");
 
@@ -95,10 +96,11 @@ const [tab, setTab] = useState("claim");
 
       if (data.success) {
   setStatus("💰 Claim exitoso!");
-  setRemaining(86400); // inicia contador
+  setRemaining(null); // 👈 NO iniciar contador aquí
 } else {
   if (data.remaining) {
-    setRemaining(data.remaining);
+    setStatus("⛔ Debes esperar");
+    setRemaining(data.remaining); // 👈 SOLO backend manda tiempo
   } else {
     setStatus("⛔ " + data.message);
   }
