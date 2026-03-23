@@ -19,17 +19,45 @@ export async function POST(req: Request) {
       .eq("nullifier", nullifier)
       .maybeSingle();
 
-    const now = new Date();
+    const now = Date.now(); // 🔥 número, más preciso
 
-    if (existing) {
-      const lastClaim = existing.last_claim
-  ? new Date(existing.last_claim)
-  : new Date(0);
-      const diff = (now.getTime() - lastClaim.getTime()) / 1000;
+if (existing) {
+  const lastClaim = existing.last_claim
+    ? new Date(existing.last_claim).getTime()
+    : 0;
 
-      // ⏱ 24 HORAS = 86400 segundos
-      if (diff < 86400) {
-        const remaining = Math.floor(86400 - diff);
+  const diff = Math.floor((now - lastClaim) / 1000);
+
+  const COOLDOWN = 86400; // 24h
+
+  if (diff < COOLDOWN) {
+    const remaining = COOLDOWN - diff;
+
+    return NextResponse.json({
+      success: false,
+      message: "Debes esperar",
+      remaining,
+    });
+  }
+
+  // ✅ actualizar correctamente
+  const { error } = await supabase
+    .from("claims")
+    .update({ last_claim: new Date().toISOString() })
+    .eq("nullifier", nullifier);
+
+  if (error) {
+    return NextResponse.json({
+      success: false,
+      message: "Error al actualizar",
+    });
+  }
+
+  return NextResponse.json({
+    success: true,
+    message: "Claim exitoso",
+  });
+}
 
         return NextResponse.json({
           success: false,
