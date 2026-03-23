@@ -40,7 +40,10 @@ export async function POST(req: Request) {
       // ✅ actualizar tiempo correctamente
       const { error: updateError } = await supabase
         .from("claims")
-        .update({ last_claim: new Date() })
+        .update({
+  last_claim: new Date(),
+  balance: existing.balance + 1
+})
         .eq("nullifier", nullifier);
 
       if (updateError) {
@@ -99,10 +102,12 @@ export async function GET(req: Request) {
       .eq("nullifier", nullifier)
       .maybeSingle();
 
+    // usuario nuevo
     if (!data) {
       return NextResponse.json({
         success: true,
         remaining: 0,
+        balance: 0
       });
     }
 
@@ -112,18 +117,18 @@ export async function GET(req: Request) {
     const diff = Math.floor((now - lastClaim) / 1000);
     const COOLDOWN = 86400;
 
-    if (diff >= COOLDOWN) {
-      return NextResponse.json({
-        success: true,
-        remaining: 0,
-      });
-    }
+    const remaining =
+      diff >= COOLDOWN ? 0 : COOLDOWN - diff;
 
     return NextResponse.json({
       success: true,
-      remaining: COOLDOWN - diff,
+      remaining,
+      balance: data.balance ?? 0
     });
+
   } catch {
-    return NextResponse.json({ success: false });
+    return NextResponse.json({
+      success: false
+    });
   }
 }

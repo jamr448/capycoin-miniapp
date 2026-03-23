@@ -7,31 +7,35 @@ export default function Home() {
 
   const [status, setStatus] = useState("Verifica tu identidad");
   const [remaining, setRemaining] = useState<number | null>(null);
+  const [balance, setBalance] = useState(0);
   const [verified, setVerified] = useState(false);
   const [tab, setTab] = useState("claim");
 
   // instalar MiniKit
   useEffect(() => {
-    MiniKit.install();
-  }, []);
 
-  // recuperar cooldown al abrir app
-  useEffect(() => {
-    const checkCooldown = async () => {
-      const nullifier = localStorage.getItem("capyNullifier");
+  const checkCooldown = async () => {
 
-      if (!nullifier) return;
+    const nullifier = localStorage.getItem("capyNullifier");
 
-      const res = await fetch(`/api/claim?nullifier=${nullifier}`);
-      const data = await res.json();
+    if (!nullifier) return;
 
-      if (data.remaining && data.remaining > 0) {
-        setRemaining(data.remaining);
-      }
-    };
+    const res = await fetch(`/api/claim?nullifier=${nullifier}`);
+    const data = await res.json();
 
-    checkCooldown();
-  }, []);
+    if (data.remaining && data.remaining > 0) {
+      setRemaining(data.remaining);
+    }
+
+    if (data.balance !== undefined) {
+      setBalance(data.balance);
+    }
+
+  };
+
+  checkCooldown();
+
+}, []);
 
   // contador en vivo
   useEffect(() => {
@@ -83,9 +87,9 @@ export default function Home() {
       localStorage.setItem("capyNullifier", nullifier);
 
       if (
-        res.finalPayload?.status === "success" ||
-        res.finalPayload?.status === "verified"
-      ) {
+  res.finalPayload?.status === "success" ||
+  (res.finalPayload as any)?.status === "verified"
+) {
         setVerified(true);
         setStatus("✅ Verificado");
       } else {
