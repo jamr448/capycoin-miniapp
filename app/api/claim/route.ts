@@ -2,42 +2,53 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
 export async function POST(req: Request) {
-  const { nullifier } = await req.json();
+  try {
+    const { nullifier } = await req.json();
 
-  const now = new Date();
-
-  // 🔍 Buscar usuario
-  const { data: existing } = await supabase
-    .from("claims")
-    .select("*")
-    .eq("nullifier", nullifier)
-    .single();
-
-  if (existing) {
-    const last = new Date(existing.last_claim);
-    const diff = now.getTime() - last.getTime();
-    const hours = diff / (1000 * 60 * 60);
-
-    if (hours < 24) {
+    if (!nullifier) {
       return NextResponse.json({
         success: false,
-        message: `Vuelve en ${Math.ceil(24 - hours)} horas`
+        message: "No nullifier",
       });
     }
 
-    // 🔄 actualizar
-    await supabase
+    // 🔍 VERIFICAR SI YA EXISTE
+    const { data: existing } = await supabase
       .from("claims")
-      .update({ last_claim: now })
-      .eq("nullifier", nullifier);
+      .select("*")
+      .eq("nullifier", nullifier)
+      .single();
 
-  } else {
-    // 🆕 nuevo usuario
-    await supabase.from("claims").insert({
-      nullifier,
-      last_claim: now
+    if (existing) {
+      return NextResponse.json({
+        success: false,
+        message: "Ya reclamaste",
+      });
+    }
+
+    // ✅ INSERTAR NUEVO CLAIM
+    const { error } = await supabase.from("claims").insert([
+      {
+        nullifier,
+      },
+    ]);
+
+    if (error) {
+      return NextResponse.json({
+        success: false,
+        message: "Error al guardar",
+      });
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Claim exitoso",
+    });
+
+  } catch (err) {
+    return NextResponse.json({
+      success: false,
+      message: "Error servidor",
     });
   }
-
-  return NextResponse.json({ success: true });
 }
