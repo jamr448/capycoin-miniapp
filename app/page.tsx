@@ -11,34 +11,8 @@ export default function Home() {
   const [verified, setVerified] = useState(false);
   const [tab, setTab] = useState("claim");
 
-  // instalar MiniKit
   useEffect(() => {
-
     MiniKit.install();
-
-    const checkCooldown = async () => {
-
-      const nullifier = localStorage.getItem("capyNullifier");
-
-      if (!nullifier) return;
-
-      const res = await fetch(`/api/claim?nullifier=${nullifier}`);
-      const data = await res.json();
-
-      if (data.remaining && data.remaining > 0) {
-        setRemaining(data.remaining);
-      }
-
-      if (data.balance !== undefined) {
-        setBalance(data.balance);
-      }
-
-      setVerified(true);
-
-    };
-
-    checkCooldown();
-
   }, []);
 
   // contador en vivo
@@ -68,7 +42,7 @@ export default function Home() {
 
   }, [remaining]);
 
-  const formatTime = (t: number) => {
+  const formatTime = (t:number) => {
 
     const h = Math.floor(t / 3600);
     const m = Math.floor((t % 3600) / 60);
@@ -80,7 +54,7 @@ export default function Home() {
 
   };
 
-  // verificar identidad
+  // 🔐 VERIFICAR IDENTIDAD
   const handleVerify = async () => {
 
     try {
@@ -114,6 +88,18 @@ export default function Home() {
         setVerified(true);
         setStatus("✅ Verificado");
 
+        // obtener estado usuario
+        const response = await fetch(`/api/claim?nullifier=${nullifier}`);
+        const data = await response.json();
+
+        if (data.remaining && data.remaining > 0) {
+          setRemaining(data.remaining);
+        }
+
+        if (data.balance !== undefined) {
+          setBalance(data.balance);
+        }
+
       } else {
 
         setStatus("❌ Falló verificación");
@@ -129,7 +115,7 @@ export default function Home() {
 
   };
 
-  // reclamar
+  // 💰 CLAIM
   const handleClaim = async () => {
 
     try {
@@ -139,16 +125,18 @@ export default function Home() {
       const nullifier = localStorage.getItem("capyNullifier");
 
       if (!nullifier) {
+
         setStatus("❌ Usuario no verificado");
         return;
+
       }
 
       const response = await fetch("/api/claim", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
         },
-        body: JSON.stringify({ nullifier }),
+        body:JSON.stringify({ nullifier })
       });
 
       const data = await response.json();
@@ -156,7 +144,7 @@ export default function Home() {
       if (data.success) {
 
         setStatus("💰 Claim exitoso!");
-        setBalance((prev) => prev + 5);
+        setBalance((prev)=>prev + 5);
 
       } else {
 
@@ -167,7 +155,7 @@ export default function Home() {
 
         } else {
 
-          setStatus("⛔ " + data.message);
+          setStatus("⛔ "+data.message);
 
         }
 
@@ -182,7 +170,7 @@ export default function Home() {
 
   };
 
-  // pantalla verificación
+  // 🔒 PANTALLA VERIFICACIÓN
   if (!verified) {
 
     return (
@@ -203,26 +191,22 @@ export default function Home() {
 
   }
 
-  // app principal
+  // 🧩 APP PRINCIPAL
   return (
 
     <main style={styles.container}>
 
-      {/* pestañas */}
-
       <div style={styles.tabs}>
 
-        <button onClick={() => setTab("claim")} style={styles.tab}>
+        <button onClick={()=>setTab("claim")} style={styles.tab}>
           Reclamar
         </button>
 
-        <button onClick={() => setTab("about")} style={styles.tab}>
+        <button onClick={()=>setTab("about")} style={styles.tab}>
           Acerca de
         </button>
 
       </div>
-
-      {/* LOGO GIRANDO */}
 
       <div style={styles.logoContainer}>
         <img src="/capycoin.png" style={styles.logo}/>
@@ -234,7 +218,7 @@ export default function Home() {
 
           <h2>💰 Tu balance</h2>
 
-          <p style={{fontSize:"24px",fontWeight:"bold"}}>
+          <p style={{fontSize:"26px",fontWeight:"bold"}}>
             {balance} CAPY
           </p>
 
@@ -280,19 +264,12 @@ export default function Home() {
 
       <p>{status}</p>
 
-      {/* animación moneda */}
-
       <style jsx global>{`
 
         @keyframes spinCoin {
 
-          0% {
-            transform: rotateY(0deg);
-          }
-
-          100% {
-            transform: rotateY(360deg);
-          }
+          0% { transform: rotateY(0deg); }
+          100% { transform: rotateY(360deg); }
 
         }
 
@@ -355,10 +332,10 @@ const styles:any = {
   },
 
   logo:{
-  width:"180px",
-  height:"180px",
-  animation:"spinCoin 8s linear infinite",
-  filter:"drop-shadow(0px 10px 25px rgba(255,215,0,0.5))"
-}
+    width:"270px",
+    height:"270px",
+    animation:"spinCoin 8s linear infinite",
+    filter:"drop-shadow(0px 10px 25px rgba(255,215,0,0.5))"
+  }
 
 };
