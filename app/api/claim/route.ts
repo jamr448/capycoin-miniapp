@@ -39,12 +39,12 @@ export async function POST(req: Request) {
 
       // ✅ actualizar tiempo correctamente
       const { error: updateError } = await supabase
-        .from("claims")
-        .update({
-  last_claim: now,
-  balance: existing.balance + 5
-})
-        .eq("nullifier", nullifier);
+  .from("claims")
+  .update({
+    last_claim: now,
+    balance: (existing.balance || 0) + 5
+  })
+  .eq("nullifier", nullifier);
 
       if (updateError) {
         return NextResponse.json({
