@@ -41,8 +41,8 @@ export async function POST(req: Request) {
       const { error: updateError } = await supabase
         .from("claims")
         .update({
-  last_claim: new Date(),
-  balance: existing.balance + 1
+  last_claim: now,
+  balance: existing.balance + 5
 })
         .eq("nullifier", nullifier);
 
