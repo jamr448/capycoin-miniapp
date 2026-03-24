@@ -355,10 +355,10 @@ const styles:any = {
   },
 
   logo:{
-    width:"120px",
-    height:"120px",
-    animation:"spinCoin 8s linear infinite",
-    filter:"drop-shadow(0px 10px 20px rgba(255,215,0,0.4))"
-  }
+  width:"180px",
+  height:"180px",
+  animation:"spinCoin 8s linear infinite",
+  filter:"drop-shadow(0px 10px 25px rgba(255,215,0,0.5))"
+}
 
 };
