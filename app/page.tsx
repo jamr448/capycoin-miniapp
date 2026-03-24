@@ -156,7 +156,7 @@ export default function Home() {
       if (data.success) {
 
         setStatus("💰 Claim exitoso!");
-        setBalance((prev) => prev + 100);
+        setBalance((prev) => prev + 5);
 
       } else {
 
