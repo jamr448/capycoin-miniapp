@@ -13,6 +13,7 @@ export default function Home() {
 
   // instalar MiniKit
   useEffect(() => {
+
     MiniKit.install();
 
     const checkCooldown = async () => {
@@ -33,6 +34,7 @@ export default function Home() {
       }
 
       setVerified(true);
+
     };
 
     checkCooldown();
@@ -49,9 +51,11 @@ export default function Home() {
       setRemaining((prev) => {
 
         if (prev === null || prev <= 1) {
+
           clearInterval(interval);
           setStatus("🎉 Ya puedes reclamar!");
           return null;
+
         }
 
         return prev - 1;
@@ -70,9 +74,9 @@ export default function Home() {
     const m = Math.floor((t % 3600) / 60);
     const s = t % 60;
 
-    return `${h.toString().padStart(2, "0")}:${m
+    return `${h.toString().padStart(2,"0")}:${m
       .toString()
-      .padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+      .padStart(2,"0")}:${s.toString().padStart(2,"0")}`;
 
   };
 
@@ -90,10 +94,14 @@ export default function Home() {
       let nullifier = "";
 
       if ("nullifier_hash" in res.finalPayload) {
+
         nullifier = res.finalPayload.nullifier_hash;
+
       } else if ("proofs" in res.finalPayload) {
+
         const proofs = res.finalPayload.proofs as any[];
         nullifier = proofs[0]?.nullifier_hash;
+
       }
 
       localStorage.setItem("capyNullifier", nullifier);
@@ -200,6 +208,8 @@ export default function Home() {
 
     <main style={styles.container}>
 
+      {/* pestañas */}
+
       <div style={styles.tabs}>
 
         <button onClick={() => setTab("claim")} style={styles.tab}>
@@ -212,17 +222,23 @@ export default function Home() {
 
       </div>
 
+      {/* LOGO GIRANDO */}
+
+      <div style={styles.logoContainer}>
+        <img src="/capycoin.png" style={styles.logo}/>
+      </div>
+
       {tab === "claim" && (
 
         <>
 
           <h2>💰 Tu balance</h2>
 
-          <p style={{fontSize: "24px", fontWeight: "bold"}}>
+          <p style={{fontSize:"24px",fontWeight:"bold"}}>
             {balance} CAPY
           </p>
 
-          <h2 style={{marginTop: "20px"}}>
+          <h2 style={{marginTop:"20px"}}>
 
             {remaining !== null
               ? `⏱️ ${formatTime(remaining)}`
@@ -243,7 +259,7 @@ export default function Home() {
 
           </button>
 
-          <p style={{marginTop: "30px"}}>
+          <p style={{marginTop:"30px"}}>
             🔥 11,150 usuarios reclamando
           </p>
 
@@ -264,55 +280,85 @@ export default function Home() {
 
       <p>{status}</p>
 
+      {/* animación moneda */}
+
+      <style jsx global>{`
+
+        @keyframes spinCoin {
+
+          0% {
+            transform: rotateY(0deg);
+          }
+
+          100% {
+            transform: rotateY(360deg);
+          }
+
+        }
+
+      `}</style>
+
     </main>
 
   );
 
 }
 
-const styles: any = {
+const styles:any = {
 
-  container: {
-    minHeight: "100vh",
-    background: "#020617",
-    color: "white",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center"
+  container:{
+    minHeight:"100vh",
+    background:"#020617",
+    color:"white",
+    display:"flex",
+    flexDirection:"column",
+    alignItems:"center",
+    justifyContent:"center"
   },
 
-  button: {
-    padding: "15px 25px",
-    borderRadius: "20px",
-    background: "#22c55e",
-    border: "none",
-    color: "white",
-    marginTop: "20px"
+  button:{
+    padding:"15px 25px",
+    borderRadius:"20px",
+    background:"#22c55e",
+    border:"none",
+    color:"white",
+    marginTop:"20px"
   },
 
-  claimButton: {
-    padding: "20px",
-    borderRadius: "30px",
-    background: "#0ea5e9",
-    border: "none",
-    color: "white",
-    marginTop: "40px",
-    width: "200px"
+  claimButton:{
+    padding:"20px",
+    borderRadius:"30px",
+    background:"#0ea5e9",
+    border:"none",
+    color:"white",
+    marginTop:"40px",
+    width:"200px"
   },
 
-  tabs: {
-    display: "flex",
-    gap: "10px",
-    marginBottom: "20px"
+  tabs:{
+    display:"flex",
+    gap:"10px",
+    marginBottom:"10px"
   },
 
-  tab: {
-    padding: "10px 20px",
-    borderRadius: "20px",
-    background: "#1e293b",
-    color: "white",
-    border: "none"
+  tab:{
+    padding:"10px 20px",
+    borderRadius:"20px",
+    background:"#1e293b",
+    color:"white",
+    border:"none"
+  },
+
+  logoContainer:{
+    marginTop:"20px",
+    marginBottom:"10px"
+  },
+
+  logo:{
+    width:"120px",
+    height:"120px",
+    animation:"spinCoin 8s linear infinite",
+    filter:"drop-shadow(0px 10px 20px rgba(255,215,0,0.4))"
   }
 
 };
