@@ -108,7 +108,7 @@ export default function Home() {
 
   };
 
-  // claim
+  // reclamar
   const handleClaim = async () => {
 
     try {
@@ -135,15 +135,23 @@ export default function Home() {
       if (data.success) {
 
         setStatus("💰 Claim exitoso!");
+
         setBalance((prev)=>prev + 5);
+
+        // activar cooldown inmediatamente
+        setRemaining(data.remaining ?? 86400);
 
       } else {
 
         if (data.remaining) {
+
           setStatus("⛔ Debes esperar");
           setRemaining(data.remaining);
+
         } else {
+
           setStatus("⛔ "+data.message);
+
         }
 
       }
@@ -180,7 +188,7 @@ export default function Home() {
         </p>
 
         <button style={styles.button} onClick={handleVerify}>
-          Iniciar Sesión
+          Verificar identidad
         </button>
 
         <p style={{marginTop:"20px"}}>{status}</p>
@@ -191,7 +199,6 @@ export default function Home() {
 
   }
 
-  // app principal
   return (
 
     <main style={styles.container}>
@@ -215,7 +222,7 @@ export default function Home() {
           <h2>💰 Tu balance</h2>
 
           <p style={{fontSize:"26px",fontWeight:"bold"}}>
-            {balance} CAPYCOIN
+            {balance} Capycoin
           </p>
 
           <h2 style={{marginTop:"20px"}}>
@@ -239,12 +246,6 @@ export default function Home() {
 
           </button>
 
-          <p style={{marginTop:"30px"}}>
-            🔥 11,150 usuarios  
-            <br/>
-            🪙 54,230 Capycoin reclamados
-          </p>
-
         </>
 
       )}
@@ -258,52 +259,6 @@ export default function Home() {
           <p style={{marginBottom:"20px"}}>
             Memecoin comunitaria en WorldChain 🚀
           </p>
-
-          <h3>Tokenomics</h3>
-
-          <div style={{width:"260px"}}>
-
-            <div style={styles.tokenBar}>
-              <span>Airdrop</span>
-              <span>40%</span>
-            </div>
-            <div style={styles.bar}>
-              <div style={{...styles.fill,width:"40%"}}/>
-            </div>
-
-            <div style={styles.tokenBar}>
-              <span>Liquidity</span>
-              <span>25%</span>
-            </div>
-            <div style={styles.bar}>
-              <div style={{...styles.fill,width:"25%"}}/>
-            </div>
-
-            <div style={styles.tokenBar}>
-              <span>Ecosystem</span>
-              <span>20%</span>
-            </div>
-            <div style={styles.bar}>
-              <div style={{...styles.fill,width:"20%"}}/>
-            </div>
-
-            <div style={styles.tokenBar}>
-              <span>Team</span>
-              <span>10%</span>
-            </div>
-            <div style={styles.bar}>
-              <div style={{...styles.fill,width:"10%"}}/>
-            </div>
-
-            <div style={styles.tokenBar}>
-              <span>Marketing</span>
-              <span>5%</span>
-            </div>
-            <div style={styles.bar}>
-              <div style={{...styles.fill,width:"5%"}}/>
-            </div>
-
-          </div>
 
         </>
 
@@ -360,7 +315,7 @@ const styles:any = {
   tabs:{
     display:"flex",
     gap:"10px",
-    marginBottom:"10px"
+    marginBottom:"20px"
   },
 
   tab:{
@@ -369,27 +324,6 @@ const styles:any = {
     background:"#1e293b",
     color:"white",
     border:"none"
-  },
-
-  tokenBar:{
-    display:"flex",
-    justifyContent:"space-between",
-    marginTop:"15px",
-    fontSize:"14px"
-  },
-
-  bar:{
-    width:"100%",
-    height:"8px",
-    background:"#1e293b",
-    borderRadius:"10px",
-    marginTop:"5px"
-  },
-
-  fill:{
-    height:"100%",
-    background:"#22c55e",
-    borderRadius:"10px"
   }
 
 };
