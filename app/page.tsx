@@ -2,354 +2,306 @@
 
 import { useEffect, useState } from "react";
 import { MiniKit } from "@worldcoin/minikit-js";
+import Image from "next/image";
 
 export default function Home() {
 
-const [status, setStatus] = useState("Verifica tu identidad");
-const [remaining, setRemaining] = useState<number | null>(null);
-const [balance, setBalance] = useState(0);
-const [verified, setVerified] = useState(false);
-const [claiming, setClaiming] = useState(false);
-const [tab, setTab] = useState("claim");
+const [remaining, setRemaining] = useState<number>(0);
+const [balance, setBalance] = useState<number>(0);
+const [status, setStatus] = useState("Verificar para reclamar");
+
+useEffect(() => {
+
+  MiniKit.install();
+
+  const nullifier = localStorage.getItem("capyNullifier");
+
+  if (nullifier) {
+    loadUser(nullifier);
+  }
+
+}, []);
+
+const loadUser = async (nullifier:string)=>{
+
+  const res = await fetch(`/api/claim?nullifier=${nullifier}`);
+  const data = await res.json();
+
+  if(data.remaining){
+    setRemaining(data.remaining);
+  }
+
+  if(data.balance !== undefined){
+    setBalance(data.balance);
+  }
+
+}
 
 useEffect(()=>{
 
-MiniKit.install();
+  const interval = setInterval(()=>{
 
-// 🔹 restaurar sesión si existe
-const nullifier = localStorage.getItem("capyNullifier");
+    setRemaining((prev)=>{
 
-if(nullifier){
-loadUserState(nullifier);
-}
+      if(prev <= 0) return 0;
+
+      return prev - 1;
+
+    });
+
+  },1000);
+
+  return ()=> clearInterval(interval);
 
 },[]);
 
+const formatTime = (t:number)=>{
 
-// cargar estado real desde backend
-const loadUserState = async (nullifier:string)=>{
+  const h = Math.floor(t/3600);
+  const m = Math.floor((t%3600)/60);
+  const s = t%60;
 
-try{
-
-const response = await fetch(`/api/claim?nullifier=${nullifier}`);
-const data = await response.json();
-
-if(data.remaining > 0){
-setRemaining(data.remaining);
-}
-
-setBalance(data.balance ?? 0);
-setVerified(true);
-
-}catch(err){
-
-console.error(err);
+  return `${h.toString().padStart(2,"0")}:${m
+    .toString()
+    .padStart(2,"0")}:${s.toString().padStart(2,"0")}`;
 
 }
 
-};
+const verifyAndClaim = async ()=>{
 
+  try{
 
-// contador en vivo
-useEffect(()=>{
+    setStatus("Verificando identidad...");
 
-if(remaining === null) return;
+    const res = await MiniKit.commandsAsync.verify({
+      action:"claimcapycoin"
+    });
 
-const interval = setInterval(()=>{
+    let nullifier = "";
 
-setRemaining(prev=>{
+    if("nullifier_hash" in res.finalPayload){
+      nullifier = res.finalPayload.nullifier_hash;
+    }else if("proofs" in res.finalPayload){
+      const proofs = res.finalPayload.proofs as any[];
+      nullifier = proofs[0]?.nullifier_hash;
+    }
 
-if(prev === null || prev <=1){
-clearInterval(interval);
-setStatus("🎉 Ya puedes reclamar!");
-return null;
-}
+    localStorage.setItem("capyNullifier",nullifier);
 
-return prev - 1;
+    const response = await fetch("/api/claim",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({nullifier})
+    });
 
-});
+    const data = await response.json();
 
-},1000);
+    if(data.success){
 
-return ()=>clearInterval(interval);
+      setStatus("Claim exitoso");
 
-},[remaining]);
+      setBalance(data.balance);
 
+      if(data.remaining){
+        setRemaining(data.remaining);
+      }
 
-const formatTime=(t:number)=>{
+    }else{
 
-const h=Math.floor(t/3600);
-const m=Math.floor((t%3600)/60);
-const s=t%60;
+      if(data.remaining){
 
-return `${h.toString().padStart(2,"0")}:${m.toString().padStart(2,"0")}:${s.toString().padStart(2,"0")}`;
+        setRemaining(data.remaining);
 
-};
+      }
 
+      setStatus(data.message);
 
-// 🔐 VERIFICAR IDENTIDAD
-const handleVerify=async()=>{
+    }
 
-try{
+  }catch{
 
-setStatus("🔐 Verificando...");
+    setStatus("Error verificando");
 
-const res = await MiniKit.commandsAsync.verify({
-action:"claimcapycoin"
-});
-
-if(!res.finalPayload){
-setStatus("❌ Verificación fallida");
-return;
-}
-
-let nullifier="";
-
-if("nullifier_hash" in res.finalPayload){
-nullifier=res.finalPayload.nullifier_hash;
-}else if("proofs" in res.finalPayload){
-const proofs=res.finalPayload.proofs as any[];
-nullifier=proofs[0]?.nullifier_hash;
-}
-
-if(!nullifier){
-setStatus("❌ Error verificando identidad");
-return;
-}
-
-localStorage.setItem("capyNullifier",nullifier);
-
-await loadUserState(nullifier);
-
-setStatus("✅ Verificado");
-
-}catch(err){
-
-console.error(err);
-setStatus("❌ Error verificando identidad");
+  }
 
 }
-
-};
-
-
-// 💰 CLAIM
-const handleClaim=async()=>{
-
-if(claiming) return;
-
-try{
-
-setClaiming(true);
-setStatus("⏳ Procesando...");
-
-const nullifier = localStorage.getItem("capyNullifier");
-
-if(!nullifier){
-setStatus("❌ Usuario no verificado");
-setClaiming(false);
-return;
-}
-
-const response = await fetch("/api/claim",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({nullifier})
-});
-
-const data = await response.json();
-
-if(data.success){
-
-setBalance(data.balance);
-setRemaining(data.remaining);
-setStatus("💰 Claim exitoso!");
-
-}else{
-
-if(data.remaining){
-setRemaining(data.remaining);
-setStatus("⛔ Debes esperar");
-}else{
-setStatus("⛔ "+data.message);
-}
-
-}
-
-}catch(err){
-
-console.error(err);
-setStatus("❌ Error en claim");
-
-}finally{
-
-setClaiming(false);
-
-}
-
-};
-
-
-// pantalla login
-if(!verified){
 
 return(
 
 <main style={styles.container}>
 
-<img
-src="/capycoin.png"
-style={{
-width:"200px",
-marginBottom:"20px",
-animation:"spinCoin 10s linear infinite"
-}}
-/>
+{/* HEADER */}
 
-<h1>Capycoin</h1>
-
-<button style={styles.button} onClick={handleVerify}>
-Verificar identidad
-</button>
-
-<p>{status}</p>
-
-</main>
-
-);
-
-}
-
-
-// APP PRINCIPAL
-return(
-
-<main style={styles.container}>
+<div style={styles.header}>
 
 <div style={styles.tabs}>
 
-<button onClick={()=>setTab("claim")} style={styles.tab}>
+<button style={styles.tab}>
 Reclamar
 </button>
 
-<button onClick={()=>setTab("about")} style={styles.tab}>
+<button style={styles.tab}>
 Acerca de
 </button>
 
 </div>
 
-{tab==="claim" &&(
+<div style={styles.balance}>
 
-<>
+🪙 {balance} CAPYCOIN
 
-<h2>💰 Balance</h2>
+</div>
 
-<p style={{fontSize:"26px"}}>
+</div>
 
-{balance} Capycoin
+{/* LOGO */}
+
+<div style={styles.logoBox}>
+
+<Image
+src="/capycoin.png"
+alt="Capycoin"
+width={260}
+height={260}
+/>
+
+</div>
+
+{/* TIMER */}
+
+<h1 style={styles.timer}>
+
+{formatTime(remaining)}
+
+</h1>
+
+{/* MENSAJE */}
+
+<p style={styles.message}>
+
+{remaining === 0
+? "¡Tu Capycoin esta listo para Reclamar!"
+: "Tu próximo Capycoin estará disponible pronto"}
 
 </p>
 
-<h2>
-
-{remaining !== null
-? `⏱️ ${formatTime(remaining)}`
-: "🟢 Disponible"}
-
-</h2>
+{/* BOTON */}
 
 <button
-style={{
-...styles.claimButton,
-opacity:remaining?0.5:1
-}}
-disabled={remaining!==null || claiming}
-onClick={handleClaim}
+style={styles.button}
+onClick={verifyAndClaim}
 >
 
-{claiming
-? "Procesando..."
-: remaining
-? "Espera..."
-: "Reclamar"}
+Verificar para Reclamar
 
 </button>
 
-</>
+{/* REDES */}
 
-)}
+<div style={styles.socials}>
 
-{tab==="about" &&(
+<a
+href="https://x.com"
+target="_blank"
+style={styles.social}
+>
+𝕏
+</a>
 
-<>
-<h2>Capycoin</h2>
-<p>Memecoin comunitaria en WorldChain 🚀</p>
-</>
+<a
+href="https://t.me"
+target="_blank"
+style={styles.social}
+>
+Telegram
+</a>
 
-)}
-
-<p>{status}</p>
-
-<style jsx global>{`
-
-@keyframes spinCoin{
-0%{transform:rotateY(0deg)}
-100%{transform:rotateY(360deg)}
-}
-
-`}</style>
+</div>
 
 </main>
 
-);
+)
 
 }
 
-
-const styles:any={
+const styles:any = {
 
 container:{
 minHeight:"100vh",
-background:"#020617",
-color:"white",
+background:"linear-gradient(180deg,#34d399,#10b981)",
 display:"flex",
 flexDirection:"column",
 alignItems:"center",
-justifyContent:"center"
-},
-
-button:{
-padding:"15px 25px",
-borderRadius:"20px",
-background:"#22c55e",
-border:"none",
-color:"white"
-},
-
-claimButton:{
 padding:"20px",
-borderRadius:"30px",
-background:"#0ea5e9",
-border:"none",
-color:"white",
-marginTop:"30px",
-width:"200px"
+color:"#063",
+fontFamily:"sans-serif"
+},
+
+header:{
+width:"100%",
+display:"flex",
+justifyContent:"space-between",
+alignItems:"center"
 },
 
 tabs:{
 display:"flex",
-gap:"10px",
-marginBottom:"20px"
+gap:"10px"
 },
 
 tab:{
 padding:"10px 20px",
 borderRadius:"20px",
-background:"#1e293b",
+border:"none",
+background:"#fff",
+fontWeight:"bold"
+},
+
+balance:{
+background:"#fff",
+padding:"8px 15px",
+borderRadius:"20px",
+fontWeight:"bold"
+},
+
+logoBox:{
+marginTop:"40px"
+},
+
+timer:{
+fontSize:"48px",
+marginTop:"20px"
+},
+
+message:{
+marginTop:"10px",
+fontSize:"18px",
+textAlign:"center"
+},
+
+button:{
+marginTop:"30px",
+background:"#0ea5e9",
 color:"white",
-border:"none"
+padding:"18px 30px",
+borderRadius:"40px",
+border:"none",
+fontSize:"18px",
+width:"80%"
+},
+
+socials:{
+marginTop:"30px",
+display:"flex",
+gap:"20px"
+},
+
+social:{
+textDecoration:"none",
+fontWeight:"bold",
+color:"#000"
 }
 
-};
+}
