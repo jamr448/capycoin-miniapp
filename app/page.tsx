@@ -310,8 +310,8 @@ alignItems:"center"
 
 tabs:{
 display:"flex",
-justifyContent:"center",
-gap:"40px",
+justifyContent:"space-between",
+width:"100%",
 marginTop:"40px"
 },
 
