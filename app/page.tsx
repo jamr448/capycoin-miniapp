@@ -144,14 +144,22 @@ return(
 <div style={styles.tabs}>
 
 <button
-style={styles.tab}
+style={{
+...styles.tab,
+background: tab === "claim" ? "#0ea5e9" : "#fff",
+color: tab === "claim" ? "#fff" : "#000"
+}}
 onClick={()=>setTab("claim")}
 >
 Reclamar
 </button>
 
 <button
-style={styles.tab}
+style={{
+...styles.tab,
+background: tab === "about" ? "#0ea5e9" : "#fff",
+color: tab === "about" ? "#fff" : "#000"
+}}
 onClick={()=>setTab("about")}
 >
 Acerca de
@@ -302,9 +310,10 @@ alignItems:"center"
 
 tabs:{
 display:"flex",
-gap:"30px",
+justifyContent:"center",
+gap:"40px",
 marginTop:"40px"
-}
+},
 
 tab:{
 padding:"10px 20px",
