@@ -238,13 +238,13 @@ Tokenomics
 
 <li>Supply Total: 100,000,000 Capycoin</li>
 
-<li>Airdrop Comunidad: 40%</li>
+<li>Airdrop Comunidad: 30%</li>
 
 <li>Liquidez: 30%</li>
 
-<li>Marketing: 20%</li>
+<li>Marketing: 25%</li>
 
-<li>Equipo: 10%</li>
+<li>Equipo: 15%</li>
 
 </ul>
 
