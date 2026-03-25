@@ -6,6 +6,7 @@ import Image from "next/image";
 
 export default function Home() {
 
+const [tab, setTab] = useState("claim");
 const [remaining, setRemaining] = useState<number>(0);
 const [balance, setBalance] = useState<number>(0);
 const [status, setStatus] = useState("Verificar para reclamar");
@@ -138,11 +139,17 @@ return(
 
 <div style={styles.tabs}>
 
-<button style={styles.tab}>
+<button
+style={styles.tab}
+onClick={()=>setTab("claim")}
+>
 Reclamar
 </button>
 
-<button style={styles.tab}>
+<button
+style={styles.tab}
+onClick={()=>setTab("about")}
+>
 Acerca de
 </button>
 
@@ -156,6 +163,9 @@ Acerca de
 
 </div>
 
+{tab === "claim" && (
+
+<>
 {/* LOGO */}
 
 <div style={styles.logoBox}>
@@ -172,9 +182,7 @@ height={260}
 {/* TIMER */}
 
 <h1 style={styles.timer}>
-
 {formatTime(remaining)}
-
 </h1>
 
 {/* MENSAJE */}
@@ -193,11 +201,59 @@ height={260}
 style={styles.button}
 onClick={verifyAndClaim}
 >
-
 Verificar para Reclamar
-
 </button>
 
+</>
+
+)}
+
+{tab === "about" && (
+
+<div style={styles.aboutBox}>
+
+<h2 style={styles.aboutTitle}>
+¿Qué es Capycoin?
+</h2>
+
+<p style={styles.aboutText}>
+Capycoin es una memecoin comunitaria creada en WorldChain
+para recompensar a usuarios verificados con World ID.
+Nuestro objetivo es construir una comunidad divertida
+y descentralizada alrededor del capybara más famoso
+del mundo cripto.
+</p>
+
+<h2 style={styles.aboutTitle}>
+Tokenomics
+</h2>
+
+<ul style={styles.tokenomics}>
+
+<li>Supply Total: 100,000,000 Capycoin</li>
+
+<li>Airdrop Comunidad: 40%</li>
+
+<li>Liquidez: 30%</li>
+
+<li>Marketing: 20%</li>
+
+<li>Equipo: 10%</li>
+
+</ul>
+
+<h2 style={styles.aboutTitle}>
+Red
+</h2>
+
+<p style={styles.aboutText}>
+Capycoin vive en WorldChain y puede ser reclamado
+por usuarios verificados usando World ID.
+</p>
+
+</div>
+
+)}
 {/* REDES */}
 
 <div style={styles.socials}>
@@ -296,6 +352,30 @@ socials:{
 marginTop:"30px",
 display:"flex",
 gap:"20px"
+},
+
+aboutBox:{
+marginTop:"40px",
+padding:"20px",
+maxWidth:"400px",
+textAlign:"center"
+},
+
+aboutTitle:{
+fontSize:"22px",
+marginTop:"20px"
+},
+
+aboutText:{
+marginTop:"10px",
+fontSize:"16px",
+lineHeight:"1.5"
+},
+
+tokenomics:{
+marginTop:"10px",
+textAlign:"left",
+fontSize:"16px"
 },
 
 social:{
