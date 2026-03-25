@@ -132,7 +132,11 @@ const verifyAndClaim = async ()=>{
 return(
 
 <main style={styles.container}>
+<div style={styles.balance}>
 
+🪙 {balance} CAPYCOIN
+
+</div>
 {/* HEADER */}
 
 <div style={styles.header}>
@@ -152,12 +156,6 @@ onClick={()=>setTab("about")}
 >
 Acerca de
 </button>
-
-</div>
-
-<div style={styles.balance}>
-
-🪙 {balance} CAPYCOIN
 
 </div>
 
