@@ -173,23 +173,32 @@ export default function Home() {
   // 🔒 PANTALLA VERIFICACIÓN
   if (!verified) {
 
-    return (
+  return (
 
-      <main style={styles.container}>
+    <main style={styles.container}>
 
-        <h1>Capycoin</h1>
+      <img
+        src="/capycoin.png"
+        style={{
+          width:"220px",
+          marginBottom:"30px",
+          animation:"spinCoin 10s linear infinite"
+        }}
+      />
 
-        <button style={styles.button} onClick={handleVerify}>
-          Verificar identidad
-        </button>
+      <h1>Capycoin</h1>
 
-        <p>{status}</p>
+      <button style={styles.button} onClick={handleVerify}>
+        Verificar identidad
+      </button>
 
-      </main>
+      <p style={{marginTop:"20px"}}>{status}</p>
 
-    );
+    </main>
 
-  }
+  );
+
+}
 
   // 🧩 APP PRINCIPAL
   return (
@@ -219,7 +228,7 @@ export default function Home() {
           <h2>💰 Tu balance</h2>
 
           <p style={{fontSize:"26px",fontWeight:"bold"}}>
-            {balance} CAPY
+            {balance} CAPYCOIN
           </p>
 
           <h2 style={{marginTop:"20px"}}>
