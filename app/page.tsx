@@ -12,42 +12,45 @@ const [verified, setVerified] = useState(false);
 const [claiming, setClaiming] = useState(false);
 const [tab, setTab] = useState("claim");
 
-useEffect(() => {
+useEffect(()=>{
 
-  MiniKit.install();
+MiniKit.install();
 
-  const loadUserState = async () => {
+// 🔹 restaurar sesión si existe
+const nullifier = localStorage.getItem("capyNullifier");
 
-    const nullifier = localStorage.getItem("capyNullifier");
+if(nullifier){
+loadUserState(nullifier);
+}
 
-    if (!nullifier) return;
+},[]);
 
-    try {
 
-      const response = await fetch(`/api/claim?nullifier=${nullifier}`);
-      const data = await response.json();
+// cargar estado real desde backend
+const loadUserState = async (nullifier:string)=>{
 
-      if (data.remaining && data.remaining > 0) {
-        setRemaining(data.remaining);
-      }
+try{
 
-      if (data.balance !== undefined) {
-        setBalance(data.balance);
-      }
+const response = await fetch(`/api/claim?nullifier=${nullifier}`);
+const data = await response.json();
 
-      setVerified(true);
+if(data.remaining > 0){
+setRemaining(data.remaining);
+}
 
-    } catch (err) {
-      console.error("Error loading user state", err);
-    }
+setBalance(data.balance ?? 0);
+setVerified(true);
 
-  };
+}catch(err){
 
-  loadUserState();
+console.error(err);
 
-}, []);
+}
 
-// contador
+};
+
+
+// contador en vivo
 useEffect(()=>{
 
 if(remaining === null) return;
@@ -72,6 +75,7 @@ return ()=>clearInterval(interval);
 
 },[remaining]);
 
+
 const formatTime=(t:number)=>{
 
 const h=Math.floor(t/3600);
@@ -82,15 +86,22 @@ return `${h.toString().padStart(2,"0")}:${m.toString().padStart(2,"0")}:${s.toSt
 
 };
 
+
+// 🔐 VERIFICAR IDENTIDAD
 const handleVerify=async()=>{
 
 try{
 
 setStatus("🔐 Verificando...");
 
-const res=await MiniKit.commandsAsync.verify({
+const res = await MiniKit.commandsAsync.verify({
 action:"claimcapycoin"
 });
+
+if(!res.finalPayload){
+setStatus("❌ Verificación fallida");
+return;
+}
 
 let nullifier="";
 
@@ -101,29 +112,28 @@ const proofs=res.finalPayload.proofs as any[];
 nullifier=proofs[0]?.nullifier_hash;
 }
 
-localStorage.setItem("capyNullifier",nullifier);
-
-setVerified(true);
-setStatus("✅ Verificado");
-
-const response=await fetch(`/api/claim?nullifier=${nullifier}`);
-const data=await response.json();
-
-if(data.remaining>0){
-setRemaining(data.remaining);
+if(!nullifier){
+setStatus("❌ Error verificando identidad");
+return;
 }
 
-setBalance(data.balance ?? 0);
+localStorage.setItem("capyNullifier",nullifier);
+
+await loadUserState(nullifier);
+
+setStatus("✅ Verificado");
 
 }catch(err){
 
 console.error(err);
-setStatus("❌ Error verificando");
+setStatus("❌ Error verificando identidad");
 
 }
 
 };
 
+
+// 💰 CLAIM
 const handleClaim=async()=>{
 
 if(claiming) return;
@@ -133,9 +143,15 @@ try{
 setClaiming(true);
 setStatus("⏳ Procesando...");
 
-const nullifier=localStorage.getItem("capyNullifier");
+const nullifier = localStorage.getItem("capyNullifier");
 
-const response=await fetch("/api/claim",{
+if(!nullifier){
+setStatus("❌ Usuario no verificado");
+setClaiming(false);
+return;
+}
+
+const response = await fetch("/api/claim",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
@@ -143,19 +159,19 @@ headers:{
 body:JSON.stringify({nullifier})
 });
 
-const data=await response.json();
+const data = await response.json();
 
 if(data.success){
 
-setStatus("💰 Claim exitoso!");
 setBalance(data.balance);
 setRemaining(data.remaining);
+setStatus("💰 Claim exitoso!");
 
 }else{
 
 if(data.remaining){
-setStatus("⛔ Debes esperar");
 setRemaining(data.remaining);
+setStatus("⛔ Debes esperar");
 }else{
 setStatus("⛔ "+data.message);
 }
@@ -175,6 +191,8 @@ setClaiming(false);
 
 };
 
+
+// pantalla login
 if(!verified){
 
 return(
@@ -184,7 +202,7 @@ return(
 <img
 src="/capycoin.png"
 style={{
-width:"240px",
+width:"200px",
 marginBottom:"20px",
 animation:"spinCoin 10s linear infinite"
 }}
@@ -204,6 +222,8 @@ Verificar identidad
 
 }
 
+
+// APP PRINCIPAL
 return(
 
 <main style={styles.container}>
@@ -265,7 +285,7 @@ onClick={handleClaim}
 
 <>
 <h2>Capycoin</h2>
-<p>Memecoin en WorldChain 🚀</p>
+<p>Memecoin comunitaria en WorldChain 🚀</p>
 </>
 
 )}
@@ -286,6 +306,7 @@ onClick={handleClaim}
 );
 
 }
+
 
 const styles:any={
 
