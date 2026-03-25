@@ -65,10 +65,11 @@ export async function POST(req: Request) {
       }
 
       return NextResponse.json({
-        success: true,
-        message: "Claim exitoso",
-        balance: (existing.balance || 0) + 5
-      });
+  success: true,
+  message: "Claim exitoso",
+  balance: (existing.balance || 0) + 5,
+  remaining: COOLDOWN
+});
 
     }
 
@@ -95,10 +96,11 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({
-      success: true,
-      message: "Claim exitoso",
-      balance: 5
-    });
+  success: true,
+  message: "Claim exitoso",
+  balance: 5,
+  remaining: COOLDOWN
+});
 
   } catch (err) {
 
