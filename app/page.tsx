@@ -12,9 +12,40 @@ const [verified, setVerified] = useState(false);
 const [claiming, setClaiming] = useState(false);
 const [tab, setTab] = useState("claim");
 
-useEffect(()=>{
-MiniKit.install();
-},[]);
+useEffect(() => {
+
+  MiniKit.install();
+
+  const loadUserState = async () => {
+
+    const nullifier = localStorage.getItem("capyNullifier");
+
+    if (!nullifier) return;
+
+    try {
+
+      const response = await fetch(`/api/claim?nullifier=${nullifier}`);
+      const data = await response.json();
+
+      if (data.remaining && data.remaining > 0) {
+        setRemaining(data.remaining);
+      }
+
+      if (data.balance !== undefined) {
+        setBalance(data.balance);
+      }
+
+      setVerified(true);
+
+    } catch (err) {
+      console.error("Error loading user state", err);
+    }
+
+  };
+
+  loadUserState();
+
+}, []);
 
 // contador
 useEffect(()=>{
