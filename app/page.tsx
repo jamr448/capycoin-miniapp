@@ -302,8 +302,9 @@ alignItems:"center"
 
 tabs:{
 display:"flex",
-gap:"10px"
-},
+gap:"30px",
+marginTop:"40px"
+}
 
 tab:{
 padding:"10px 20px",
