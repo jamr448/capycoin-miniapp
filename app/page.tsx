@@ -25,11 +25,9 @@ export default function Home() {
       setRemaining((prev) => {
 
         if (prev === null || prev <= 1) {
-
           clearInterval(interval);
           setStatus("🎉 Ya puedes reclamar!");
           return null;
-
         }
 
         return prev - 1;
@@ -54,7 +52,7 @@ export default function Home() {
 
   };
 
-  // 🔐 VERIFICAR IDENTIDAD
+  // verificar identidad
   const handleVerify = async () => {
 
     try {
@@ -68,14 +66,10 @@ export default function Home() {
       let nullifier = "";
 
       if ("nullifier_hash" in res.finalPayload) {
-
         nullifier = res.finalPayload.nullifier_hash;
-
       } else if ("proofs" in res.finalPayload) {
-
         const proofs = res.finalPayload.proofs as any[];
         nullifier = proofs[0]?.nullifier_hash;
-
       }
 
       localStorage.setItem("capyNullifier", nullifier);
@@ -88,7 +82,6 @@ export default function Home() {
         setVerified(true);
         setStatus("✅ Verificado");
 
-        // obtener estado usuario
         const response = await fetch(`/api/claim?nullifier=${nullifier}`);
         const data = await response.json();
 
@@ -115,7 +108,7 @@ export default function Home() {
 
   };
 
-  // 💰 CLAIM
+  // claim
   const handleClaim = async () => {
 
     try {
@@ -125,10 +118,8 @@ export default function Home() {
       const nullifier = localStorage.getItem("capyNullifier");
 
       if (!nullifier) {
-
         setStatus("❌ Usuario no verificado");
         return;
-
       }
 
       const response = await fetch("/api/claim", {
@@ -149,14 +140,10 @@ export default function Home() {
       } else {
 
         if (data.remaining) {
-
           setStatus("⛔ Debes esperar");
           setRemaining(data.remaining);
-
         } else {
-
           setStatus("⛔ "+data.message);
-
         }
 
       }
@@ -170,37 +157,41 @@ export default function Home() {
 
   };
 
-  // 🔒 PANTALLA VERIFICACIÓN
+  // pantalla login
   if (!verified) {
 
-  return (
+    return (
 
-    <main style={styles.container}>
+      <main style={styles.container}>
 
-      <img
-        src="/capycoin.png"
-        style={{
-          width:"220px",
-          marginBottom:"30px",
-          animation:"spinCoin 10s linear infinite"
-        }}
-      />
+        <img
+          src="/capycoin.png"
+          style={{
+            width:"240px",
+            marginBottom:"20px",
+            animation:"spinCoin 10s linear infinite"
+          }}
+        />
 
-      <h1>Capycoin</h1>
+        <h1 style={{fontSize:"34px"}}>Capycoin</h1>
 
-      <button style={styles.button} onClick={handleVerify}>
-        Verificar identidad
-      </button>
+        <p style={{opacity:0.7,marginBottom:"30px"}}>
+          Memecoin comunitaria en WorldChain
+        </p>
 
-      <p style={{marginTop:"20px"}}>{status}</p>
+        <button style={styles.button} onClick={handleVerify}>
+          Iniciar Sesión
+        </button>
 
-    </main>
+        <p style={{marginTop:"20px"}}>{status}</p>
 
-  );
+      </main>
 
-}
+    );
 
-  // 🧩 APP PRINCIPAL
+  }
+
+  // app principal
   return (
 
     <main style={styles.container}>
@@ -215,10 +206,6 @@ export default function Home() {
           Acerca de
         </button>
 
-      </div>
-
-      <div style={styles.logoContainer}>
-        <img src="/capycoin.png" style={styles.logo}/>
       </div>
 
       {tab === "claim" && (
@@ -253,7 +240,9 @@ export default function Home() {
           </button>
 
           <p style={{marginTop:"30px"}}>
-            🔥 11,150 usuarios reclamando
+            🔥 11,150 usuarios  
+            <br/>
+            🪙 54,230 Capycoin reclamados
           </p>
 
         </>
@@ -265,7 +254,56 @@ export default function Home() {
         <>
 
           <h2>Capycoin</h2>
-          <p>Memecoin comunitaria en WorldChain 🚀</p>
+
+          <p style={{marginBottom:"20px"}}>
+            Memecoin comunitaria en WorldChain 🚀
+          </p>
+
+          <h3>Tokenomics</h3>
+
+          <div style={{width:"260px"}}>
+
+            <div style={styles.tokenBar}>
+              <span>Airdrop</span>
+              <span>40%</span>
+            </div>
+            <div style={styles.bar}>
+              <div style={{...styles.fill,width:"40%"}}/>
+            </div>
+
+            <div style={styles.tokenBar}>
+              <span>Liquidity</span>
+              <span>25%</span>
+            </div>
+            <div style={styles.bar}>
+              <div style={{...styles.fill,width:"25%"}}/>
+            </div>
+
+            <div style={styles.tokenBar}>
+              <span>Ecosystem</span>
+              <span>20%</span>
+            </div>
+            <div style={styles.bar}>
+              <div style={{...styles.fill,width:"20%"}}/>
+            </div>
+
+            <div style={styles.tokenBar}>
+              <span>Team</span>
+              <span>10%</span>
+            </div>
+            <div style={styles.bar}>
+              <div style={{...styles.fill,width:"10%"}}/>
+            </div>
+
+            <div style={styles.tokenBar}>
+              <span>Marketing</span>
+              <span>5%</span>
+            </div>
+            <div style={styles.bar}>
+              <div style={{...styles.fill,width:"5%"}}/>
+            </div>
+
+          </div>
 
         </>
 
@@ -276,10 +314,8 @@ export default function Home() {
       <style jsx global>{`
 
         @keyframes spinCoin {
-
           0% { transform: rotateY(0deg); }
           100% { transform: rotateY(360deg); }
-
         }
 
       `}</style>
@@ -335,16 +371,25 @@ const styles:any = {
     border:"none"
   },
 
-  logoContainer:{
-    marginTop:"20px",
-    marginBottom:"10px"
+  tokenBar:{
+    display:"flex",
+    justifyContent:"space-between",
+    marginTop:"15px",
+    fontSize:"14px"
   },
 
-  logo:{
-    width:"270px",
-    height:"270px",
-    animation:"spinCoin 8s linear infinite",
-    filter:"drop-shadow(0px 10px 25px rgba(255,215,0,0.5))"
+  bar:{
+    width:"100%",
+    height:"8px",
+    background:"#1e293b",
+    borderRadius:"10px",
+    marginTop:"5px"
+  },
+
+  fill:{
+    height:"100%",
+    background:"#22c55e",
+    borderRadius:"10px"
   }
 
 };
