@@ -293,9 +293,20 @@ Telegram
 
 <style jsx global>{`
 
-@keyframes spin {
-from {transform: rotate(0deg);}
-to {transform: rotate(360deg);}
+@keyframes coinSpin {
+
+0% {
+transform: rotateY(0deg);
+}
+
+50% {
+transform: rotateY(180deg);
+}
+
+100% {
+transform: rotateY(360deg);
+}
+
 }
 
 `}</style>
