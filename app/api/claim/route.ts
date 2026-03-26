@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
-const COOLDOWN = 86400; // 24h en segundos
+const COOLDOWN = 86400; // 24h
 
 export async function POST(req: Request) {
   try {
@@ -15,16 +15,16 @@ export async function POST(req: Request) {
       });
     }
 
-    // 🔍 buscar usuario
+    const now = new Date();
+
+    // buscar usuario
     const { data: existing } = await supabase
       .from("claims")
       .select("*")
       .eq("nullifier", nullifier)
       .maybeSingle();
 
-    const now = new Date();
-
-    // usuario ya existe
+    // usuario existente
     if (existing) {
 
       const lastClaim = existing.last_claim
@@ -37,19 +37,23 @@ export async function POST(req: Request) {
 
       // cooldown activo
       if (diff < COOLDOWN) {
+
         return NextResponse.json({
           success: false,
           message: "Debes esperar",
-          remaining: COOLDOWN - diff
+          remaining: COOLDOWN - diff,
+          balance: existing.balance ?? 0
         });
+
       }
 
-      // ✅ actualizar claim
+      const newBalance = (existing.balance ?? 0) + 5;
+
       const { error: updateError } = await supabase
         .from("claims")
         .update({
           last_claim: now,
-          balance: (existing.balance || 0) + 5
+          balance: newBalance
         })
         .eq("nullifier", nullifier);
 
@@ -65,15 +69,15 @@ export async function POST(req: Request) {
       }
 
       return NextResponse.json({
-  success: true,
-  message: "Claim exitoso",
-  balance: (existing.balance || 0) + 5,
-  remaining: COOLDOWN
-});
+        success: true,
+        message: "Claim exitoso",
+        balance: newBalance,
+        remaining: COOLDOWN
+      });
 
     }
 
-    // 🆕 primer claim
+    // primer claim
     const { error: insertError } = await supabase
       .from("claims")
       .insert([
@@ -96,11 +100,11 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({
-  success: true,
-  message: "Claim exitoso",
-  balance: 5,
-  remaining: COOLDOWN
-});
+      success: true,
+      message: "Claim exitoso",
+      balance: 5,
+      remaining: COOLDOWN
+    });
 
   } catch (err) {
 
@@ -149,7 +153,9 @@ export async function GET(req: Request) {
     );
 
     const remaining =
-      diff >= COOLDOWN ? 0 : COOLDOWN - diff;
+      diff >= COOLDOWN
+        ? 0
+        : COOLDOWN - diff;
 
     return NextResponse.json({
       success: true,
