@@ -147,8 +147,15 @@ return(
 
 <>
 
-<CoinRain active={rain}/>
-<CapyBackground/>
+<video
+autoPlay
+loop
+muted
+playsInline
+className="video-bg"
+>
+<source src="/capy-bg.mp4" type="video/mp4" />
+</video>
 
 <main style={styles.container}>
 
@@ -306,9 +313,18 @@ transform: rotateY(180deg);
 100% {
 transform: rotateY(360deg);
 }
-
+/* VIDEO BACKGROUND */
 }
-
+.video-bg{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+z-index:-1;
+opacity:0.35;
+}
 `}</style>
 
 </main>
@@ -323,7 +339,7 @@ const styles:any = {
 
 container:{
 minHeight:"100vh",
-background:"transparent",
+background:"rgba(0,0,0,0.35)",
 display:"flex",
 flexDirection:"column",
 alignItems:"center",
@@ -422,5 +438,6 @@ textDecoration:"none",
 fontWeight:"bold",
 color:"#000"
 }
+
 
 }
