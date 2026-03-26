@@ -10,6 +10,7 @@ const [tab, setTab] = useState("claim");
 const [remaining, setRemaining] = useState<number>(0);
 const [balance, setBalance] = useState<number>(0);
 const [status, setStatus] = useState("Verificar para reclamar");
+const [claiming, setClaiming] = useState(false);
 
 useEffect(() => {
 
@@ -70,6 +71,10 @@ const formatTime = (t:number)=>{
 
 const verifyAndClaim = async ()=>{
 
+  if(claiming || remaining > 0) return;
+
+  setClaiming(true);
+
   try{
 
     setStatus("Verificando identidad...");
@@ -112,9 +117,7 @@ const verifyAndClaim = async ()=>{
     }else{
 
       if(data.remaining){
-
         setRemaining(data.remaining);
-
       }
 
       setStatus(data.message);
@@ -127,17 +130,17 @@ const verifyAndClaim = async ()=>{
 
   }
 
+  setClaiming(false);
+
 }
 
 return(
 
 <main style={styles.container}>
+
 <div style={styles.balance}>
-
 🪙 {balance} CAPYCOIN
-
 </div>
-{/* HEADER */}
 
 <div style={styles.header}>
 
@@ -172,7 +175,6 @@ Acerca de
 {tab === "claim" && (
 
 <>
-{/* LOGO */}
 
 <div style={styles.logoBox}>
 
@@ -185,13 +187,9 @@ height={260}
 
 </div>
 
-{/* TIMER */}
-
 <h1 style={styles.timer}>
 {formatTime(remaining)}
 </h1>
-
-{/* MENSAJE */}
 
 <p style={styles.message}>
 
@@ -201,13 +199,15 @@ height={260}
 
 </p>
 
-{/* BOTON */}
-
 <button
-style={styles.button}
+style={{
+...styles.button,
+opacity: remaining > 0 || claiming ? 0.6 : 1
+}}
 onClick={verifyAndClaim}
+disabled={remaining > 0 || claiming}
 >
-Verificar para Reclamar
+{claiming ? "Procesando..." : "Verificar para Reclamar"}
 </button>
 
 </>
@@ -235,17 +235,11 @@ Tokenomics
 </h2>
 
 <ul style={styles.tokenomics}>
-
 <li>Supply Total: 100,000,000 Capycoin</li>
-
 <li>Airdrop Comunidad: 30%</li>
-
 <li>Liquidez: 30%</li>
-
 <li>Marketing: 25%</li>
-
 <li>Equipo: 15%</li>
-
 </ul>
 
 <h2 style={styles.aboutTitle}>
@@ -260,7 +254,6 @@ por usuarios verificados usando World ID.
 </div>
 
 )}
-{/* REDES */}
 
 <div style={styles.socials}>
 

@@ -24,7 +24,7 @@ export async function POST(req: Request) {
       .eq("nullifier", nullifier)
       .maybeSingle();
 
-    // usuario existente
+    // usuario ya existe
     if (existing) {
 
       const lastClaim = existing.last_claim
@@ -49,21 +49,24 @@ export async function POST(req: Request) {
 
       const newBalance = (existing.balance ?? 0) + 5;
 
-      const { error: updateError } = await supabase
+      // 🔒 UPDATE SEGURO (evita multi reclamo)
+      const { data: updated, error: updateError } = await supabase
         .from("claims")
         .update({
           last_claim: now,
           balance: newBalance
         })
-        .eq("nullifier", nullifier);
+        .eq("nullifier", nullifier)
+        .eq("last_claim", existing.last_claim) // clave anti doble reclamo
+        .select()
+        .maybeSingle();
 
-      if (updateError) {
-
-        console.error(updateError);
+      if (updateError || !updated) {
 
         return NextResponse.json({
           success: false,
-          message: "Error al actualizar"
+          message: "Reclamo ya procesado",
+          balance: existing.balance ?? 0
         });
 
       }
@@ -77,7 +80,7 @@ export async function POST(req: Request) {
 
     }
 
-    // primer claim
+    // 🆕 primer claim
     const { error: insertError } = await supabase
       .from("claims")
       .insert([
@@ -135,7 +138,6 @@ export async function GET(req: Request) {
       .eq("nullifier", nullifier)
       .maybeSingle();
 
-    // usuario nuevo
     if (!data) {
 
       return NextResponse.json({
