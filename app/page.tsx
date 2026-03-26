@@ -29,7 +29,7 @@ const loadUser = async (nullifier:string)=>{
   const res = await fetch(`/api/claim?nullifier=${nullifier}`);
   const data = await res.json();
 
-  if(data.remaining){
+  if(data.remaining !== undefined){
     setRemaining(data.remaining);
   }
 
@@ -85,11 +85,19 @@ const verifyAndClaim = async ()=>{
 
     let nullifier = "";
 
-    if("nullifier_hash" in res.finalPayload){
+    // 🔑 detectar nullifier correctamente
+    if (res?.finalPayload?.nullifier_hash) {
       nullifier = res.finalPayload.nullifier_hash;
-    }else if("proofs" in res.finalPayload){
-      const proofs = res.finalPayload.proofs as any[];
-      nullifier = proofs[0]?.nullifier_hash;
+    }
+
+    if (!nullifier && res?.finalPayload?.proofs?.length) {
+      nullifier = res.finalPayload.proofs[0].nullifier_hash;
+    }
+
+    if (!nullifier) {
+      setStatus("Error obteniendo identidad");
+      setClaiming(false);
+      return;
     }
 
     localStorage.setItem("capyNullifier",nullifier);
@@ -124,8 +132,9 @@ const verifyAndClaim = async ()=>{
 
     }
 
-  }catch{
+  }catch(err){
 
+    console.error(err);
     setStatus("Error verificando");
 
   }
@@ -235,11 +244,13 @@ Tokenomics
 </h2>
 
 <ul style={styles.tokenomics}>
+
 <li>Supply Total: 100,000,000 Capycoin</li>
 <li>Airdrop Comunidad: 30%</li>
 <li>Liquidez: 30%</li>
 <li>Marketing: 25%</li>
 <li>Equipo: 15%</li>
+
 </ul>
 
 <h2 style={styles.aboutTitle}>
@@ -257,19 +268,11 @@ por usuarios verificados usando World ID.
 
 <div style={styles.socials}>
 
-<a
-href="https://x.com"
-target="_blank"
-style={styles.social}
->
+<a href="https://x.com" target="_blank" style={styles.social}>
 𝕏
 </a>
 
-<a
-href="https://t.me"
-target="_blank"
-style={styles.social}
->
+<a href="https://t.me" target="_blank" style={styles.social}>
 Telegram
 </a>
 
@@ -385,4 +388,4 @@ fontWeight:"bold",
 color:"#000"
 }
 
-}
+};
