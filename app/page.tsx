@@ -1,5 +1,7 @@
 "use client";
 
+import CapyBackground from "@/components/CapyBackground";
+import CoinRain from "@/components/CoinRain";
 import { useEffect, useState } from "react";
 import { MiniKit } from "@worldcoin/minikit-js";
 import Image from "next/image";
@@ -12,6 +14,7 @@ const [balance, setBalance] = useState<number>(0);
 const [status, setStatus] = useState("Verificar para reclamar");
 const [claiming, setClaiming] = useState(false);
 
+const [rain,setRain] = useState(false);
 useEffect(() => {
 
   MiniKit.install();
@@ -106,13 +109,19 @@ const verifyAndClaim = async ()=>{
 
     if(data.success){
 
-      setStatus("🎉 Has reclamado Capycoin!");
+setStatus("🎉 Has reclamado Capycoin!");
 
-      setBalance(data.balance);
+setRain(true);
 
-      if(data.remaining){
-        setRemaining(data.remaining);
-      }
+setTimeout(()=>{
+setRain(false);
+},3000);
+
+setBalance(data.balance);
+
+if(data.remaining){
+setRemaining(data.remaining);
+}
 
     }else{
 
@@ -135,6 +144,11 @@ const verifyAndClaim = async ()=>{
 }
 
 return(
+
+<>
+
+<CoinRain active={rain}/>
+<CapyBackground/>
 
 <main style={styles.container}>
 
@@ -285,6 +299,8 @@ to {transform: rotate(360deg);}
 
 </main>
 
+</>
+
 )
 
 }
@@ -293,7 +309,7 @@ const styles:any = {
 
 container:{
 minHeight:"100vh",
-background:"linear-gradient(180deg,#34d399,#10b981)",
+background:"transparent",
 display:"flex",
 flexDirection:"column",
 alignItems:"center",
