@@ -77,7 +77,7 @@ const verifyAndClaim = async ()=>{
 
   try{
 
-    setStatus("Verificando identidad...");
+    setStatus("🔍 Verificando identidad...");
 
     const res = await MiniKit.commandsAsync.verify({
       action:"claimcapycoin"
@@ -106,7 +106,7 @@ const verifyAndClaim = async ()=>{
 
     if(data.success){
 
-      setStatus("Claim exitoso");
+      setStatus("🎉 Has reclamado Capycoin!");
 
       setBalance(data.balance);
 
@@ -120,13 +120,13 @@ const verifyAndClaim = async ()=>{
         setRemaining(data.remaining);
       }
 
-      setStatus(data.message);
+      setStatus("⛔ Debes esperar para reclamar nuevamente");
 
     }
 
   }catch{
 
-    setStatus("Error verificando");
+    setStatus("❌ Error verificando");
 
   }
 
@@ -139,7 +139,7 @@ return(
 <main style={styles.container}>
 
 <div style={styles.balance}>
-🪙 {balance} CAPYCOIN
+🪙 {balance} CAPY
 </div>
 
 <div style={styles.header}>
@@ -183,6 +183,7 @@ src="/capycoin.png"
 alt="Capycoin"
 width={260}
 height={260}
+style={{animation:"spin 8s linear infinite"}}
 />
 
 </div>
@@ -194,8 +195,8 @@ height={260}
 <p style={styles.message}>
 
 {remaining === 0
-? "¡Tu Capycoin esta listo para Reclamar!"
-: "Tu próximo Capycoin estará disponible pronto"}
+? "🟢 Disponible ahora"
+: "🔒 Bloqueado por cooldown"}
 
 </p>
 
@@ -207,7 +208,11 @@ opacity: remaining > 0 || claiming ? 0.6 : 1
 onClick={verifyAndClaim}
 disabled={remaining > 0 || claiming}
 >
-{claiming ? "Procesando..." : "Verificar para Reclamar"}
+{claiming
+? "Procesando..."
+: remaining > 0
+? "Espera..."
+: "Reclamar Capycoin"}
 </button>
 
 </>
@@ -257,23 +262,24 @@ por usuarios verificados usando World ID.
 
 <div style={styles.socials}>
 
-<a
-href="https://x.com"
-target="_blank"
-style={styles.social}
->
+<a href="https://x.com" target="_blank" style={styles.social}>
 𝕏
 </a>
 
-<a
-href="https://t.me"
-target="_blank"
-style={styles.social}
->
+<a href="https://t.me" target="_blank" style={styles.social}>
 Telegram
 </a>
 
 </div>
+
+<style jsx global>{`
+
+@keyframes spin {
+from {transform: rotate(0deg);}
+to {transform: rotate(360deg);}
+}
+
+`}</style>
 
 </main>
 
