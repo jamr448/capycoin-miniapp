@@ -139,7 +139,7 @@ return(
 <main style={styles.container}>
 
 <div style={styles.balance}>
-🪙 {balance} CAPY
+🪙 {balance} CAPYCOIN
 </div>
 
 <div style={styles.header}>
@@ -195,8 +195,8 @@ style={{animation:"spin 8s linear infinite"}}
 <p style={styles.message}>
 
 {remaining === 0
-? "🟢 Disponible ahora"
-: "🔒 Bloqueado por cooldown"}
+? "🟢 ¡Tus capycoin estan listo para reclamar!"
+: "🔒 Bloqueado hasta tu proximo reclamo"}
 
 </p>
 
@@ -241,9 +241,10 @@ Tokenomics
 
 <ul style={styles.tokenomics}>
 <li>Supply Total: 100,000,000 Capycoin</li>
-<li>Airdrop Comunidad: 30%</li>
-<li>Liquidez: 30%</li>
+<li>Airdrop Comunidad: 15%</li>
+<li>Liquidez: 40%</li>
 <li>Marketing: 25%</li>
+<li>Token Burn: 5%</li>
 <li>Equipo: 15%</li>
 </ul>
 
@@ -254,6 +255,7 @@ Red
 <p style={styles.aboutText}>
 Capycoin vive en WorldChain y puede ser reclamado
 por usuarios verificados usando World ID.
+11.100 Holders y contando!
 </p>
 
 </div>
@@ -262,11 +264,11 @@ por usuarios verificados usando World ID.
 
 <div style={styles.socials}>
 
-<a href="https://x.com" target="_blank" style={styles.social}>
+<a href="https://x.com/Capycoin_cpcoin" target="_blank" style={styles.social}>
 𝕏
 </a>
 
-<a href="https://t.me" target="_blank" style={styles.social}>
+<a href="https://t.me/+LEokjKFRaDFkNzEx" target="_blank" style={styles.social}>
 Telegram
 </a>
 
