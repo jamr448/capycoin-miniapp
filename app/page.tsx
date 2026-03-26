@@ -197,7 +197,10 @@ src="/capycoin.png"
 alt="Capycoin"
 width={260}
 height={260}
-style={{animation:"spin 8s linear infinite"}}
+style={{
+animation:"coinSpin 4s linear infinite",
+transformStyle:"preserve-3d"
+}}
 />
 
 </div>
