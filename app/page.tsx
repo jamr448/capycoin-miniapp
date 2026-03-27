@@ -11,6 +11,7 @@ const [remaining, setRemaining] = useState<number>(0);
 const [balance, setBalance] = useState<number>(0);
 const [claiming, setClaiming] = useState(false);
 const [rain,setRain] = useState(false);
+const [username,setUsername] = useState("Verified Human");
 
 useEffect(() => {
 
@@ -71,6 +72,8 @@ const res = await MiniKit.commandsAsync.verify({
 action:"claimcapycoin"
 });
 
+setUsername("Verified Human");
+
 let nullifier = "";
 
 if("nullifier_hash" in res.finalPayload){
@@ -124,8 +127,16 @@ return(
 
 <main style={styles.container}>
 
+<div style={styles.topBar}>
+
+<div style={styles.user}>
+👤 {username}
+</div>
+
 <div style={styles.balance}>
 🪙 {balance} CAPYCOIN
+</div>
+
 </div>
 
 <div style={styles.tabs}>
@@ -296,6 +307,21 @@ opacity:0.35;
 }
 
 const styles:any = {
+
+topBar:{
+width:"100%",
+display:"flex",
+justifyContent:"space-between",
+alignItems:"center"
+},
+
+user:{
+background:"#ffffff",
+padding:"8px 15px",
+borderRadius:"20px",
+fontWeight:"bold",
+boxShadow:"0 3px 8px rgba(0,0,0,0.15)"
+},
 
 container:{
 minHeight:"100vh",
