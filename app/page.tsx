@@ -130,15 +130,18 @@ return(
 <div style={styles.topCards}>
 
 <div style={styles.infoCard}>
-👤 Verified Human
+<span style={styles.icon}>👤</span>
+<span>Verified Human</span>
 </div>
 
 <div style={styles.infoCard}>
-🪙 {balance} CAPYCOIN
+<span style={styles.icon}>🪙</span>
+<span>{balance} CAPYCOIN</span>
 </div>
 
 <div style={styles.infoCard}>
-🟢 Verified with World ID
+<img src="/verified.png" style={styles.verifiedIcon}/>
+<span>Verified with World ID</span>
 </div>
 
 </div>
@@ -351,6 +354,38 @@ fontWeight:"bold",
 boxShadow:"0 3px 8px rgba(0,0,0,0.15)"
 },
 
+topCards:{
+display:"flex",
+justifyContent:"space-between",
+gap:"10px",
+width:"100%",
+marginTop:"10px"
+},
+
+infoCard:{
+flex:1,
+background:"#ffffff",
+borderRadius:"30px",
+padding:"12px 10px",
+display:"flex",
+alignItems:"center",
+justifyContent:"center",
+gap:"6px",
+fontWeight:"bold",
+color:"#065f46",
+boxShadow:"0 4px 10px rgba(0,0,0,0.15)",
+fontSize:"13px",
+textAlign:"center"
+},
+
+icon:{
+fontSize:"18px"
+},
+
+verifiedIcon:{
+width:"18px",
+height:"18px"
+},
 container:{
 minHeight:"100vh",
 background:"rgba(0,0,0,0.35)",
@@ -374,13 +409,6 @@ padding:"10px 20px",
 borderRadius:"20px",
 border:"none",
 background:"#fff",
-fontWeight:"bold"
-},
-
-balance:{
-background:"#fff",
-padding:"8px 15px",
-borderRadius:"20px",
 fontWeight:"bold"
 },
 
