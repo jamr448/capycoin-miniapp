@@ -127,17 +127,17 @@ return(
 
 <main style={styles.container}>
 
-<div style={styles.topBar}>
+<div style={styles.topCards}>
 
-<div style={styles.user}>
-👤 {username}
+<div style={styles.infoCard}>
+👤 Verified Human
 </div>
 
-<div style={styles.balance}>
+<div style={styles.infoCard}>
 🪙 {balance} CAPYCOIN
 </div>
 
-<div style={styles.worldVerified}>
+<div style={styles.infoCard}>
 🟢 Verified with World ID
 </div>
 
@@ -251,11 +251,13 @@ del mundo cripto.
 <p style={styles.aboutText}>
 Capycoin vive en WorldChain y puede ser reclamado
 por usuarios verificados usando World ID.
-11.100 Holders y contando!
-</p>
-</div>
+
 Capycoin utiliza World ID para verificar que cada usuario
 es único y humano. No recopilamos información personal.
+
+12.000 Holders y contando!
+</p>
+</div>
 
 <a
 href="https://worldcoin.org/mini-app?app_id=app_e5ba7c3061400e361f98ce44d8b1b9c4&app_mode=mini-app"
