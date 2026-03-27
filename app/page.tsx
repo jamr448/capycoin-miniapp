@@ -137,6 +137,10 @@ return(
 🪙 {balance} CAPYCOIN
 </div>
 
+<div style={styles.worldVerified}>
+🟢 Verified with World ID
+</div>
+
 </div>
 
 <div style={styles.tabs}>
@@ -189,9 +193,11 @@ transformStyle:"preserve-3d"
 </h1>
 
 <p style={styles.message}>
+
 {remaining === 0
-? "🟢 ¡Tus Capycoin están listos para reclamar!"
-: "🔒 Bloqueado hasta tu próximo reclamo"}
+? "🟢 Tu Capycoin está listo para reclamar"
+: "⏳ Tu próximo Capycoin estará disponible pronto"}
+
 </p>
 
 <button
@@ -206,7 +212,7 @@ disabled={remaining > 0 || claiming}
 ? "Procesando..."
 : remaining > 0
 ? "Espera..."
-: "Reclamar Capycoin"}
+: "Verificar y Reclamar Capycoin"}
 </button>
 
 </>
@@ -248,6 +254,8 @@ por usuarios verificados usando World ID.
 11.100 Holders y contando!
 </p>
 </div>
+Capycoin utiliza World ID para verificar que cada usuario
+es único y humano. No recopilamos información personal.
 
 <a
 href="https://worldcoin.org/mini-app?app_id=app_e5ba7c3061400e361f98ce44d8b1b9c4&app_mode=mini-app"
@@ -307,6 +315,24 @@ opacity:0.35;
 }
 
 const styles:any = {
+
+privacy:{
+marginTop:"20px",
+fontSize:"14px",
+opacity:0.8,
+lineHeight:"1.5"
+},
+
+worldVerified:{
+marginTop:"5px",
+fontSize:"14px",
+background:"rgba(255,255,255,0.9)",
+padding:"5px 12px",
+borderRadius:"20px",
+fontWeight:"bold",
+color:"#065f46",
+boxShadow:"0 2px 6px rgba(0,0,0,0.15)"
+},
 
 topBar:{
 width:"100%",
