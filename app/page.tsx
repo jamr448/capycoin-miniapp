@@ -303,12 +303,32 @@ Intercambiar Capycoin
 
 <div style={styles.socials}>
 
-<a href="https://x.com/Capycoin_cpcoin" target="_blank" style={styles.social}>
-𝕏
+<a
+href="https://x.com/Capycoin_cpcoin"
+target="_blank"
+style={styles.socialButton}
+>
+
+<img
+src="/x.png"
+alt="Twitter X"
+style={styles.socialIcon}
+/>
+
 </a>
 
-<a href="https://t.me/+LEokjKFRaDFkNzEx" target="_blank" style={styles.social}>
-Telegram
+<a
+href="https://t.me/+LEokjKFRaDFkNzEx"
+target="_blank"
+style={styles.socialButton}
+>
+
+<img
+src="/telegram.png"
+alt="Telegram"
+style={styles.socialIcon}
+/>
+
 </a>
 
 </div>
@@ -448,10 +468,20 @@ textAlign:"left",
 fontSize:"16px"
 },
 
-social:{
-textDecoration:"none",
-fontWeight:"bold",
-color:"#000"
+socialButton:{
+width:"50px",
+height:"50px",
+background:"#ffffff",
+borderRadius:"50%",
+display:"flex",
+alignItems:"center",
+justifyContent:"center",
+boxShadow:"0 4px 10px rgba(0,0,0,0.2)"
+},
+
+socialIcon:{
+width:"24px",
+height:"24px"
 },
 
 swapButton:{
