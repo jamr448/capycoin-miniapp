@@ -282,6 +282,21 @@ por usuarios verificados usando World ID.
 11.100 Holders y contando!
 </p>
 
+<a
+href="https://worldcoin.org/mini-app?app_id=app_e5ba7c3061400e361f98ce44d8b1b9c4&app_mode=mini-app"
+target="_blank"
+style={styles.swapButton}
+>
+
+<img
+src="/puff.png"
+alt="Puff"
+style={styles.swapLogo}
+/>
+
+Intercambiar Capycoin
+
+</a>
 </div>
 
 )}
@@ -437,7 +452,25 @@ social:{
 textDecoration:"none",
 fontWeight:"bold",
 color:"#000"
-}
+},
 
+swapButton:{
+marginTop:"30px",
+background:"#ffffff",
+padding:"14px 20px",
+borderRadius:"30px",
+display:"flex",
+alignItems:"center",
+justifyContent:"center",
+gap:"10px",
+fontWeight:"bold",
+textDecoration:"none",
+color:"#000",
+boxShadow:"0 4px 10px rgba(0,0,0,0.15)"
+},
 
+swapLogo:{
+width:"24px",
+height:"24px"
+},
 }
