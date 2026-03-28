@@ -103,11 +103,11 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({
-      success: true,
-      message: "Claim exitoso",
-      balance: 5,
-      remaining: COOLDOWN
-    });
+success: true,
+message: "Claim exitoso",
+balance: 5,
+remaining: COOLDOWN
+});
 
   } catch (err) {
 
@@ -154,10 +154,7 @@ export async function GET(req: Request) {
       (Date.now() - lastClaim) / 1000
     );
 
-    const remaining =
-      diff >= COOLDOWN
-        ? 0
-        : COOLDOWN - diff;
+    const remaining = diff >= COOLDOWN ? 0 : COOLDOWN - diff;
 
     return NextResponse.json({
       success: true,
