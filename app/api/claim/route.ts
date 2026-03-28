@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
-const COOLDOWN = 60; // 60 segundos
+const COOLDOWN = 60; // prueba
 const REWARD = 5;
 
 export async function POST(req: Request) {
@@ -11,36 +11,30 @@ export async function POST(req: Request) {
     const { nullifier } = await req.json();
 
     if (!nullifier) {
-
       return NextResponse.json({
-        success:false,
-        message:"Missing nullifier"
+        success: false,
+        message: "Missing nullifier"
       });
-
     }
 
     const now = Date.now();
 
-    // buscar usuario
     const { data: user, error } = await supabase
       .from("claims")
       .select("*")
       .eq("nullifier", nullifier)
       .maybeSingle();
 
-    if(error){
-
+    if (error) {
       console.error(error);
-
       return NextResponse.json({
-        success:false,
-        message:"Database error"
+        success: false,
+        message: "Database error"
       });
-
     }
 
-    // usuario nuevo
-    if(!user){
+    // 🆕 usuario nuevo
+    if (!user) {
 
       const nowISO = new Date().toISOString();
 
@@ -52,85 +46,75 @@ export async function POST(req: Request) {
           balance: REWARD
         }]);
 
-      if(insertError){
-
+      if (insertError) {
         console.error(insertError);
-
         return NextResponse.json({
-          success:false,
-          message:"Insert error"
+          success: false,
+          message: "Insert error"
         });
-
       }
 
       return NextResponse.json({
-        success:true,
-        balance:REWARD,
-        remaining:COOLDOWN
+        success: true,
+        balance: REWARD,
+        remaining: COOLDOWN
       });
-
     }
 
-    // calcular cooldown
+    // ⏱️ cooldown
     const lastClaim = new Date(user.last_claim).getTime();
-
     const diff = Math.floor((now - lastClaim) / 1000);
 
-    if(diff < COOLDOWN){
-
+    if (diff < COOLDOWN) {
       return NextResponse.json({
-        success:false,
-        message:"Cooldown active",
-        remaining:COOLDOWN - diff,
-        balance:user.balance ?? 0
+        success: false,
+        message: "Cooldown active",
+        remaining: COOLDOWN - diff,
+        balance: user.balance ?? 0
       });
-
     }
 
-    const newBalance = (user.balance ?? 0) + REWARD;
     const nowISO = new Date().toISOString();
 
-    // 🔒 UPDATE ATÓMICO
+    // ✅ UPDATE ÚNICO Y LIMPIO
     const { data: updated, error: updateError } = await supabase
       .from("claims")
       .update({
         last_claim: nowISO,
-        balance: newBalance
+        balance: (user.balance ?? 0) + REWARD
       })
       .eq("nullifier", nullifier)
       .select()
       .maybeSingle();
 
-    if(updateError || !updated){
-
+    if (updateError || !updated) {
       console.error(updateError);
-
       return NextResponse.json({
-        success:false,
-        message:"Claim failed"
+        success: false,
+        message: "Update failed"
       });
-
     }
 
     return NextResponse.json({
-      success:true,
-      balance:newBalance,
-      remaining:COOLDOWN
+      success: true,
+      balance: updated.balance,
+      remaining: COOLDOWN
     });
 
-  } catch(err){
+  } catch (err) {
 
     console.error(err);
 
     return NextResponse.json({
-      success:false,
-      message:"Server error"
+      success: false,
+      message: "Server error"
     });
 
   }
-
 }
 
+
+// ✅ GET separado correctamente
 export async function GET(req: Request) {
 
   try {
@@ -138,12 +122,8 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const nullifier = searchParams.get("nullifier");
 
-    if(!nullifier){
-
-      return NextResponse.json({
-        success:false
-      });
-
+    if (!nullifier) {
+      return NextResponse.json({ success: false });
     }
 
     const { data } = await supabase
@@ -152,14 +132,12 @@ export async function GET(req: Request) {
       .eq("nullifier", nullifier)
       .maybeSingle();
 
-    if(!data){
-
+    if (!data) {
       return NextResponse.json({
-        success:true,
-        remaining:0,
-        balance:0
+        success: true,
+        remaining: 0,
+        balance: 0
       });
-
     }
 
     const now = Date.now();
@@ -173,19 +151,18 @@ export async function GET(req: Request) {
         : COOLDOWN - diff;
 
     return NextResponse.json({
-      success:true,
+      success: true,
       remaining,
-      balance:data.balance ?? 0
+      balance: data.balance ?? 0
     });
 
-  } catch(err){
+  } catch (err) {
 
     console.error(err);
 
     return NextResponse.json({
-      success:false
+      success: false
     });
 
   }
-
 }
