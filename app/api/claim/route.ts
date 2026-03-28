@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
-const COOLDOWN = 86400; // 24h
+const COOLDOWN = 60; // 24h
 
 export async function POST(req: Request) {
   try {
