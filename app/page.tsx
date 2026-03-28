@@ -276,10 +276,8 @@ del mundo cripto.
 <p style={styles.aboutText}>
 Capycoin vive en WorldChain y puede ser reclamado
 por usuarios verificados usando World ID.
-
 Capycoin utiliza World ID para verificar que cada usuario
 es único y humano. No recopilamos información personal.
-
 12.000 Holders y contando!
 </p>
 </div>
