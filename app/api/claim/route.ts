@@ -16,7 +16,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const now = new Date();
+    const now = new Date().toISOString();
 
     const { data: existing } = await supabase
       .from("claims")
@@ -50,11 +50,11 @@ export async function POST(req: Request) {
       const { data: updated, error } = await supabase
         .from("claims")
         .update({
-          last_claim: now,
-          balance: newBalance
+        last_claim: now,
+        balance: newBalance
         })
         .eq("nullifier", nullifier)
-        .lte("last_claim", existing.last_claim)
+       
         .select()
         .maybeSingle();
 
