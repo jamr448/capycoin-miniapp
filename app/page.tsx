@@ -28,7 +28,7 @@ const loadUser = async (nullifier:string)=>{
 const res = await fetch(`/api/claim?nullifier=${nullifier}`);
 const data = await res.json();
 
-if(data.remaining) setRemaining(data.remaining);
+if(data.remaining !== undefined) setRemaining(data.remaining);
 if(data.balance !== undefined) setBalance(data.balance);
 
 }
@@ -72,15 +72,31 @@ const res = await MiniKit.commandsAsync.verify({
 action:"claimcapycoin"
 });
 
-setUsername("Verified Human");
+if(!res || !res.finalPayload){
+setClaiming(false);
+return;
+}
 
 let nullifier = "";
 
 if("nullifier_hash" in res.finalPayload){
+
 nullifier = res.finalPayload.nullifier_hash;
+
 }else if("proofs" in res.finalPayload){
+
 const proofs = res.finalPayload.proofs as any[];
-nullifier = proofs[0]?.nullifier_hash;
+
+if(proofs && proofs.length > 0){
+nullifier = proofs[0].nullifier_hash;
+}
+
+}
+
+if(!nullifier){
+console.log("No nullifier received");
+setClaiming(false);
+return;
 }
 
 localStorage.setItem("capyNullifier",nullifier);
@@ -95,6 +111,8 @@ body:JSON.stringify({nullifier})
 
 const data = await response.json();
 
+console.log("claim response",data);
+
 if(data.success){
 
 setRain(true);
@@ -103,21 +121,25 @@ setTimeout(()=>{
 setRain(false);
 },3000);
 
-setBalance(data.balance);
+setBalance(data.balance ?? balance);
 
-if(data.remaining){
+if(data.remaining !== undefined){
 setRemaining(data.remaining);
 }
 
 }
 
-}catch{}
+}catch(err){
+
+console.log("claim error",err);
+
+}
 
 setClaiming(false);
 
 }
 
-return(
+return (
 
 <>
 
@@ -315,8 +337,7 @@ opacity:0.35;
 
 </>
 
-)
-
+);
 }
 
 const styles:any = {
