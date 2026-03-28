@@ -6,24 +6,30 @@ import Image from "next/image";
 
 export default function Home() {
 
-const [tab, setTab] = useState("claim");
-const [remaining, setRemaining] = useState<number>(0);
-const [balance, setBalance] = useState<number>(0);
-const [claiming, setClaiming] = useState(false);
-const [rain,setRain] = useState(false);
-const [username,setUsername] = useState("Verified Human");
+const [tab,setTab] = useState("claim");
+const [remaining,setRemaining] = useState<number>(0);
+const [balance,setBalance] = useState<number>(0);
+const [verified,setVerified] = useState(false);
+const [claiming,setClaiming] = useState(false);
 
-useEffect(() => {
+useEffect(()=>{
 
 MiniKit.install();
 
 const nullifier = localStorage.getItem("capyNullifier");
 
-if (nullifier) loadUser(nullifier);
+if(nullifier){
 
-}, []);
+setVerified(true);
+loadUser(nullifier);
+
+}
+
+},[]);
 
 const loadUser = async (nullifier:string)=>{
+
+try{
 
 const res = await fetch(`/api/claim?nullifier=${nullifier}`);
 const data = await res.json();
@@ -31,20 +37,26 @@ const data = await res.json();
 if(data.remaining !== undefined) setRemaining(data.remaining);
 if(data.balance !== undefined) setBalance(data.balance);
 
+}catch(err){
+
+console.log("load user error",err);
+
 }
+
+};
 
 useEffect(()=>{
 
 const interval = setInterval(()=>{
 
-setRemaining((prev)=>{
+setRemaining(prev=>{
 if(prev <= 0) return 0;
 return prev - 1;
 });
 
 },1000);
 
-return ()=> clearInterval(interval);
+return ()=>clearInterval(interval);
 
 },[]);
 
@@ -58,13 +70,9 @@ return `${h.toString().padStart(2,"0")}:${m
 .toString()
 .padStart(2,"0")}:${s.toString().padStart(2,"0")}`;
 
-}
+};
 
-const verifyAndClaim = async ()=>{
-
-if(claiming || remaining > 0) return;
-
-setClaiming(true);
+const verifyUser = async ()=>{
 
 try{
 
@@ -72,10 +80,7 @@ const res = await MiniKit.commandsAsync.verify({
 action:"claimcapycoin"
 });
 
-if(!res || !res.finalPayload){
-setClaiming(false);
-return;
-}
+if(!res?.finalPayload) return;
 
 let nullifier = "";
 
@@ -87,21 +92,41 @@ nullifier = res.finalPayload.nullifier_hash;
 
 const proofs = res.finalPayload.proofs as any[];
 
-if(proofs && proofs.length > 0){
+if(proofs?.length > 0){
 nullifier = proofs[0].nullifier_hash;
 }
 
 }
 
-if(!nullifier){
-console.log("No nullifier received");
-setClaiming(false);
-return;
-}
+if(!nullifier) return;
 
 localStorage.setItem("capyNullifier",nullifier);
 
-const response = await fetch("/api/claim",{
+setVerified(true);
+
+loadUser(nullifier);
+
+}catch(err){
+
+console.log("verify error",err);
+
+}
+
+};
+
+const claimCapycoin = async ()=>{
+
+if(claiming || remaining > 0) return;
+
+const nullifier = localStorage.getItem("capyNullifier");
+
+if(!nullifier) return;
+
+setClaiming(true);
+
+try{
+
+const res = await fetch("/api/claim",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
@@ -109,19 +134,13 @@ headers:{
 body:JSON.stringify({nullifier})
 });
 
-const data = await response.json();
+const data = await res.json();
 
 console.log("claim response",data);
 
 if(data.success){
 
-setRain(true);
-
-setTimeout(()=>{
-setRain(false);
-},3000);
-
-setBalance(data.balance ?? balance);
+setBalance(data.balance);
 
 if(data.remaining !== undefined){
 setRemaining(data.remaining);
@@ -137,14 +156,14 @@ console.log("claim error",err);
 
 setClaiming(false);
 
-}
+};
 
-return (
+return(
 
 <>
 
 <video autoPlay loop muted playsInline className="video-bg">
-<source src="/capy-bg.mp4" type="video/mp4" />
+<source src="/capy-bg.mp4" type="video/mp4"/>
 </video>
 
 <main style={styles.container}>
@@ -173,8 +192,8 @@ return (
 <button
 style={{
 ...styles.tab,
-background: tab === "claim" ? "#0ea5e9" : "#fff",
-color: tab === "claim" ? "#fff" : "#000"
+background:tab==="claim"?"#0ea5e9":"#fff",
+color:tab==="claim"?"#fff":"#000"
 }}
 onClick={()=>setTab("claim")}
 >
@@ -184,8 +203,8 @@ Reclamar
 <button
 style={{
 ...styles.tab,
-background: tab === "about" ? "#0ea5e9" : "#fff",
-color: tab === "about" ? "#fff" : "#000"
+background:tab==="about"?"#0ea5e9":"#fff",
+color:tab==="about"?"#fff":"#000"
 }}
 onClick={()=>setTab("about")}
 >
@@ -194,7 +213,7 @@ Acerca de
 
 </div>
 
-{tab === "claim" && (
+{tab==="claim" && (
 
 <>
 
@@ -219,103 +238,50 @@ transformStyle:"preserve-3d"
 
 <p style={styles.message}>
 
-{remaining === 0
+{remaining===0
 ? "🟢 Tu Capycoin está listo para reclamar"
 : "⏳ Tu próximo Capycoin estará disponible pronto"}
 
 </p>
 
+{!verified ? (
+
+<button
+style={styles.button}
+onClick={verifyUser}
+>
+Verificar identidad
+</button>
+
+):( 
+
 <button
 style={{
 ...styles.button,
-opacity: remaining > 0 || claiming ? 0.6 : 1
+opacity:remaining>0 || claiming ? 0.6 : 1
 }}
-onClick={verifyAndClaim}
-disabled={remaining > 0 || claiming}
+onClick={claimCapycoin}
+disabled={remaining>0 || claiming}
 >
 {claiming
-? "Procesando..."
-: remaining > 0
-? "Espera..."
-: "Verificar y Reclamar Capycoin"}
+?"Procesando..."
+:remaining>0
+?"Espera..."
+:"Reclamar Capycoin"}
 </button>
+
+)}
 
 </>
 
 )}
 
-{tab === "about" && (
-
-<div style={styles.aboutBox}>
-
-<div style={styles.aboutCard}>
-<h2 style={styles.aboutTitle}>¿Qué es Capycoin?</h2>
-<p style={styles.aboutText}>
-Capycoin es una memecoin comunitaria creada en WorldChain
-para recompensar a usuarios verificados con World ID.
-Nuestro objetivo es construir una comunidad divertida
-y descentralizada alrededor del capybara más famoso
-del mundo cripto.
-</p>
-</div>
-
-<div style={styles.aboutCard}>
-<h2 style={styles.aboutTitle}>Tokenomics</h2>
-<ul style={styles.tokenomics}>
-<li>Supply Total: 100,000,000 Capycoin</li>
-<li>Airdrop Comunidad: 15%</li>
-<li>Liquidez: 40%</li>
-<li>Marketing: 25%</li>
-<li>Token Burn: 5%</li>
-<li>Equipo: 15%</li>
-</ul>
-</div>
-
-<div style={styles.aboutCard}>
-<h2 style={styles.aboutTitle}>Red</h2>
-<p style={styles.aboutText}>
-Capycoin vive en WorldChain y puede ser reclamado
-por usuarios verificados usando World ID.
-Capycoin utiliza World ID para verificar que cada usuario
-es único y humano. No recopilamos información personal.
-12.000 Holders y contando!
-</p>
-</div>
-
-<a
-href="https://worldcoin.org/mini-app?app_id=app_e5ba7c3061400e361f98ce44d8b1b9c4&app_mode=mini-app"
-target="_blank"
-style={styles.swapButton}
->
-
-<img src="/puff.png" alt="Puff" style={styles.swapLogo}/>
-
-Intercambiar Capycoin
-
-</a>
-
-</div>
-
-)}
-
-<div style={styles.socials}>
-
-<a href="https://x.com/Capycoin_cpcoin" target="_blank" style={styles.socialButton}>
-<img src="/x.png" alt="Twitter X" style={styles.socialIcon}/>
-</a>
-
-<a href="https://t.me/+LEokjKFRaDFkNzEx" target="_blank" style={styles.socialButton}>
-<img src="/telegram.png" alt="Telegram" style={styles.socialIcon}/>
-</a>
-
-</div>
-
 <style jsx global>{`
 
 @keyframes coinSpin {
-0% { transform: rotateY(0deg); }
-50% { transform: rotateY(180deg); }
-100% { transform: rotateY(360deg); }
+0%{transform:rotateY(0deg);}
+50%{transform:rotateY(180deg);}
+100%{transform:rotateY(360deg);}
 }
 
 .video-bg{
@@ -336,42 +302,10 @@ opacity:0.35;
 </>
 
 );
+
 }
 
-const styles:any = {
-
-privacy:{
-marginTop:"20px",
-fontSize:"14px",
-opacity:0.8,
-lineHeight:"1.5"
-},
-
-worldVerified:{
-marginTop:"5px",
-fontSize:"14px",
-background:"rgba(255,255,255,0.9)",
-padding:"5px 12px",
-borderRadius:"20px",
-fontWeight:"bold",
-color:"#065f46",
-boxShadow:"0 2px 6px rgba(0,0,0,0.15)"
-},
-
-topBar:{
-width:"100%",
-display:"flex",
-justifyContent:"space-between",
-alignItems:"center"
-},
-
-user:{
-background:"#ffffff",
-padding:"8px 15px",
-borderRadius:"20px",
-fontWeight:"bold",
-boxShadow:"0 3px 8px rgba(0,0,0,0.15)"
-},
+const styles:any={
 
 topCards:{
 display:"flex",
@@ -397,14 +331,13 @@ fontSize:"13px",
 textAlign:"center"
 },
 
-icon:{
-fontSize:"18px"
-},
+icon:{fontSize:"18px"},
 
 verifiedIcon:{
 width:"18px",
 height:"18px"
 },
+
 container:{
 minHeight:"100vh",
 background:"rgba(0,0,0,0.35)",
@@ -427,13 +360,10 @@ tab:{
 padding:"10px 20px",
 borderRadius:"20px",
 border:"none",
-background:"#fff",
 fontWeight:"bold"
 },
 
-logoBox:{
-marginTop:"40px"
-},
+logoBox:{marginTop:"40px"},
 
 timer:{
 fontSize:"48px",
@@ -455,77 +385,6 @@ borderRadius:"40px",
 border:"none",
 fontSize:"18px",
 width:"80%"
-},
-
-socials:{
-marginTop:"30px",
-display:"flex",
-gap:"20px"
-},
-
-socialButton:{
-width:"50px",
-height:"50px",
-background:"#fff",
-borderRadius:"50%",
-display:"flex",
-alignItems:"center",
-justifyContent:"center",
-boxShadow:"0 4px 10px rgba(0,0,0,0.2)"
-},
-
-socialIcon:{
-width:"24px",
-height:"24px"
-},
-
-aboutBox:{
-marginTop:"40px",
-maxWidth:"420px"
-},
-
-aboutCard:{
-background:"rgba(255,255,255,0.85)",
-padding:"20px",
-borderRadius:"20px",
-marginTop:"20px",
-boxShadow:"0 6px 15px rgba(0,0,0,0.15)",
-backdropFilter:"blur(6px)"
-},
-
-aboutTitle:{
-fontSize:"22px"
-},
-
-aboutText:{
-marginTop:"10px",
-fontSize:"16px",
-lineHeight:"1.5"
-},
-
-tokenomics:{
-marginTop:"10px",
-textAlign:"left"
-},
-
-swapButton:{
-marginTop:"30px",
-background:"#fff",
-padding:"14px 20px",
-borderRadius:"30px",
-display:"flex",
-alignItems:"center",
-justifyContent:"center",
-gap:"10px",
-fontWeight:"bold",
-textDecoration:"none",
-color:"#000",
-boxShadow:"0 4px 10px rgba(0,0,0,0.15)"
-},
-
-swapLogo:{
-width:"24px",
-height:"24px"
 }
 
-}
+};
