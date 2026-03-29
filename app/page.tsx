@@ -12,6 +12,7 @@ const [balance,setBalance] = useState<number>(0);
 const [verified,setVerified] = useState(false);
 const [claiming,setClaiming] = useState(false);
 const [clicks,setClicks] = useState(0);
+const [loading,setLoading] = useState(true);
 
 useEffect(()=>{
 
@@ -86,6 +87,8 @@ if(data.balance !== undefined) setBalance(data.balance);
 console.log("load user error",err);
 
 }
+
+setLoading(false);
 
 };
 
@@ -241,7 +244,7 @@ transformStyle:"preserve-3d"
 </div>
 
 <h1 style={styles.timer}>
-{formatTime(remaining)}
+{loading ? "..." : formatTime(remaining)}
 </h1>
 
 <p style={styles.message}>

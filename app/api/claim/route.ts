@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
-const COOLDOWN = 60; // 60 seconds
+const COOLDOWN = 21600; // 6 horas
 const REWARD = 5;
 
 export async function POST(req: Request) {
@@ -16,11 +16,16 @@ return NextResponse.json({success:false});
 
 const now = Date.now();
 
-const { data:user } = await supabase
+const { data:user, error } = await supabase
 .from("claims")
 .select("*")
 .eq("nullifier",nullifier)
 .maybeSingle();
+
+if(error){
+console.error(error);
+return NextResponse.json({success:false});
+}
 
 if(!user){
 
@@ -57,19 +62,24 @@ balance:user.balance ?? 0
 
 const nowISO = new Date().toISOString();
 
-const { data:updated } = await supabase
+await supabase
 .from("claims")
 .update({
 last_claim:nowISO,
 balance:(user.balance ?? 0)+REWARD
 })
+.eq("nullifier",nullifier);
+
+// 🔥 obtener balance actualizado
+const { data:updated } = await supabase
+.from("claims")
+.select("balance")
 .eq("nullifier",nullifier)
-.select()
 .maybeSingle();
 
 return NextResponse.json({
 success:true,
-balance:updated?.balance ?? 0,
+balance:updated?.balance ?? user.balance + REWARD,
 remaining:COOLDOWN
 });
 
