@@ -15,6 +15,7 @@ const [clicks,setClicks] = useState(0);
 const [loading,setLoading] = useState(true);
 const [showClaiming,setShowClaiming] = useState(false);
 const [showReward,setShowReward] = useState(false);
+const [nextClaimTime,setNextClaimTime] = useState<number>(0);
 
 useEffect(()=>{
 
@@ -85,7 +86,11 @@ cache:"no-store"
 const data = await res.json();
 
 if(data.remaining !== undefined){
-setRemaining(data.remaining);
+
+const next = Date.now() + (data.remaining * 1000);
+
+setNextClaimTime(next);
+
 }
 
 if(data.balance !== undefined){
@@ -104,19 +109,19 @@ setLoading(false);
 
 useEffect(()=>{
 
-const nullifier = localStorage.getItem("capyNullifier");
+const interval = setInterval(()=>{
 
-if(!nullifier) return;
+if(nextClaimTime === 0) return;
 
-const sync = setInterval(()=>{
+const diff = Math.floor((nextClaimTime - Date.now()) / 1000);
 
-loadUser(nullifier);
+setRemaining(diff > 0 ? diff : 0);
 
-},30000);
+},1000);
 
-return ()=>clearInterval(sync);
+return ()=>clearInterval(interval);
 
-},[]);
+},[nextClaimTime]);
 
 const formatTime = (t:number)=>{
 
@@ -165,7 +170,7 @@ setShowClaiming(false);
 if(!data.success){
 
 if(data.remaining !== undefined){
-setRemaining(data.remaining);
+setNextClaimTime(Date.now() + (data.remaining * 1000));
 }
 
 setClaiming(false);
