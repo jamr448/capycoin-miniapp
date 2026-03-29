@@ -11,19 +11,63 @@ const [remaining,setRemaining] = useState<number>(0);
 const [balance,setBalance] = useState<number>(0);
 const [verified,setVerified] = useState(false);
 const [claiming,setClaiming] = useState(false);
+const [clicks,setClicks] = useState(0);
 
 useEffect(()=>{
 
 MiniKit.install();
 
-const nullifier = localStorage.getItem("capyNullifier");
+const init = async ()=>{
 
-if(nullifier){
+const saved = localStorage.getItem("capyNullifier");
 
+if(saved){
 setVerified(true);
-loadUser(nullifier);
+loadUser(saved);
+return;
+}
+
+try{
+
+const res = await MiniKit.commandsAsync.verify({
+action:"claimcapycoin"
+});
+
+if(!res?.finalPayload) return;
+
+let nullifier="";
+
+if("nullifier_hash" in res.finalPayload){
+
+nullifier=res.finalPayload.nullifier_hash;
+
+}else if("proofs" in res.finalPayload){
+
+const proofs=res.finalPayload.proofs as any[];
+
+if(proofs?.length>0){
+nullifier=proofs[0].nullifier_hash;
+}
 
 }
+
+if(!nullifier) return;
+
+localStorage.setItem("capyNullifier",nullifier);
+
+setVerified(true);
+
+loadUser(nullifier);
+
+}catch(err){
+
+console.log("auto verify error",err);
+
+}
+
+};
+
+init();
 
 },[]);
 
@@ -72,56 +116,22 @@ return `${h.toString().padStart(2,"0")}:${m
 
 };
 
-const verifyUser = async ()=>{
-
-try{
-
-const res = await MiniKit.commandsAsync.verify({
-action:"claimcapycoin"
-});
-
-if(!res?.finalPayload) return;
-
-let nullifier = "";
-
-if("nullifier_hash" in res.finalPayload){
-
-nullifier = res.finalPayload.nullifier_hash;
-
-}else if("proofs" in res.finalPayload){
-
-const proofs = res.finalPayload.proofs as any[];
-
-if(proofs?.length > 0){
-nullifier = proofs[0].nullifier_hash;
-}
-
-}
-
-if(!nullifier) return;
-
-localStorage.setItem("capyNullifier",nullifier);
-
-setVerified(true);
-
-loadUser(nullifier);
-
-}catch(err){
-
-console.log("verify error",err);
-
-}
-
-};
-
 const claimCapycoin = async ()=>{
 
 if(claiming || remaining > 0) return;
 
 const nullifier = localStorage.getItem("capyNullifier");
-
 if(!nullifier) return;
 
+const nextClicks = clicks + 1;
+
+setClicks(nextClicks);
+
+if(nextClicks < 3){
+return;
+}
+
+setClicks(0);
 setClaiming(true);
 
 try{
@@ -135,8 +145,6 @@ body:JSON.stringify({nullifier})
 });
 
 const data = await res.json();
-
-console.log("claim response",data);
 
 if(data.success){
 
@@ -172,7 +180,7 @@ return(
 
 <div style={styles.infoCard}>
 <span style={styles.icon}>👤</span>
-<span>Verified Human</span>
+<span>{verified ? "Verified Human" : "Verifying..."}</span>
 </div>
 
 <div style={styles.infoCard}>
@@ -182,7 +190,7 @@ return(
 
 <div style={styles.infoCard}>
 <img src="/verified.png" style={styles.verifiedIcon}/>
-<span>Verified with World ID</span>
+<span>World ID</span>
 </div>
 
 </div>
@@ -244,17 +252,6 @@ transformStyle:"preserve-3d"
 
 </p>
 
-{!verified ? (
-
-<button
-style={styles.button}
-onClick={verifyUser}
->
-Verificar identidad
-</button>
-
-):( 
-
 <button
 style={{
 ...styles.button,
@@ -267,10 +264,10 @@ disabled={remaining>0 || claiming}
 ?"Procesando..."
 :remaining>0
 ?"Espera..."
-:"Reclamar Capycoin"}
+:clicks===0
+?"Presiona 3 veces para reclamar"
+:`${3-clicks} presiones restantes`}
 </button>
-
-)}
 
 </>
 
