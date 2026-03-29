@@ -127,7 +127,6 @@ const nullifier = localStorage.getItem("capyNullifier");
 if(!nullifier) return;
 
 const nextClicks = clicks + 1;
-
 setClicks(nextClicks);
 
 if(nextClicks < 3){
@@ -149,14 +148,21 @@ body:JSON.stringify({nullifier})
 
 const data = await res.json();
 
-if(data.success){
-
-setBalance(data.balance);
+if(!data.success){
 
 if(data.remaining !== undefined){
 setRemaining(data.remaining);
 }
 
+setClaiming(false);
+return;
+
+}
+
+setBalance(data.balance);
+
+if(data.remaining !== undefined){
+setRemaining(data.remaining);
 }
 
 }catch(err){
