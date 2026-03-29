@@ -180,9 +180,11 @@ return;
 
 setBalance(data.balance);
 
-if(data.remaining !== undefined){
-setRemaining(data.remaining);
-}
+// iniciar contador inmediatamente
+const cooldown = data.remaining ?? 60;
+
+setNextClaimTime(Date.now() + cooldown * 1000);
+setRemaining(cooldown);
 
 setShowReward(true);
 
