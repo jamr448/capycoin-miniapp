@@ -13,6 +13,8 @@ const [verified,setVerified] = useState(false);
 const [claiming,setClaiming] = useState(false);
 const [clicks,setClicks] = useState(0);
 const [loading,setLoading] = useState(true);
+const [showClaiming,setShowClaiming] = useState(false);
+const [showReward,setShowReward] = useState(false);
 
 useEffect(()=>{
 
@@ -135,6 +137,7 @@ return;
 
 setClicks(0);
 setClaiming(true);
+setShowClaiming(true);
 
 try{
 
@@ -147,6 +150,8 @@ body:JSON.stringify({nullifier})
 });
 
 const data = await res.json();
+
+setShowClaiming(false);
 
 if(!data.success){
 
@@ -165,9 +170,17 @@ if(data.remaining !== undefined){
 setRemaining(data.remaining);
 }
 
+setShowReward(true);
+
+setTimeout(()=>{
+setShowReward(false);
+},2000);
+
 }catch(err){
 
 console.log("claim error",err);
+
+setShowClaiming(false);
 
 }
 
@@ -184,6 +197,42 @@ return(
 </video>
 
 <main style={styles.container}>
+
+{showClaiming && (
+
+<div style={styles.overlay}>
+
+<img
+src="/capycoin.png"
+style={{
+width:"120px",
+animation:"coinSpin 2s linear infinite"
+}}
+/>
+
+<h2>Reclamando Capycoin...</h2>
+
+</div>
+
+)}
+
+{showReward && (
+
+<div style={styles.overlay}>
+
+<img
+src="/capycoin.png"
+style={{
+width:"120px",
+animation:"coinSpin 2s linear infinite"
+}}
+/>
+
+<h2>Has reclamado 5 Capycoin</h2>
+
+</div>
+
+)}
 
 <div style={styles.topCards}>
 
@@ -391,6 +440,24 @@ borderRadius:"40px",
 border:"none",
 fontSize:"18px",
 width:"80%"
+},
+
+overlay:{
+position:"fixed",
+top:0,
+left:0,
+width:"100%",
+height:"100%",
+background:"rgba(0,0,0,0.7)",
+display:"flex",
+flexDirection:"column",
+alignItems:"center",
+justifyContent:"center",
+color:"#fff",
+zIndex:9999,
+textAlign:"center",
+fontSize:"22px",
+gap:"20px"
 }
 
 };
