@@ -78,11 +78,19 @@ const loadUser = async (nullifier:string)=>{
 
 try{
 
-const res = await fetch(`/api/claim?nullifier=${nullifier}`);
+const res = await fetch(`/api/claim?nullifier=${nullifier}`,{
+cache:"no-store"
+});
+
 const data = await res.json();
 
-if(data.remaining !== undefined) setRemaining(data.remaining);
-if(data.balance !== undefined) setBalance(data.balance);
+if(data.remaining !== undefined){
+setRemaining(data.remaining);
+}
+
+if(data.balance !== undefined){
+setBalance(data.balance);
+}
 
 }catch(err){
 
@@ -96,16 +104,17 @@ setLoading(false);
 
 useEffect(()=>{
 
-const interval = setInterval(()=>{
+const nullifier = localStorage.getItem("capyNullifier");
 
-setRemaining(prev=>{
-if(prev <= 0) return 0;
-return prev - 1;
-});
+if(!nullifier) return;
 
-},1000);
+const sync = setInterval(()=>{
 
-return ()=>clearInterval(interval);
+loadUser(nullifier);
+
+},30000);
+
+return ()=>clearInterval(sync);
 
 },[]);
 
