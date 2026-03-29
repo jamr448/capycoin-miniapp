@@ -30,55 +30,55 @@ return NextResponse.json({success:false});
 // usuario nuevo
 if(!user){
 
-const nowISO = new Date().toISOString();
+const nextClaim = now + COOLDOWN * 1000;
 
 await supabase
 .from("claims")
 .insert([{
 nullifier,
-last_claim:nowISO,
-balance:REWARD
+last_claim:new Date(now).toISOString(),
+balance:REWARD,
+next_claim_timestamp:nextClaim
 }]);
 
 return NextResponse.json({
 success:true,
 balance:REWARD,
-remaining:COOLDOWN
+nextClaim
 });
 
 }
 
-// cooldown
-const lastClaim = new Date(user.last_claim).getTime();
-const diff = Math.floor((now-lastClaim)/1000);
+// verificar cooldown
+if(now < user.next_claim_timestamp){
 
-if(diff < COOLDOWN){
+const remaining = Math.floor((user.next_claim_timestamp - now)/1000);
 
 return NextResponse.json({
 success:false,
-remaining:COOLDOWN-diff,
+remaining,
 balance:user.balance ?? 0
 });
 
 }
 
-// 🔥 calcular nuevo balance antes del update
+// nuevo balance
 const newBalance = (user.balance ?? 0) + REWARD;
-
-const nowISO = new Date().toISOString();
+const nextClaim = now + COOLDOWN * 1000;
 
 await supabase
 .from("claims")
 .update({
-last_claim:nowISO,
-balance:newBalance
+last_claim:new Date(now).toISOString(),
+balance:newBalance,
+next_claim_timestamp:nextClaim
 })
 .eq("nullifier",nullifier);
 
 return NextResponse.json({
 success:true,
 balance:newBalance,
-remaining:COOLDOWN
+nextClaim
 });
 
 }catch(err){
@@ -119,11 +119,11 @@ balance:0
 }
 
 const now = Date.now();
-const lastClaim = new Date(data.last_claim).getTime();
 
-const diff = Math.floor((now-lastClaim)/1000);
-
-const remaining = diff >= COOLDOWN ? 0 : COOLDOWN-diff;
+const remaining = Math.max(
+0,
+Math.floor((data.next_claim_timestamp - now)/1000)
+);
 
 return NextResponse.json({
 success:true,

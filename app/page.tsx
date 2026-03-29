@@ -88,7 +88,6 @@ const data = await res.json();
 if(data.remaining !== undefined){
 
 const next = Date.now() + (data.remaining * 1000);
-
 setNextClaimTime(next);
 
 }
@@ -183,7 +182,7 @@ setBalance(data.balance);
 // iniciar contador inmediatamente
 const cooldown = data.remaining ?? 60;
 
-setNextClaimTime(Date.now() + cooldown * 1000);
+setNextClaimTime(data.nextClaim);
 setRemaining(cooldown);
 
 setShowReward(true);
