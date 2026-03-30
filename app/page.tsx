@@ -21,6 +21,7 @@ const [nextClaimTime,setNextClaimTime] = useState<number>(0);
 const [username,setUsername] = useState<string | null>(null);
 const [copied,setCopied] = useState(false);
 const [holders,setHolders] = useState<number>(0);
+const [supply,setSupply] = useState(0);
 useEffect(()=>{
 
 MiniKit.install();
@@ -80,7 +81,7 @@ console.log(err);
 
 init();
 
-const loadTokenStats = async ()=>{
+const loadTokenData = async ()=>{
 
 try{
 
@@ -88,7 +89,7 @@ const res = await fetch("/api/token");
 
 const data = await res.json();
 
-setHolders(data.holders);
+setSupply(data.supply);
 
 }catch(err){
 
@@ -98,7 +99,7 @@ console.log(err);
 
 };
 
-loadTokenStats();
+loadTokenData();
 
 },[]);
 
@@ -389,6 +390,15 @@ dentro del ecosistema de Worldchain.
 <div style={styles.statItem}>
 <span style={styles.statNumber}>5M+</span>
 <span style={styles.statLabel}> <strong>CAPYCOIN distribuidos</strong></span>
+</div>
+
+<div style={styles.statItem}>
+<span style={styles.statNumber}>
+{Number(supply).toLocaleString()}
+</span>
+<span style={styles.statLabel}>
+Total Supply CAPYCOIN
+</span>
 </div>
 
 </div>
