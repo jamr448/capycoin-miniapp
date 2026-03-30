@@ -28,8 +28,6 @@ setTimeout(()=>{
 
 const user = MiniKit.user;
 
-console.log("MiniKit user:", user);
-
 if(user?.username){
 setUsername(user.username);
 }
@@ -57,17 +55,12 @@ if(!res?.finalPayload) return;
 let nullifier="";
 
 if("nullifier_hash" in res.finalPayload){
-
 nullifier=res.finalPayload.nullifier_hash;
-
 }else if("proofs" in res.finalPayload){
-
 const proofs=res.finalPayload.proofs as any[];
-
 if(proofs?.length>0){
 nullifier=proofs[0].nullifier_hash;
 }
-
 }
 
 if(!nullifier) return;
@@ -79,9 +72,7 @@ setVerified(true);
 loadUser(nullifier);
 
 }catch(err){
-
-console.log("auto verify error",err);
-
+console.log(err);
 }
 
 };
@@ -101,18 +92,16 @@ cache:"no-store"
 const data = await res.json();
 
 if(data.remaining !== undefined){
-
 const next = Date.now() + (data.remaining * 1000);
 setNextClaimTime(next);
-
 }
 
 if(data.balance !== undefined){
 setBalance(data.balance);
+}
 
 if(data.reward !== undefined){
 setReward(data.reward);
-}
 }
 
 if(data.streak !== undefined){
@@ -120,9 +109,7 @@ setStreak(data.streak);
 }
 
 }catch(err){
-
-console.log("load user error",err);
-
+console.log(err);
 }
 
 setLoading(false);
@@ -167,9 +154,7 @@ if(!nullifier) return;
 const nextClicks = clicks + 1;
 setClicks(nextClicks);
 
-if(nextClicks < 3){
-return;
-}
+if(nextClicks < 3) return;
 
 setClicks(0);
 setClaiming(true);
@@ -202,6 +187,10 @@ return;
 
 setBalance(data.balance);
 
+if(data.reward !== undefined){
+setReward(data.reward);
+}
+
 if(data.streak !== undefined){
 setStreak(data.streak);
 }
@@ -216,8 +205,7 @@ setShowReward(false);
 
 }catch(err){
 
-console.log("claim error",err);
-
+console.log(err);
 setShowClaiming(false);
 
 }
@@ -243,62 +231,17 @@ return(
 )}
 
 {showClaiming && (
-
 <div style={styles.overlay}>
-
-<img
-src="/capycoin.png"
-style={{
-width:"120px",
-animation:"coinSpin 2s linear infinite"
-}}
-/>
-
+<img src="/capycoin.png" style={{width:"120px",animation:"coinSpin 2s linear infinite"}}/>
 <h2>Reclamando Capycoin...</h2>
-
 </div>
-
 )}
 
 {showReward && (
-
 <div style={styles.overlay}>
-
-<img
-src="/capycoin.png"
-style={{
-width:"120px",
-animation:"coinSpin 2s linear infinite"
-}}
-/>
-
+<img src="/capycoin.png" style={{width:"120px",animation:"coinSpin 2s linear infinite"}}/>
 <h2>Has reclamado {reward} Capycoin</h2>
-
 </div>
-
-)}
-
-{tab === "claim" && (
-
-<div style={styles.topCards}>
-
-<div style={styles.infoCard}>
-<span style={styles.icon}>🔥</span>
-<span>Streak {streak}</span>
-</div>
-
-<div style={styles.infoCard}>
-<span style={styles.icon}>🪙</span>
-<span>{balance} CAPYCOIN</span>
-</div>
-
-<div style={styles.infoCard}>
-<img src="/verified.png" style={styles.verifiedIcon}/>
-<span>World ID</span>
-</div>
-
-</div>
-
 )}
 
 <div style={styles.tabs}>
@@ -327,58 +270,30 @@ Acerca de
 
 </div>
 
-{tab==="about" && (
+{/* CLAIM TAB */}
 
-<div style={styles.aboutBox}>
-
-<h2>🪙 ¿Qué es Capycoin?</h2>
-
-<p>
-Capycoin es una memecoin comunitaria creada para humanos
-verificados dentro de World App. Su objetivo es construir
-una comunidad divertida y activa dentro del ecosistema
-de Worldchain.
-</p>
-
-<h3>🔥 Sistema de Streak</h3>
-
-<p>
-Puedes reclamar Capycoin cada 24 horas. Cada día consecutivo
-aumenta tu recompensa hasta un máximo de <strong>10 CAPY</strong>.
-Si pierdes un día, tu streak vuelve a comenzar desde 1.
-</p>
-
-<h3>📊 Tokenomics</h3>
-
-<ul style={styles.tokenList}>
-<li>15% — Airdrop para la comunidad</li>
-<li>35% — Equipo y logística</li>
-<li>15% — Marketing</li>
-<li>5% — Token Burns</li>
-<li>20% — Liquidez</li>
-<li>10% — Desarrollo</li>
-</ul>
-
-<a
-href="https://worldcoin.org/mini-app?app_id=app_e5ba7c3061400e361f98ce44d8b1b9c4&app_mode=mini-app"
-target="_blank"
-style={styles.exchangeButton}
->
-
-<img
-src="/puff.png"
-style={styles.exchangeLogo}
-/>
-
-<span>Intercambiar Capycoin</span>
-
-</a>
-
-</div>
-
-)}
+{tab==="claim" && (
 
 <>
+
+<div style={styles.topCards}>
+
+<div style={styles.infoCard}>
+<span style={styles.icon}>🔥</span>
+<span>Streak {streak}</span>
+</div>
+
+<div style={styles.infoCard}>
+<span style={styles.icon}>🪙</span>
+<span>{balance} CAPYCOIN</span>
+</div>
+
+<div style={styles.infoCard}>
+<img src="/verified.png" style={styles.verifiedIcon}/>
+<span>World ID</span>
+</div>
+
+</div>
 
 <div style={styles.logoBox}>
 
@@ -403,11 +318,9 @@ transformStyle:"preserve-3d"
 </h1>
 
 <p style={styles.message}>
-
 {remaining===0
 ? "🟢 Tu Capycoin está listo para reclamar"
 : "⏳ Tu próximo Capycoin estará disponible pronto"}
-
 </p>
 
 <button
@@ -429,7 +342,52 @@ disabled={remaining>0 || claiming}
 
 </>
 
+)}
 
+{/* ABOUT TAB */}
+
+{tab==="about" && (
+
+<div style={styles.aboutBox}>
+
+<h2>🪙 ¿Qué es Capycoin?</h2>
+
+<p>
+Capycoin es una memecoin comunitaria creada para humanos verificados
+dentro de World App. Su objetivo es construir una comunidad activa
+dentro del ecosistema de Worldchain.
+</p>
+
+<h3>🔥 Sistema de Streak</h3>
+
+<p>
+Cada día consecutivo aumenta tu recompensa hasta un máximo de
+<strong>10 CAPY</strong>. Si pierdes un día, el streak vuelve a comenzar.
+</p>
+
+<h3>📊 Tokenomics</h3>
+
+<ul style={styles.tokenList}>
+<li>15% — Airdrop comunidad</li>
+<li>35% — Equipo y logística</li>
+<li>15% — Marketing</li>
+<li>5% — Token Burns</li>
+<li>20% — Liquidez</li>
+<li>10% — Desarrollo</li>
+</ul>
+
+<a
+href="https://worldcoin.org/mini-app?app_id=app_e5ba7c3061400e361f98ce44d8b1b9c4&app_mode=mini-app"
+target="_blank"
+style={styles.exchangeButton}
+>
+<img src="/puff.png" style={styles.exchangeLogo}/>
+<span>Intercambiar Capycoin</span>
+</a>
+
+</div>
+
+)}
 
 <style jsx global>{`
 
@@ -441,22 +399,12 @@ disabled={remaining>0 || claiming}
 
 @keyframes coinReady {
 
-0%{
-transform:translateY(0px) scale(1);
-filter:drop-shadow(0 0 0px gold);
-}
-
-50%{
-transform:translateY(-15px) scale(1.08);
-filter:drop-shadow(0 0 15px gold);
-}
-
-100%{
-transform:translateY(0px) scale(1);
-filter:drop-shadow(0 0 0px gold);
-}
+0%{transform:translateY(0px) scale(1);filter:drop-shadow(0 0 0px gold);}
+50%{transform:translateY(-15px) scale(1.08);filter:drop-shadow(0 0 15px gold);}
+100%{transform:translateY(0px) scale(1);filter:drop-shadow(0 0 0px gold);}
 
 }
+
 .video-bg{
 position:fixed;
 top:0;
@@ -479,37 +427,6 @@ opacity:0.35;
 }
 
 const styles:any={
-
-topCards:{
-display:"flex",
-justifyContent:"space-between",
-gap:"10px",
-width:"100%",
-marginTop:"10px"
-},
-
-infoCard:{
-flex:1,
-background:"#ffffff",
-borderRadius:"30px",
-padding:"12px 10px",
-display:"flex",
-alignItems:"center",
-justifyContent:"center",
-gap:"6px",
-fontWeight:"bold",
-color:"#065f46",
-boxShadow:"0 4px 10px rgba(0,0,0,0.15)",
-fontSize:"13px",
-textAlign:"center"
-},
-
-icon:{fontSize:"18px"},
-
-verifiedIcon:{
-width:"18px",
-height:"18px"
-},
 
 container:{
 minHeight:"100vh",
@@ -546,18 +463,39 @@ border:"none",
 fontWeight:"bold"
 },
 
-logoBox:{marginTop:"40px"},
-
-timer:{
-fontSize:"48px",
-marginTop:"20px"
+topCards:{
+display:"flex",
+justifyContent:"space-between",
+gap:"10px",
+width:"100%",
+marginTop:"10px"
 },
 
-message:{
-marginTop:"10px",
-fontSize:"18px",
+infoCard:{
+flex:1,
+background:"#ffffff",
+borderRadius:"30px",
+padding:"12px 10px",
+display:"flex",
+alignItems:"center",
+justifyContent:"center",
+gap:"6px",
+fontWeight:"bold",
+color:"#065f46",
+boxShadow:"0 4px 10px rgba(0,0,0,0.15)",
+fontSize:"13px",
 textAlign:"center"
 },
+
+icon:{fontSize:"18px"},
+
+verifiedIcon:{width:"18px",height:"18px"},
+
+logoBox:{marginTop:"40px"},
+
+timer:{fontSize:"48px",marginTop:"20px"},
+
+message:{marginTop:"10px",fontSize:"18px",textAlign:"center"},
 
 button:{
 marginTop:"30px",
@@ -619,9 +557,6 @@ fontWeight:"bold",
 marginTop:"15px"
 },
 
-exchangeLogo:{
-width:"24px",
-height:"24px"
-}
+exchangeLogo:{width:"24px",height:"24px"}
 
 };
