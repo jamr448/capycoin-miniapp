@@ -327,7 +327,56 @@ Acerca de
 
 </div>
 
-{tab==="claim" && (
+{tab==="about" && (
+
+<div style={styles.aboutBox}>
+
+<h2>🪙 ¿Qué es Capycoin?</h2>
+
+<p>
+Capycoin es una memecoin comunitaria creada para humanos
+verificados dentro de World App. Su objetivo es construir
+una comunidad divertida y activa dentro del ecosistema
+de Worldchain.
+</p>
+
+<h3>🔥 Sistema de Streak</h3>
+
+<p>
+Puedes reclamar Capycoin cada 24 horas. Cada día consecutivo
+aumenta tu recompensa hasta un máximo de <strong>10 CAPY</strong>.
+Si pierdes un día, tu streak vuelve a comenzar desde 1.
+</p>
+
+<h3>📊 Tokenomics</h3>
+
+<ul style={styles.tokenList}>
+<li>15% — Airdrop para la comunidad</li>
+<li>35% — Equipo y logística</li>
+<li>15% — Marketing</li>
+<li>5% — Token Burns</li>
+<li>20% — Liquidez</li>
+<li>10% — Desarrollo</li>
+</ul>
+
+<a
+href="https://worldcoin.org/mini-app?app_id=app_e5ba7c3061400e361f98ce44d8b1b9c4&app_mode=mini-app"
+target="_blank"
+style={styles.exchangeButton}
+>
+
+<img
+src="/puff.png"
+style={styles.exchangeLogo}
+/>
+
+<span>Intercambiar Capycoin</span>
+
+</a>
+
+</div>
+
+)}
 
 <>
 
@@ -380,7 +429,7 @@ disabled={remaining>0 || claiming}
 
 </>
 
-)}
+
 
 <style jsx global>{`
 
