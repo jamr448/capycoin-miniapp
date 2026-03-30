@@ -20,11 +20,31 @@ const [showReward,setShowReward] = useState(false);
 const [nextClaimTime,setNextClaimTime] = useState<number>(0);
 const [username,setUsername] = useState<string | null>(null);
 const [copied,setCopied] = useState(false);
+
 const [holders,setHolders] = useState<number>(0);
-const [supply,setSupply] = useState(0);
+const [supply,setSupply] = useState<number>(0);
+
 useEffect(()=>{
 
 MiniKit.install();
+
+const loadTokenData = async ()=>{
+
+try{
+
+const res = await fetch("/api/token");
+const data = await res.json();
+
+setSupply(Number(data.supply));
+setHolders(Number(data.holders));
+
+}catch(err){
+console.log(err);
+}
+
+};
+
+loadTokenData();
 
 setTimeout(()=>{
 
@@ -60,6 +80,7 @@ if("nullifier_hash" in res.finalPayload){
 nullifier=res.finalPayload.nullifier_hash;
 }else if("proofs" in res.finalPayload){
 const proofs=res.finalPayload.proofs as any[];
+
 if(proofs?.length>0){
 nullifier=proofs[0].nullifier_hash;
 }
@@ -80,26 +101,6 @@ console.log(err);
 };
 
 init();
-
-const loadTokenData = async ()=>{
-
-try{
-
-const res = await fetch("/api/token");
-
-const data = await res.json();
-
-setSupply(data.supply);
-
-}catch(err){
-
-console.log(err);
-
-}
-
-};
-
-loadTokenData();
 
 },[]);
 
@@ -171,9 +172,11 @@ const claimCapycoin = async ()=>{
 if(claiming || remaining > 0) return;
 
 const nullifier = localStorage.getItem("capyNullifier");
+
 if(!nullifier) return;
 
 const nextClicks = clicks + 1;
+
 setClicks(nextClicks);
 
 if(nextClicks < 3) return;
@@ -292,8 +295,6 @@ Acerca de
 
 </div>
 
-{/* CLAIM TAB */}
-
 {tab==="claim" && (
 
 <>
@@ -301,18 +302,16 @@ Acerca de
 <div style={styles.topCards}>
 
 <div style={styles.infoCard}>
-<span style={styles.icon}>🔥</span>
-<span>Streak {streak}</span>
+🔥 Streak {streak}
 </div>
 
 <div style={styles.infoCard}>
-<span style={styles.icon}>🪙</span>
-<span>{balance} CAPYCOIN</span>
+🪙 {balance} CAPYCOIN
 </div>
 
 <div style={styles.infoCard}>
 <img src="/verified.png" style={styles.verifiedIcon}/>
-<span>World ID</span>
+World ID
 </div>
 
 </div>
@@ -328,8 +327,7 @@ style={{
 animation:
 remaining === 0
 ? "coinReady 1.2s ease-in-out infinite"
-: "coinSpin 10s linear infinite",
-transformStyle:"preserve-3d"
+: "coinSpin 10s linear infinite"
 }}
 />
 
@@ -366,146 +364,39 @@ disabled={remaining>0 || claiming}
 
 )}
 
-{/* ABOUT TAB */}
-
 {tab==="about" && (
 
 <div style={styles.aboutBox}>
 
-<h2>🪙 <strong>¿Qué es Capycoin?</strong></h2>
+<h2>🪙 ¿Qué es Capycoin?</h2>
 
 <p>
 Capycoin es una memecoin comunitaria creada para humanos verificados
-dentro de World App. Su objetivo es construir una comunidad activa
-dentro del ecosistema de Worldchain.
+dentro de World App.
 </p>
 
 <div style={styles.statsBox}>
 
 <div style={styles.statItem}>
-<span style={styles.statNumber}>{holders}</span>
-<span style={styles.statLabel}> <strong>Holders</strong></span>
+<span style={styles.statNumber}>{holders.toLocaleString()}</span>
+<span style={styles.statLabel}>Holders</span>
 </div>
 
 <div style={styles.statItem}>
 <span style={styles.statNumber}>5M+</span>
-<span style={styles.statLabel}> <strong>CAPYCOIN distribuidos</strong></span>
+<span style={styles.statLabel}>CAPY distribuidos</span>
 </div>
 
 <div style={styles.statItem}>
-<span style={styles.statNumber}>
-{Number(supply).toLocaleString()}
-</span>
-<span style={styles.statLabel}>
-Total Supply CAPYCOIN
-</span>
+<span style={styles.statNumber}>{supply.toLocaleString()}</span>
+<span style={styles.statLabel}>Supply</span>
 </div>
 
 </div>
-
-<h3>🔥<strong>Sistema de Streak</strong></h3>
-
-<p>
-Cada día consecutivo aumenta tu recompensa hasta un máximo de
-<strong> 10 CAPYCOIN</strong>. Si pierdes un día, el streak vuelve a comenzar.
-</p>
-
-<h3>📊 <strong>Tokenomics</strong></h3>
-
-<ul style={styles.tokenList}>
-<li>15% — Airdrop comunidad</li>
-<li>25% — Equipo y logística</li>
-<li>15% — Marketing</li>
-<li>5% — Token Burns "Una vez completada la fase de graduación"</li>
-<li>30% — Liquidez "una vez sea listada en DEX SCREENER"</li>
-<li>10% — Desarrollo</li>
-</ul>
-
-<div style={styles.contractCard}>
-
-<div style={styles.contractTitle}>
-📄 Contrato Capycoin
-</div>
-
-<div style={styles.contractAddressFull}>
-0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2
-</div>
-
-<div style={styles.contractButtons}>
-
-<button
-style={styles.copyButton}
-onClick={()=>{
-navigator.clipboard.writeText(
-"0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2"
-);
-
-setCopied(true);
-
-setTimeout(()=>{
-setCopied(false);
-},2000);
-
-}}
->
-
-{copied ? "✓ Copiado" : "📋 Copiar"}
-
-</button>
-
-<a
-href="https://worldscan.org/token/0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2"
-target="_blank"
-style={styles.scanButton}
->
-🔎 Worldscan
-</a>
-
-</div>
-
-</div>
-
-<a
-href="https://worldcoin.org/mini-app?app_id=app_e5ba7c3061400e361f98ce44d8b1b9c4&app_mode=mini-app"
-target="_blank"
-style={styles.exchangeButton}
->
-<img src="/puff.png" style={styles.exchangeLogo}/>
-<span>Intercambiar Capycoin</span>
-</a>
 
 </div>
 
 )}
-
-<style jsx global>{`
-
-@keyframes coinSpin {
-0%{transform:rotateY(0deg);}
-50%{transform:rotateY(180deg);}
-100%{transform:rotateY(360deg);}
-}
-
-@keyframes coinReady {
-
-0%{transform:translateY(0px) scale(1);filter:drop-shadow(0 0 0px gold);}
-50%{transform:translateY(-15px) scale(1.08);filter:drop-shadow(0 0 15px gold);}
-100%{transform:translateY(0px) scale(1);filter:drop-shadow(0 0 0px gold);}
-
-}
-
-.video-bg{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-object-fit:cover;
-z-index:-1;
-opacity:0.35;
-}
-
-`}</style>
 
 </main>
 
@@ -523,49 +414,12 @@ background:"rgba(0,0,0,0.35)",
 display:"flex",
 flexDirection:"column",
 alignItems:"center",
-padding:"20px",
-color:"#063",
-fontFamily:"sans-serif"
-},
-
-userBox:{
-marginTop:"10px",
-background:"#ffffff",
-padding:"10px 20px",
-borderRadius:"20px",
-fontWeight:"bold",
-color:"#065f46",
-boxShadow:"0 4px 10px rgba(0,0,0,0.15)"
-},
-
-statsBox:{
-display:"flex",
-justifyContent:"space-around",
-marginTop:"20px",
-marginBottom:"25px"
-},
-
-statItem:{
-display:"flex",
-flexDirection:"column",
-alignItems:"center"
-},
-
-statNumber:{
-fontSize:"22px",
-fontWeight:"bold",
-color:"#065f46"
-},
-
-statLabel:{
-fontSize:"14px",
-opacity:0.8
+padding:"20px"
 },
 
 tabs:{
 display:"flex",
-justifyContent:"space-between",
-width:"100%",
+gap:"10px",
 marginTop:"40px"
 },
 
@@ -578,109 +432,32 @@ fontWeight:"bold"
 
 topCards:{
 display:"flex",
-justifyContent:"space-between",
 gap:"10px",
-width:"100%",
-marginTop:"10px"
+marginTop:"20px"
 },
 
 infoCard:{
-flex:1,
-background:"#ffffff",
-borderRadius:"30px",
-padding:"12px 10px",
-display:"flex",
-alignItems:"center",
-justifyContent:"center",
-gap:"6px",
-fontWeight:"bold",
-color:"#065f46",
-boxShadow:"0 4px 10px rgba(0,0,0,0.15)",
-fontSize:"13px",
-textAlign:"center"
+background:"#fff",
+padding:"10px 15px",
+borderRadius:"20px",
+fontWeight:"bold"
 },
 
-icon:{fontSize:"18px"},
+verifiedIcon:{width:"18px"},
 
-verifiedIcon:{width:"18px",height:"18px"},
-
-logoBox:{marginTop:"40px"},
+logoBox:{marginTop:"30px"},
 
 timer:{fontSize:"48px",marginTop:"20px"},
 
-message:{marginTop:"10px",fontSize:"18px",textAlign:"center"},
+message:{marginTop:"10px"},
 
 button:{
 marginTop:"30px",
 background:"#0ea5e9",
-color:"white",
+color:"#fff",
 padding:"18px 30px",
 borderRadius:"40px",
-border:"none",
-fontSize:"18px",
-width:"80%"
-},
-
-contractAddressFull:{
-fontSize:"12px",
-wordBreak:"break-all",
-marginBottom:"12px",
-textAlign:"center"
-},
-
-contractButtons:{
-display:"flex",
-justifyContent:"center",
-gap:"10px",
-marginTop:"10px"
-},
-
-scanButton:{
-background:"#065f46",
-color:"#fff",
-padding:"8px 14px",
-borderRadius:"20px",
-textDecoration:"none",
-fontWeight:"bold",
-fontSize:"14px"
-},
-
-contractCard:{
-marginTop:"20px",
-background:"#f8fafc",
-padding:"18px",
-borderRadius:"16px",
-width:"100%",
-boxShadow:"0 4px 10px rgba(0,0,0,0.1)"
-},
-
-contractTitle:{
-fontWeight:"bold",
-marginBottom:"10px",
-color:"#065f46"
-},
-
-contractRow:{
-display:"flex",
-alignItems:"center",
-justifyContent:"space-between",
-gap:"10px"
-},
-
-contractText:{
-fontSize:"12px",
-wordBreak:"break-all",
-flex:1
-},
-
-copyButton:{
-background:"#0ea5e9",
-border:"none",
-color:"#fff",
-padding:"8px 14px",
-borderRadius:"20px",
-cursor:"pointer",
-fontWeight:"bold"
+border:"none"
 },
 
 overlay:{
@@ -695,68 +472,35 @@ flexDirection:"column",
 alignItems:"center",
 justifyContent:"center",
 color:"#fff",
-zIndex:9999,
-textAlign:"center",
-fontSize:"22px",
-gap:"20px"
+zIndex:9999
 },
 
 aboutBox:{
 marginTop:"30px",
-background:"#ffffff",
+background:"#fff",
 padding:"25px",
-borderRadius:"20px",
-color:"#064e3b",
-boxShadow:"0 4px 12px rgba(0,0,0,0.15)",
-lineHeight:"1.6",
-fontSize:"15px"
+borderRadius:"20px"
 },
 
-tokenList:{
-marginTop:"10px",
-marginBottom:"20px",
-paddingLeft:"20px"
-},
-
-contractButton:{
+statsBox:{
 display:"flex",
-alignItems:"center",
-justifyContent:"center",
-gap:"10px",
-background:"#065f46",
-color:"#fff",
-padding:"14px",
-borderRadius:"40px",
-textDecoration:"none",
-fontWeight:"bold",
-marginTop:"15px"
+justifyContent:"space-around",
+marginTop:"20px"
 },
 
-contractIcon:{
-fontSize:"18px"
-},
-
-contractAddress:{
-textAlign:"center",
-fontSize:"12px",
-marginTop:"6px",
-opacity:0.7
-},
-
-exchangeButton:{
+statItem:{
 display:"flex",
-alignItems:"center",
-justifyContent:"center",
-gap:"10px",
-background:"#0ea5e9",
-color:"#fff",
-padding:"14px",
-borderRadius:"40px",
-textDecoration:"none",
-fontWeight:"bold",
-marginTop:"15px"
+flexDirection:"column",
+alignItems:"center"
 },
 
-exchangeLogo:{width:"24px",height:"24px"}
+statNumber:{
+fontSize:"22px",
+fontWeight:"bold"
+},
+
+statLabel:{
+fontSize:"14px"
+}
 
 };
