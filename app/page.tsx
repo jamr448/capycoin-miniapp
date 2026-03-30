@@ -24,11 +24,17 @@ useEffect(()=>{
 
 MiniKit.install();
 
+setTimeout(()=>{
+
 const user = MiniKit.user;
 
-if(user){
-setUsername(user.username ?? "World User");
+console.log("MiniKit user:", user);
+
+if(user?.username){
+setUsername(user.username);
 }
+
+},500);
 
 const init = async ()=>{
 
