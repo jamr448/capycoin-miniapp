@@ -9,6 +9,7 @@ export default function Home() {
 const [tab,setTab] = useState("claim");
 const [remaining,setRemaining] = useState<number>(0);
 const [balance,setBalance] = useState<number>(0);
+const [streak,setStreak] = useState<number>(1);
 const [verified,setVerified] = useState(false);
 const [claiming,setClaiming] = useState(false);
 const [clicks,setClicks] = useState(0);
@@ -103,6 +104,10 @@ if(data.balance !== undefined){
 setBalance(data.balance);
 }
 
+if(data.streak !== undefined){
+setStreak(data.streak);
+}
+
 }catch(err){
 
 console.log("load user error",err);
@@ -186,11 +191,11 @@ return;
 
 setBalance(data.balance);
 
-// iniciar contador inmediatamente
-const cooldown = data.remaining ?? 60;
+if(data.streak !== undefined){
+setStreak(data.streak);
+}
 
 setNextClaimTime(data.nextClaim);
-setRemaining(cooldown);
 
 setShowReward(true);
 
@@ -256,17 +261,19 @@ animation:"coinSpin 2s linear infinite"
 }}
 />
 
-<h2>Has reclamado 5 Capycoin</h2>
+<h2>Capycoin reclamado</h2>
 
 </div>
 
 )}
 
+{tab === "claim" && (
+
 <div style={styles.topCards}>
 
 <div style={styles.infoCard}>
-<span style={styles.icon}>👤</span>
-<span>{verified ? "Verified Human" : "Verifying..."}</span>
+<span style={styles.icon}>🔥</span>
+<span>Streak {streak}</span>
 </div>
 
 <div style={styles.infoCard}>
@@ -280,6 +287,8 @@ animation:"coinSpin 2s linear infinite"
 </div>
 
 </div>
+
+)}
 
 <div style={styles.tabs}>
 
