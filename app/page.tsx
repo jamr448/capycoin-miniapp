@@ -395,10 +395,9 @@ href="https://worldscan.org/token/0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2"
 target="_blank"
 style={styles.contractButton}
 >
-
 <span style={styles.contractIcon}>🔎</span>
-
-<span>Ver contrato de Capycoin</span>
+<span>Ver contrato en Worldscan</span>
+</a>
 
 <div style={styles.contractCard}>
 
@@ -421,16 +420,12 @@ navigator.clipboard.writeText(
 alert("Contrato copiado");
 }}
 >
-
 Copiar
-
 </button>
 
 </div>
 
 </div>
-
-</a>
 
 <p style={styles.contractAddress}>
 0xe55B...928B2
