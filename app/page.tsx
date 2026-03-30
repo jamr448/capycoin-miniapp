@@ -362,17 +362,17 @@ dentro del ecosistema de Worldchain.
 
 <div style={styles.statItem}>
 <span style={styles.statNumber}>17K+</span>
-<span style={styles.statLabel}>Holders</span>
+<span style={styles.statLabel}> <strong>Holders</strong></span>
 </div>
 
 <div style={styles.statItem}>
 <span style={styles.statNumber}>5M+</span>
-<span style={styles.statLabel}>CAPYCOIN distribuidos</span>
+<span style={styles.statLabel}> <strong>CAPYCOIN distribuidos</strong></span>
 </div>
 
 </div>
 
-<h3>🔥 <strong>Sistema de Streak</strong></h3>
+<h3>🔥<strong>Sistema de Streak</strong></h3>
 
 <p>
 Cada día consecutivo aumenta tu recompensa hasta un máximo de
