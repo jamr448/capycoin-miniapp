@@ -20,7 +20,7 @@ const [showReward,setShowReward] = useState(false);
 const [nextClaimTime,setNextClaimTime] = useState<number>(0);
 const [username,setUsername] = useState<string | null>(null);
 const [copied,setCopied] = useState(false);
-
+const [holders,setHolders] = useState<number>(0);
 useEffect(()=>{
 
 MiniKit.install();
@@ -79,6 +79,26 @@ console.log(err);
 };
 
 init();
+
+const loadTokenStats = async ()=>{
+
+try{
+
+const res = await fetch("/api/token");
+
+const data = await res.json();
+
+setHolders(data.holders);
+
+}catch(err){
+
+console.log(err);
+
+}
+
+};
+
+loadTokenStats();
 
 },[]);
 
@@ -362,7 +382,7 @@ dentro del ecosistema de Worldchain.
 <div style={styles.statsBox}>
 
 <div style={styles.statItem}>
-<span style={styles.statNumber}>17K+</span>
+<span style={styles.statNumber}>{holders}</span>
 <span style={styles.statLabel}> <strong>Holders</strong></span>
 </div>
 
