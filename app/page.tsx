@@ -390,26 +390,17 @@ Cada día consecutivo aumenta tu recompensa hasta un máximo de
 <li>10% — Desarrollo</li>
 </ul>
 
-<a
-href="https://worldscan.org/token/0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2"
-target="_blank"
-style={styles.contractButton}
->
-<span style={styles.contractIcon}>🔎</span>
-<span>Ver contrato en Worldscan</span>
-</a>
-
 <div style={styles.contractCard}>
 
 <div style={styles.contractTitle}>
 📄 Contrato Capycoin
 </div>
 
-<div style={styles.contractRow}>
-
-<span style={styles.contractText}>
+<div style={styles.contractAddressFull}>
 0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2
-</span>
+</div>
+
+<div style={styles.contractButtons}>
 
 <button
 style={styles.copyButton}
@@ -420,16 +411,20 @@ navigator.clipboard.writeText(
 alert("Contrato copiado");
 }}
 >
-Copiar
+📋 Copiar
 </button>
 
-</div>
+<a
+href="https://worldscan.org/token/0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2"
+target="_blank"
+style={styles.scanButton}
+>
+🔎 Worldscan
+</a>
 
 </div>
 
-<p style={styles.contractAddress}>
-0xe55B...928B2
-</p>
+</div>
 
 <a
 href="https://worldcoin.org/mini-app?app_id=app_e5ba7c3061400e361f98ce44d8b1b9c4&app_mode=mini-app"
@@ -585,6 +580,30 @@ borderRadius:"40px",
 border:"none",
 fontSize:"18px",
 width:"80%"
+},
+
+contractAddressFull:{
+fontSize:"12px",
+wordBreak:"break-all",
+marginBottom:"12px",
+textAlign:"center"
+},
+
+contractButtons:{
+display:"flex",
+justifyContent:"center",
+gap:"10px",
+marginTop:"10px"
+},
+
+scanButton:{
+background:"#065f46",
+color:"#fff",
+padding:"8px 14px",
+borderRadius:"20px",
+textDecoration:"none",
+fontWeight:"bold",
+fontSize:"14px"
 },
 
 contractCard:{
