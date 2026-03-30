@@ -358,6 +358,20 @@ dentro de World App. Su objetivo es construir una comunidad activa
 dentro del ecosistema de Worldchain.
 </p>
 
+<div style={styles.statsBox}>
+
+<div style={styles.statItem}>
+<span style={styles.statNumber}>17K+</span>
+<span style={styles.statLabel}>Holders</span>
+</div>
+
+<div style={styles.statItem}>
+<span style={styles.statNumber}>5M+</span>
+<span style={styles.statLabel}>CAPYCOIN distribuidos</span>
+</div>
+
+</div>
+
 <h3>🔥 <strong>Sistema de Streak</strong></h3>
 
 <p>
@@ -375,6 +389,22 @@ Cada día consecutivo aumenta tu recompensa hasta un máximo de
 <li>30% — Liquidez "una vez sea listada en DEX SCREENER"</li>
 <li>10% — Desarrollo</li>
 </ul>
+
+<a
+href="https://worldscan.org/token/0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2"
+target="_blank"
+style={styles.contractButton}
+>
+
+<span style={styles.contractIcon}>🔎</span>
+
+<span>Ver contrato de Capycoin</span>
+
+</a>
+
+<p style={styles.contractAddress}>
+0xe55B...928B2
+</p>
 
 <a
 href="https://worldcoin.org/mini-app?app_id=app_e5ba7c3061400e361f98ce44d8b1b9c4&app_mode=mini-app"
@@ -447,6 +477,30 @@ borderRadius:"20px",
 fontWeight:"bold",
 color:"#065f46",
 boxShadow:"0 4px 10px rgba(0,0,0,0.15)"
+},
+
+statsBox:{
+display:"flex",
+justifyContent:"space-around",
+marginTop:"20px",
+marginBottom:"25px"
+},
+
+statItem:{
+display:"flex",
+flexDirection:"column",
+alignItems:"center"
+},
+
+statNumber:{
+fontSize:"22px",
+fontWeight:"bold",
+color:"#065f46"
+},
+
+statLabel:{
+fontSize:"14px",
+opacity:0.8
 },
 
 tabs:{
@@ -541,6 +595,31 @@ tokenList:{
 marginTop:"10px",
 marginBottom:"20px",
 paddingLeft:"20px"
+},
+
+contractButton:{
+display:"flex",
+alignItems:"center",
+justifyContent:"center",
+gap:"10px",
+background:"#065f46",
+color:"#fff",
+padding:"14px",
+borderRadius:"40px",
+textDecoration:"none",
+fontWeight:"bold",
+marginTop:"15px"
+},
+
+contractIcon:{
+fontSize:"18px"
+},
+
+contractAddress:{
+textAlign:"center",
+fontSize:"12px",
+marginTop:"6px",
+opacity:0.7
 },
 
 exchangeButton:{
