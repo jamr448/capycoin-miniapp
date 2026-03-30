@@ -10,6 +10,7 @@ const [tab,setTab] = useState("claim");
 const [remaining,setRemaining] = useState<number>(0);
 const [balance,setBalance] = useState<number>(0);
 const [streak,setStreak] = useState<number>(1);
+const [reward,setReward] = useState<number>(0);
 const [verified,setVerified] = useState(false);
 const [claiming,setClaiming] = useState(false);
 const [clicks,setClicks] = useState(0);
@@ -102,6 +103,10 @@ setNextClaimTime(next);
 
 if(data.balance !== undefined){
 setBalance(data.balance);
+
+if(data.reward !== undefined){
+setReward(data.reward);
+}
 }
 
 if(data.streak !== undefined){
@@ -261,7 +266,7 @@ animation:"coinSpin 2s linear infinite"
 }}
 />
 
-<h2>Capycoin reclamado</h2>
+<h2>Has reclamado {reward} Capycoin</h2>
 
 </div>
 
@@ -328,7 +333,10 @@ alt="Capycoin"
 width={260}
 height={260}
 style={{
-animation:"coinSpin 4s linear infinite",
+animation:
+remaining === 0
+? "coinReady 1.2s ease-in-out infinite"
+: "coinSpin 10s linear infinite",
 transformStyle:"preserve-3d"
 }}
 />
@@ -376,6 +384,24 @@ disabled={remaining>0 || claiming}
 100%{transform:rotateY(360deg);}
 }
 
+@keyframes coinReady {
+
+0%{
+transform:translateY(0px) scale(1);
+filter:drop-shadow(0 0 0px gold);
+}
+
+50%{
+transform:translateY(-15px) scale(1.08);
+filter:drop-shadow(0 0 15px gold);
+}
+
+100%{
+transform:translateY(0px) scale(1);
+filter:drop-shadow(0 0 0px gold);
+}
+
+}
 .video-bg{
 position:fixed;
 top:0;
