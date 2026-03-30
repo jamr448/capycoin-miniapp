@@ -350,7 +350,7 @@ disabled={remaining>0 || claiming}
 
 <div style={styles.aboutBox}>
 
-<h2>🪙 ¿Qué es Capycoin?</h2>
+<h2>🪙 <strong>¿Qué es Capycoin?</strong></h2>
 
 <p>
 Capycoin es una memecoin comunitaria creada para humanos verificados
@@ -358,21 +358,21 @@ dentro de World App. Su objetivo es construir una comunidad activa
 dentro del ecosistema de Worldchain.
 </p>
 
-<h3>🔥 Sistema de Streak</h3>
+<h3>🔥 <strong>Sistema de Streak</strong></h3>
 
 <p>
 Cada día consecutivo aumenta tu recompensa hasta un máximo de
-<strong>10 CAPY</strong>. Si pierdes un día, el streak vuelve a comenzar.
+<strong> 10 CAPYCOIN</strong>. Si pierdes un día, el streak vuelve a comenzar.
 </p>
 
-<h3>📊 Tokenomics</h3>
+<h3>📊 <strong>Tokenomics</strong></h3>
 
 <ul style={styles.tokenList}>
 <li>15% — Airdrop comunidad</li>
-<li>35% — Equipo y logística</li>
+<li>25% — Equipo y logística</li>
 <li>15% — Marketing</li>
-<li>5% — Token Burns</li>
-<li>20% — Liquidez</li>
+<li>5% — Token Burns "Una vez completada la fase de graduación"</li>
+<li>30% — Liquidez "una vez sea listada en DEX SCREENER"</li>
 <li>10% — Desarrollo</li>
 </ul>
 
