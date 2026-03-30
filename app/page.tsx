@@ -16,10 +16,17 @@ const [loading,setLoading] = useState(true);
 const [showClaiming,setShowClaiming] = useState(false);
 const [showReward,setShowReward] = useState(false);
 const [nextClaimTime,setNextClaimTime] = useState<number>(0);
+const [username,setUsername] = useState<string | null>(null);
 
 useEffect(()=>{
 
 MiniKit.install();
+
+const user = MiniKit.user;
+
+if(user){
+setUsername(user.username ?? "World User");
+}
 
 const init = async ()=>{
 
@@ -212,6 +219,12 @@ return(
 </video>
 
 <main style={styles.container}>
+
+{username && (
+<div style={styles.userBox}>
+👋 Hola {username}
+</div>
+)}
 
 {showClaiming && (
 
@@ -417,6 +430,16 @@ alignItems:"center",
 padding:"20px",
 color:"#063",
 fontFamily:"sans-serif"
+},
+
+userBox:{
+marginTop:"10px",
+background:"#ffffff",
+padding:"10px 20px",
+borderRadius:"20px",
+fontWeight:"bold",
+color:"#065f46",
+boxShadow:"0 4px 10px rgba(0,0,0,0.15)"
 },
 
 tabs:{
