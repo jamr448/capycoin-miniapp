@@ -400,6 +400,36 @@ style={styles.contractButton}
 
 <span>Ver contrato de Capycoin</span>
 
+<div style={styles.contractCard}>
+
+<div style={styles.contractTitle}>
+📄 Contrato Capycoin
+</div>
+
+<div style={styles.contractRow}>
+
+<span style={styles.contractText}>
+0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2
+</span>
+
+<button
+style={styles.copyButton}
+onClick={()=>{
+navigator.clipboard.writeText(
+"0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2"
+);
+alert("Contrato copiado");
+}}
+>
+
+Copiar
+
+</button>
+
+</div>
+
+</div>
+
 </a>
 
 <p style={styles.contractAddress}>
@@ -560,6 +590,44 @@ borderRadius:"40px",
 border:"none",
 fontSize:"18px",
 width:"80%"
+},
+
+contractCard:{
+marginTop:"20px",
+background:"#f8fafc",
+padding:"18px",
+borderRadius:"16px",
+width:"100%",
+boxShadow:"0 4px 10px rgba(0,0,0,0.1)"
+},
+
+contractTitle:{
+fontWeight:"bold",
+marginBottom:"10px",
+color:"#065f46"
+},
+
+contractRow:{
+display:"flex",
+alignItems:"center",
+justifyContent:"space-between",
+gap:"10px"
+},
+
+contractText:{
+fontSize:"12px",
+wordBreak:"break-all",
+flex:1
+},
+
+copyButton:{
+background:"#0ea5e9",
+border:"none",
+color:"#fff",
+padding:"8px 14px",
+borderRadius:"20px",
+cursor:"pointer",
+fontWeight:"bold"
 },
 
 overlay:{
