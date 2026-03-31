@@ -38,10 +38,6 @@ if(user?.walletAddress){
 setWallet(user.walletAddress);
 }
 
-if(user?.walletAddress){
-setWallet(user.walletAddress);
-}
-
 },500);
 
 const init = async ()=>{
