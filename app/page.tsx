@@ -341,6 +341,35 @@ disabled={remaining>0 || claiming}
 :`${3-clicks} presiones restantes`}
 </button>
 
+<div style={styles.socialCard}>
+
+<p style={styles.socialText}>
+Sigue a Capycoin en nuestras redes
+</p>
+
+<div style={styles.socialButtons}>
+
+<a
+href="https://x.com/Capycoin_cpcoin"
+target="_blank"
+style={styles.xButton}
+>
+<img src="/x.png" style={styles.socialIcon}/>
+<span>Síguenos</span>
+</a>
+
+<a
+href="https://t.me/"
+target="_blank"
+style={styles.telegramButton}
+>
+<img src="/telegram.png" style={styles.socialIcon}/>
+<span>Telegram</span>
+</a>
+
+</div>
+
+</div>
 </>
 
 )}
@@ -448,6 +477,41 @@ style={styles.exchangeButton}
 
 )}
 
+<div className="community-glow" style={styles.communityCard}>
+
+<h3 style={{marginBottom:"10px"}}>
+Únete a la comunidad de Capycoin
+</h3>
+
+<p style={styles.communityText}>
+Mantente al día con noticias, actualizaciones y novedades del proyecto.
+Síguenos en nuestras redes oficiales y no te pierdas ningún anuncio.
+</p>
+
+<div style={styles.socialButtons}>
+
+<a
+href="https://x.com/Capycoin_cpcoin"
+target="_blank"
+style={styles.xButton}
+>
+<img src="/x.png" className="x-anim"/>
+<span>Síguenos</span>
+</a>
+
+<a
+href="https://t.me/"
+target="_blank"
+style={styles.telegramButton}
+>
+<img src="/telegram.png" style={styles.socialIcon}/>
+<span>Telegram</span>
+</a>
+
+</div>
+
+</div>
+
 <style jsx global>{`
 
 @keyframes coinSpin {
@@ -464,6 +528,7 @@ style={styles.exchangeButton}
 
 }
 
+
 .video-bg{
 position:fixed;
 top:0;
@@ -473,6 +538,48 @@ height:100%;
 object-fit:cover;
 z-index:-1;
 opacity:0.35;
+}
+
+@keyframes xPulse {
+
+0%{
+transform:scale(1);
+}
+
+50%{
+transform:scale(1.2);
+}
+
+100%{
+transform:scale(1);
+}
+
+}
+
+.x-anim{
+width:18px;
+height:18px;
+animation:xPulse 2s infinite;
+}
+
+@keyframes cardGlow {
+
+0%{
+box-shadow:0 0 0 rgba(14,165,233,0);
+}
+
+50%{
+box-shadow:0 0 20px rgba(14,165,233,0.6);
+}
+
+100%{
+box-shadow:0 0 0 rgba(14,165,233,0);
+}
+
+}
+
+.community-glow{
+animation:cardGlow 3s infinite;
 }
 
 `}</style>
@@ -544,6 +651,73 @@ padding:"10px 20px",
 borderRadius:"20px",
 border:"none",
 fontWeight:"bold"
+},
+
+socialCard:{
+marginTop:"40px",
+background:"#ffffff",
+padding:"18px",
+borderRadius:"18px",
+width:"100%",
+boxShadow:"0 4px 10px rgba(0,0,0,0.15)",
+textAlign:"center"
+},
+
+communityCard:{
+marginTop:"30px",
+background:"#f8fafc",
+padding:"22px",
+borderRadius:"18px",
+width:"100%",
+boxShadow:"0 4px 10px rgba(0,0,0,0.1)",
+textAlign:"center"
+},
+
+communityText:{
+fontSize:"14px",
+marginBottom:"15px",
+lineHeight:"1.5"
+},
+
+socialText:{
+marginBottom:"12px",
+fontWeight:"bold"
+},
+
+socialButtons:{
+display:"flex",
+justifyContent:"center",
+gap:"12px",
+marginTop:"10px"
+},
+
+xButton:{
+display:"flex",
+alignItems:"center",
+gap:"6px",
+background:"#000",
+color:"#fff",
+padding:"10px 16px",
+borderRadius:"25px",
+textDecoration:"none",
+fontWeight:"bold"
+},
+
+telegramButton:{
+display:"flex",
+alignItems:"center",
+gap:"6px",
+background:"#0088cc",
+color:"#fff",
+padding:"10px 16px",
+borderRadius:"25px",
+textDecoration:"none",
+fontWeight:"bold"
+},
+
+socialIcon:{
+width:"18px",
+height:"18px"
 },
 
 topCards:{
