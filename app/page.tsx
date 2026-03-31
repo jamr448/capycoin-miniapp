@@ -409,10 +409,18 @@ onClick={()=>{
 navigator.clipboard.writeText(
 "0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2"
 );
-alert("Contrato copiado");
+
+setCopied(true);
+
+setTimeout(()=>{
+setCopied(false);
+},2000);
+
 }}
 >
-📋 Copiar
+
+{copied ? "✓ Copiado" : "📋 Copiar"}
+
 </button>
 
 <a
