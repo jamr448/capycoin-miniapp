@@ -424,7 +424,49 @@ Cada día consecutivo aumenta tu recompensa hasta un máximo de
 </ul>
 
 <div style={styles.contractCard}>
-...
+
+<div style={styles.contractTitle}>
+📄 Contrato Capycoin
+</div>
+
+<div style={styles.contractRow}>
+
+<span style={styles.contractText}>
+0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2
+</span>
+
+<button
+style={styles.copyButton}
+onClick={()=>{
+navigator.clipboard.writeText(
+"0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2"
+);
+
+setCopied(true);
+
+setTimeout(()=>{
+setCopied(false);
+},2000);
+
+}}
+>
+{copied ? "✓ Copiado" : "Copiar"}
+</button>
+
+</div>
+
+<div style={styles.contractButtons}>
+
+<a
+href="https://worldscan.org/token/0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2"
+target="_blank"
+style={styles.scanButton}
+>
+Ver en Worldscan
+</a>
+
+</div>
+
 </div>
 
 <a
