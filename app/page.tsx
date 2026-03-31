@@ -20,6 +20,7 @@ const [showReward,setShowReward] = useState(false);
 const [nextClaimTime,setNextClaimTime] = useState<number>(0);
 const [username,setUsername] = useState<string | null>(null);
 const [copied,setCopied] = useState(false);
+const [wallet,setWallet] = useState<string | null>(null);
 
 useEffect(()=>{
 
@@ -31,6 +32,10 @@ const user = MiniKit.user;
 
 if(user?.username){
 setUsername(user.username);
+}
+
+if(user?.walletAddress){
+setWallet(user.walletAddress);
 }
 
 },500);
@@ -145,6 +150,12 @@ return `${h.toString().padStart(2,"0")}:${m
 
 };
 
+const shortAddress = (addr:string)=>{
+
+return addr.slice(0,6) + "..." + addr.slice(-4);
+
+};
+
 const claimCapycoin = async ()=>{
 
 if(claiming || remaining > 0) return;
@@ -227,7 +238,13 @@ return(
 
 {username && (
 <div style={styles.userBox}>
-👋 Hola {username}
+👋 Hola {
+username
+? username
+: wallet
+? shortAddress(wallet)
+: "Capy Holder"
+}
 </div>
 )}
 
@@ -359,7 +376,7 @@ style={styles.xButton}
 </a>
 
 <a
-href="https://t.me/"
+href="https://t.me/+LEokjKFRaDFkNzEx"
 target="_blank"
 style={styles.telegramButton}
 >
@@ -458,7 +475,7 @@ style={styles.xButton}
 </a>
 
 <a
-href="https://t.me/"
+href="https://t.me/+LEokjKFRaDFkNzEx/"
 target="_blank"
 style={styles.telegramButton}
 >
