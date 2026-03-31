@@ -262,6 +262,7 @@ Acerca de
 
 </div>
 
+{tab === "claim" && (
 <div style={styles.userBox}>
 👋 Hola {
 username
@@ -271,6 +272,7 @@ username
 : "Capycoin Holder"
 }
 </div>
+)}
 
 {/* CLAIM TAB */}
 
