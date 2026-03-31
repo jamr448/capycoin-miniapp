@@ -383,12 +383,12 @@ Cada día consecutivo aumenta tu recompensa hasta un máximo de
 <h3>📊 <strong>Tokenomics</strong></h3>
 
 <ul style={styles.tokenList}>
-<li>15% — Airdrop comunidad</li>
-<li>25% — Equipo y logística</li>
-<li>15% — Marketing</li>
+<li>15% — Distribución de Airdrop</li>
+<li>20% — Reserva</li>
+<li>25% — Comunidad</li>
+<li>5% — Marketing</li>
 <li>5% — Token Burns "Una vez completada la fase de graduación"</li>
 <li>30% — Liquidez "una vez sea listada en DEX SCREENER"</li>
-<li>10% — Desarrollo</li>
 </ul>
 
 <div style={styles.contractCard}>
