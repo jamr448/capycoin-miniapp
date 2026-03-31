@@ -392,12 +392,12 @@ dentro del ecosistema de Worldchain.
 
 <div style={styles.statItem}>
 <span style={styles.statNumber}>17K+</span>
-<span style={styles.statLabel}> <strong>Holders</strong></span>
+<span style={styles.statLabel}><strong>Holders</strong></span>
 </div>
 
 <div style={styles.statItem}>
 <span style={styles.statNumber}>5M+</span>
-<span style={styles.statLabel}> <strong>CAPYCOIN distribuidos</strong></span>
+<span style={styles.statLabel}><strong>CAPYCOIN distribuidos</strong></span>
 </div>
 
 </div>
@@ -416,52 +416,12 @@ Cada día consecutivo aumenta tu recompensa hasta un máximo de
 <li>20% — Reserva</li>
 <li>25% — Comunidad</li>
 <li>5% — Marketing</li>
-<li>5% — Token Burns "Una vez completada la fase de graduación"</li>
-<li>30% — Liquidez "una vez sea listada en DEX SCREENER"</li>
+<li>5% — Token Burns</li>
+<li>30% — Liquidez</li>
 </ul>
 
 <div style={styles.contractCard}>
-
-<div style={styles.contractTitle}>
-📄 Contrato Capycoin
-</div>
-
-<div style={styles.contractAddressFull}>
-0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2
-</div>
-
-<div style={styles.contractButtons}>
-
-<button
-style={styles.copyButton}
-onClick={()=>{
-navigator.clipboard.writeText(
-"0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2"
-);
-
-setCopied(true);
-
-setTimeout(()=>{
-setCopied(false);
-},2000);
-
-}}
->
-
-{copied ? "✓ Copiado" : "📋 Copiar"}
-
-</button>
-
-<a
-href="https://worldscan.org/token/0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2"
-target="_blank"
-style={styles.scanButton}
->
-🔎 Worldscan
-</a>
-
-</div>
-
+...
 </div>
 
 <a
@@ -473,9 +433,7 @@ style={styles.exchangeButton}
 <span>Intercambiar Capycoin</span>
 </a>
 
-</div>
-
-)}
+{/* 🔥 TARJETA COMUNIDAD */}
 
 <div className="community-glow" style={styles.communityCard}>
 
@@ -511,6 +469,10 @@ style={styles.telegramButton}
 </div>
 
 </div>
+
+</div>
+
+)}
 
 <style jsx global>{`
 
