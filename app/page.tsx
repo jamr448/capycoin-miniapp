@@ -425,14 +425,14 @@ Cada día consecutivo aumenta tu recompensa hasta un máximo de
 
 <div style={styles.contractCard}>
 
-<div style={styles.contractTitle}>
-📄 Contrato Capycoin
+<div style={styles.contractHeader}>
+<span style={styles.contractTitle}>📄 Contrato Capycoin</span>
 </div>
 
 <div style={styles.contractRow}>
 
 <span style={styles.contractText}>
-0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2
+0xe55B...928B2
 </span>
 
 <button
@@ -462,7 +462,15 @@ href="https://worldscan.org/token/0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2"
 target="_blank"
 style={styles.scanButton}
 >
-Ver en Worldscan
+Worldscan
+</a>
+
+<a
+href="https://worldcoin.org/mini-app?app_id=app_e5ba7c3061400e361f98ce44d8b1b9c4&app_mode=mini-app"
+target="_blank"
+style={styles.swapButton}
+>
+Swap
 </a>
 
 </div>
@@ -782,25 +790,6 @@ marginBottom:"12px",
 textAlign:"center"
 },
 
-contractButtons:{
-display:"flex",
-justifyContent:"space-between",
-alignItems:"center",
-gap:"10px",
-marginTop:"10px",
-flexWrap:"nowrap"
-},
-
-scanButton:{
-background:"#065f46",
-color:"#fff",
-padding:"8px 14px",
-borderRadius:"20px",
-textDecoration:"none",
-fontWeight:"bold",
-fontSize:"14px"
-},
-
 contractCard:{
 marginTop:"20px",
 background:"#f8fafc",
@@ -814,21 +803,6 @@ contractTitle:{
 fontWeight:"bold",
 marginBottom:"10px",
 color:"#065f46"
-},
-
-contractRow:{
-display:"flex",
-alignItems:"center",
-justifyContent:"space-between",
-gap:"10px"
-},
-
-contractText:{
-fontSize:"12px",
-whiteSpace:"nowrap",
-overflow:"hidden",
-textOverflow:"ellipsis",
-flex:1
 },
 
 copyButton:{
@@ -877,20 +851,6 @@ marginBottom:"20px",
 paddingLeft:"20px"
 },
 
-contractButton:{
-display:"flex",
-alignItems:"center",
-justifyContent:"center",
-gap:"10px",
-background:"#065f46",
-color:"#fff",
-padding:"14px",
-borderRadius:"40px",
-textDecoration:"none",
-fontWeight:"bold",
-marginTop:"15px"
-},
-
 contractIcon:{
 fontSize:"18px"
 },
@@ -900,6 +860,54 @@ textAlign:"center",
 fontSize:"12px",
 marginTop:"6px",
 opacity:0.7
+},
+
+contractHeader:{
+display:"flex",
+justifyContent:"space-between",
+alignItems:"center",
+marginBottom:"8px"
+},
+
+contractRow:{
+display:"flex",
+alignItems:"center",
+justifyContent:"space-between",
+gap:"10px",
+marginBottom:"10px"
+},
+
+contractText:{
+fontSize:"14px",
+fontWeight:"bold",
+color:"#065f46"
+},
+
+contractButtons:{
+display:"flex",
+gap:"10px"
+},
+
+scanButton:{
+flex:1,
+background:"#065f46",
+color:"#fff",
+padding:"10px",
+borderRadius:"20px",
+textDecoration:"none",
+textAlign:"center",
+fontWeight:"bold"
+},
+
+swapButton:{
+flex:1,
+background:"#0ea5e9",
+color:"#fff",
+padding:"10px",
+borderRadius:"20px",
+textDecoration:"none",
+textAlign:"center",
+fontWeight:"bold"
 },
 
 exchangeButton:{
