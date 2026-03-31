@@ -240,7 +240,6 @@ return(
 
 <main style={styles.container}>
 
-{username && (
 <div style={styles.userBox}>
 👋 Hola {
 username
@@ -250,7 +249,6 @@ username
 : "Capy Holder"
 }
 </div>
-)}
 
 {showClaiming && (
 <div style={styles.overlay}>
