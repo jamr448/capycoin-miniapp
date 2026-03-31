@@ -354,7 +354,7 @@ href="https://x.com/Capycoin_cpcoin"
 target="_blank"
 style={styles.xButton}
 >
-<img src="/x.png" style={styles.socialIcon}/>
+<img src="/x.png" className="x-anim"/>
 <span>Síguenos</span>
 </a>
 
