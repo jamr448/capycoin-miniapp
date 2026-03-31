@@ -784,9 +784,11 @@ textAlign:"center"
 
 contractButtons:{
 display:"flex",
-justifyContent:"center",
+justifyContent:"space-between",
+alignItems:"center",
 gap:"10px",
-marginTop:"10px"
+marginTop:"10px",
+flexWrap:"nowrap"
 },
 
 scanButton:{
@@ -823,7 +825,9 @@ gap:"10px"
 
 contractText:{
 fontSize:"12px",
-wordBreak:"break-all",
+whiteSpace:"nowrap",
+overflow:"hidden",
+textOverflow:"ellipsis",
 flex:1
 },
 
@@ -831,10 +835,11 @@ copyButton:{
 background:"#0ea5e9",
 border:"none",
 color:"#fff",
-padding:"8px 14px",
+padding:"6px 12px",
 borderRadius:"20px",
 cursor:"pointer",
-fontWeight:"bold"
+fontWeight:"bold",
+whiteSpace:"nowrap"
 },
 
 overlay:{
