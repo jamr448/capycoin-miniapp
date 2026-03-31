@@ -19,8 +19,8 @@ const [showClaiming,setShowClaiming] = useState(false);
 const [showReward,setShowReward] = useState(false);
 const [nextClaimTime,setNextClaimTime] = useState<number>(0);
 const [username,setUsername] = useState<string | null>(null);
-const [copied,setCopied] = useState(false);
 const [wallet,setWallet] = useState<string | null>(null);
+const [copied,setCopied] = useState(false);
 
 useEffect(()=>{
 
@@ -32,6 +32,10 @@ const user = MiniKit.user;
 
 if(user?.username){
 setUsername(user.username);
+}
+
+if(user?.walletAddress){
+setWallet(user.walletAddress);
 }
 
 if(user?.walletAddress){
