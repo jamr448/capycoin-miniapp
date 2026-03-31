@@ -236,30 +236,6 @@ return(
 
 <main style={styles.container}>
 
-<div style={styles.userBox}>
-👋 Hola {
-username
-? username
-: wallet
-? shortAddress(wallet)
-: "Capy Holder"
-}
-</div>
-
-{showClaiming && (
-<div style={styles.overlay}>
-<img src="/capycoin.png" style={{width:"120px",animation:"coinSpin 2s linear infinite"}}/>
-<h2>Reclamando Capycoin...</h2>
-</div>
-)}
-
-{showReward && (
-<div style={styles.overlay}>
-<img src="/capycoin.png" style={{width:"120px",animation:"coinSpin 2s linear infinite"}}/>
-<h2>Has reclamado {reward} Capycoin</h2>
-</div>
-)}
-
 <div style={styles.tabs}>
 
 <button
@@ -284,6 +260,16 @@ onClick={()=>setTab("about")}
 Acerca de
 </button>
 
+</div>
+
+<div style={styles.userBox}>
+👋 Hola {
+username
+? username
+: wallet
+? shortAddress(wallet)
+: "Capycoin Holder"
+}
 </div>
 
 {/* CLAIM TAB */}
@@ -617,10 +603,13 @@ opacity:0.8
 },
 
 tabs:{
+position:"sticky",
+top:"10px",
 display:"flex",
 justifyContent:"space-between",
 width:"100%",
-marginTop:"40px"
+zIndex:5,
+marginTop:"10px"
 },
 
 tab:{
