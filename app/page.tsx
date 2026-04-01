@@ -504,12 +504,12 @@ Swap
 </div>
 
 <a
-href="https://worldcoin.org/mini-app?app_id=app_e5ba7c3061400e361f98ce44d8b1b9c4&app_mode=mini-app"
+href="https://jamr448.github.io/capycoin.io/#home"
 target="_blank"
 style={styles.exchangeButton}
 >
-<img src="/puff.png" style={styles.exchangeLogo}/>
-<span>Intercambiar Capycoin</span>
+<img src="/capycoin.png" style={styles.exchangeLogo}/>
+<span>Sitio Web</span>
 </a>
 
 {/* 🔥 TARJETA COMUNIDAD */}
