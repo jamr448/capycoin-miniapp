@@ -169,6 +169,23 @@ setClicks(nextClicks);
 if(nextClicks < 3) return;
 
 setClicks(0);
+
+// 🔐 verificación adicional
+try{
+
+const verify = await MiniKit.commandsAsync.verify({
+action:"claimcapycoin"
+});
+
+if(!verify?.finalPayload){
+return;
+}
+
+}catch(err){
+console.log("Verification failed",err);
+return;
+}
+
 setClaiming(true);
 setShowClaiming(true);
 
