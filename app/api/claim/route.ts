@@ -26,7 +26,7 @@ console.error(error);
 return NextResponse.json({success:false});
 }
 
-const today = new Date().toISOString().split("T")[0];
+const today = new Date().toLocaleDateString("en-CA");
 
 // 🆕 usuario nuevo
 if(!user){
@@ -52,6 +52,7 @@ success:true,
 balance:reward,
 reward,
 streak,
+streakMessage:`🔥 ¡Racha de ${streak} días!`,
 nextClaim
 });
 
@@ -88,9 +89,7 @@ const diffDays = Math.floor(
 if(diffDays === 1){
 streak += 1;
 }
-
-// perdió streak
-if(diffDays > 1){
+else if(diffDays > 1){
 streak = 1;
 }
 
@@ -123,6 +122,7 @@ success:true,
 balance:newBalance,
 reward,
 streak,
+streakMessage:`🔥 ¡Racha de ${streak} días!`,
 nextClaim
 });
 

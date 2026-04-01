@@ -21,6 +21,7 @@ const [nextClaimTime,setNextClaimTime] = useState<number>(0);
 const [username,setUsername] = useState<string | null>(null);
 const [wallet,setWallet] = useState<string | null>(null);
 const [copied,setCopied] = useState(false);
+const [streakMessage,setStreakMessage] = useState("");
 
 useEffect(()=>{
 
@@ -113,7 +114,9 @@ setReward(data.reward);
 if(data.streak !== undefined){
 setStreak(data.streak);
 }
-
+if(data.streakMessage){
+setStreakMessage(data.streakMessage);
+}
 }catch(err){
 console.log(err);
 }
@@ -298,6 +301,12 @@ username
 <>
 
 <div style={styles.topCards}>
+
+{streakMessage && (
+<div style={styles.streakMessage}>
+{streakMessage}
+</div>
+)}
 
 <div style={styles.infoCard}>
 <span style={styles.icon}>🔥</span>
@@ -635,6 +644,16 @@ alignItems:"center",
 padding:"20px",
 color:"#063",
 fontFamily:"sans-serif"
+},
+
+streakMessage:{
+marginTop:"10px",
+background:"#fff7ed",
+padding:"8px 14px",
+borderRadius:"20px",
+fontWeight:"bold",
+color:"#b45309",
+boxShadow:"0 2px 6px rgba(0,0,0,0.1)"
 },
 
 userBox:{
