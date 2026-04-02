@@ -555,13 +555,17 @@ style={styles.telegramButton}
 
 <style jsx global>{`
 
-html, body {
+html,body{
 margin:0;
 padding:0;
 height:100%;
-overflow:hidden;
 overscroll-behavior:none;
-touch-action:manipulation;
+}
+
+.container{
+height:100vh;
+overflow-y:auto;
+-webkit-overflow-scrolling:touch;
 }
 
 body{
@@ -650,7 +654,8 @@ animation:cardGlow 3s infinite;
 const styles:any={
 
 container:{
-height:"100%",
+height:"100vh",
+overflowY:"auto",
 background:"rgba(0,0,0,0.35)",
 display:"flex",
 flexDirection:"column",
