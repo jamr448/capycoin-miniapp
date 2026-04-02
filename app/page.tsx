@@ -250,10 +250,6 @@ return(
 
 <>
 
-<video autoPlay loop muted playsInline className="video-bg">
-<source src="/capy-bg.mp4" type="video/mp4"/>
-</video>
-
 <main style={styles.container}>
 
 <div style={styles.tabs}>
@@ -560,6 +556,8 @@ margin:0;
 padding:0;
 height:100%;
 overscroll-behavior:none;
+touch-action: manipulation;
+overflow-x: hidden;
 }
 
 .container{
@@ -652,12 +650,12 @@ const styles:any={
 container:{
 minHeight:"100vh",
 overflowY:"auto",
-background:"rgba(0,0,0,0.35)",
+background:"#020617",
 display:"flex",
 flexDirection:"column",
 alignItems:"center",
 padding:"20px",
-color:"#063",
+color:"#fff",
 fontFamily:"sans-serif"
 },
 
