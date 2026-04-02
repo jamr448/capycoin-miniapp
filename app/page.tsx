@@ -555,6 +555,19 @@ style={styles.telegramButton}
 
 <style jsx global>{`
 
+html, body {
+margin:0;
+padding:0;
+height:100%;
+overflow:hidden;
+overscroll-behavior:none;
+touch-action:manipulation;
+}
+
+body{
+position:fixed;
+width:100%;
+}
 @keyframes coinSpin {
 0%{transform:rotateY(0deg);}
 50%{transform:rotateY(180deg);}
@@ -574,10 +587,11 @@ style={styles.telegramButton}
 position:fixed;
 top:0;
 left:0;
-width:100%;
-height:100%;
+width:100vw;
+height:100vh;
 object-fit:cover;
 z-index:-1;
+pointer-events:none;
 opacity:0.35;
 }
 
@@ -636,7 +650,7 @@ animation:cardGlow 3s infinite;
 const styles:any={
 
 container:{
-minHeight:"100vh",
+height:"100%",
 background:"rgba(0,0,0,0.35)",
 display:"flex",
 flexDirection:"column",
