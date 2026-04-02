@@ -568,10 +568,6 @@ overflow-y:auto;
 -webkit-overflow-scrolling:touch;
 }
 
-body{
-position:fixed;
-width:100%;
-}
 @keyframes coinSpin {
 0%{transform:rotateY(0deg);}
 50%{transform:rotateY(180deg);}
@@ -654,7 +650,7 @@ animation:cardGlow 3s infinite;
 const styles:any={
 
 container:{
-height:"100vh",
+minHeight:"100vh",
 overflowY:"auto",
 background:"rgba(0,0,0,0.35)",
 display:"flex",
