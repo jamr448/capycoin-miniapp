@@ -333,7 +333,8 @@ animation:
 remaining === 0
 ? "coinReady 1.2s ease-in-out infinite"
 : "coinSpin 10s linear infinite",
-transformStyle:"preserve-3d"
+transformStyle:"preserve-3d",
+filter:"drop-shadow(0 0 20px gold)"
 }}
 />
 
@@ -650,7 +651,12 @@ const styles:any={
 container:{
 minHeight:"100vh",
 overflowY:"auto",
-background:"#020617",
+backgroundImage:"url('/bg-capy.jpg')",
+backgroundSize:"cover",
+backgroundPosition:"center",
+backgroundRepeat:"no-repeat",
+backgroundColor:"rgba(0,0,0,0.55)",
+backgroundBlendMode:"overlay",
 display:"flex",
 flexDirection:"column",
 alignItems:"center",
