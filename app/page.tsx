@@ -549,6 +549,15 @@ style={styles.telegramButton}
 </div>
 
 )}
+{showReward && (
+<div style={styles.overlay}>
+<div style={styles.rewardCard}>
+<h2>🎉 Reclamo exitoso</h2>
+<p>Has recibido <strong>{reward} CAPYCOIN</strong></p>
+<p>🔥 Streak: {streak}</p>
+</div>
+</div>
+)}
 
 <style jsx global>{`
 
