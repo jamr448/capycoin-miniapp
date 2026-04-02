@@ -706,13 +706,11 @@ opacity:0.8
 },
 
 tabs:{
-position:"sticky",
-top:"10px",
 display:"flex",
 justifyContent:"space-between",
 width:"100%",
-zIndex:5,
-marginTop:"10px"
+marginTop:"10px",
+marginBottom:"10px"
 },
 
 tab:{
