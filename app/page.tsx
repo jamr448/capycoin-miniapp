@@ -22,6 +22,7 @@ const [username,setUsername] = useState<string | null>(null);
 const [wallet,setWallet] = useState<string | null>(null);
 const [copied,setCopied] = useState(false);
 const [streakMessage,setStreakMessage] = useState("");
+const [explode,setExplode] = useState(false);
 
 useEffect(()=>{
 
@@ -231,6 +232,12 @@ setNextClaimTime(data.nextClaim);
 
 setShowReward(true);
 
+setExplode(true);
+
+setTimeout(()=>{
+setExplode(false);
+},1200);
+
 setTimeout(()=>{
 setShowReward(false);
 },2000);
@@ -330,11 +337,16 @@ width={260}
 height={260}
 style={{
 animation:
-remaining === 0
+explode
+? "coinExplode 1s ease-out"
+: remaining === 0
 ? "coinReady 1.2s ease-in-out infinite"
 : "coinSpin 10s linear infinite",
 transformStyle:"preserve-3d",
-filter:"drop-shadow(0 0 20px gold)"
+filter:
+remaining === 0
+? "drop-shadow(0 0 30px gold)"
+: "drop-shadow(0 0 10px gold)"
 }}
 />
 
@@ -570,6 +582,30 @@ touch-action: manipulation;
 overflow-x: hidden;
 }
 
+@keyframes coinExplode {
+
+0%{
+transform:scale(1) rotate(0deg);
+filter:drop-shadow(0 0 30px gold);
+}
+
+30%{
+transform:scale(1.4) rotate(180deg);
+filter:drop-shadow(0 0 60px gold);
+}
+
+60%{
+transform:scale(0.8) rotate(360deg);
+filter:drop-shadow(0 0 40px orange);
+}
+
+100%{
+transform:scale(1) rotate(360deg);
+filter:drop-shadow(0 0 20px gold);
+}
+
+}
+
 .container{
 height:100vh;
 overflow-y:auto;
@@ -692,6 +728,16 @@ borderRadius:"20px",
 fontWeight:"bold",
 color:"#065f46",
 boxShadow:"0 4px 10px rgba(0,0,0,0.15)"
+},
+
+rewardCard:{
+background:"#111",
+padding:"30px",
+borderRadius:"20px",
+textAlign:"center",
+boxShadow:"0 0 30px rgba(255,215,0,0.5)",
+color:"#fff",
+maxWidth:"280px"
 },
 
 statsBox:{
