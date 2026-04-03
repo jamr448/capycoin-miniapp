@@ -162,6 +162,24 @@ return ()=>clearInterval(interval);
 
 },[nextClaimTime]);
 
+useEffect(()=>{
+
+const user = MiniKit.user;
+
+if(user){
+
+if(user.username){
+setUsername(user.username);
+}
+
+if(user.walletAddress){
+setWallet(user.walletAddress);
+}
+
+}
+
+},[]);
+
 const formatTime = (t:number)=>{
 
 const h = Math.floor(t/3600);
@@ -182,14 +200,26 @@ return addr.slice(0,6) + "..." + addr.slice(-4);
 
 const loginUser = ()=>{
 
+try{
+
 const user = MiniKit.user;
 
-if(user?.username){
+if(user){
+
+if(user.username){
 setUsername(user.username);
 }
 
-if(user?.walletAddress){
+if(user.walletAddress){
 setWallet(user.walletAddress);
+}
+
+}
+
+}catch(err){
+
+console.log("World App user not available",err);
+
 }
 
 };
@@ -299,9 +329,17 @@ return(
 
 {username || wallet ? (
 
-<>
+<div>
+
+<div>
 🟢 {username ? username : shortAddress(wallet!)}
-</>
+</div>
+
+<div style={styles.userStatus}>
+Verified Human
+</div>
+
+</div>
 
 ) : (
 
@@ -309,7 +347,7 @@ return(
 style={styles.loginButton}
 onClick={loginUser}
 >
-Login
+Connect
 </button>
 
 )}
@@ -861,6 +899,11 @@ statItem:{
 display:"flex",
 flexDirection:"column",
 alignItems:"center"
+},
+
+userStatus:{
+fontSize:"12px",
+opacity:0.7
 },
 
 statNumber:{
