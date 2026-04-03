@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export default function Home() {
 
-const [tab,setTab] = useState("claim");
+const [tab,setTab] = useState("home");
 const [remaining,setRemaining] = useState<number>(0);
 const [balance,setBalance] = useState<number>(0);
 const [streak,setStreak] = useState<number>(1);
