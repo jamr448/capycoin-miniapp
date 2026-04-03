@@ -23,6 +23,7 @@ const [wallet,setWallet] = useState<string | null>(null);
 const [copied,setCopied] = useState(false);
 const [streakMessage,setStreakMessage] = useState("");
 const [explode,setExplode] = useState(false);
+const [lang,setLang] = useState("en");
 
 useEffect(()=>{
 
@@ -259,6 +260,31 @@ return(
 
 <main style={styles.container}>
 
+<div style={styles.header}>
+
+<div style={styles.userHeader}>
+🟢 {
+username
+? username
+: wallet
+? shortAddress(wallet)
+: "Capycoin Holder"
+}
+</div>
+
+<div style={styles.langSelector}>
+<select
+value={lang}
+onChange={(e)=>setLang(e.target.value)}
+style={styles.langSelect}
+>
+<option value="en">🇺🇸 EN</option>
+<option value="es">🇪🇸 ES</option>
+</select>
+</div>
+
+</div>
+
 <div style={styles.tabs}>
 
 <button
@@ -352,9 +378,11 @@ remaining === 0
 
 </div>
 
+<div style={styles.timerCard}>
 <h1 style={styles.timer}>
 {loading ? "..." : formatTime(remaining)}
 </h1>
+</div>
 
 <p style={styles.message}>
 {remaining===0
@@ -571,6 +599,34 @@ style={styles.telegramButton}
 </div>
 )}
 
+<div style={styles.bottomNav}>
+
+<button
+style={styles.navButton}
+onClick={()=>setTab("claim")}
+>
+🏠
+<span>Home</span>
+</button>
+
+<button
+style={styles.navButton}
+onClick={()=>setTab("claim")}
+>
+🪙
+<span>Claim</span>
+</button>
+
+<button
+style={styles.navButton}
+onClick={()=>setTab("about")}
+>
+ℹ️
+<span>Info</span>
+</button>
+
+</div>
+
 <style jsx global>{`
 
 html,body{
@@ -706,6 +762,7 @@ display:"flex",
 flexDirection:"column",
 alignItems:"center",
 padding:"20px",
+paddingBottom:"90px",
 color:"#fff",
 fontFamily:"sans-serif"
 },
@@ -1030,6 +1087,70 @@ borderRadius:"40px",
 textDecoration:"none",
 fontWeight:"bold",
 marginTop:"15px"
+},
+
+bottomNav:{
+position:"fixed",
+bottom:0,
+left:0,
+width:"100%",
+height:"70px",
+background:"#020617",
+display:"flex",
+justifyContent:"space-around",
+alignItems:"center",
+borderTop:"1px solid #1e293b",
+zIndex:1000
+},
+
+navButton:{
+display:"flex",
+flexDirection:"column",
+alignItems:"center",
+fontSize:"12px",
+color:"#fff",
+background:"none",
+border:"none"
+},
+
+header:{
+position:"fixed",
+top:0,
+left:0,
+width:"100%",
+height:"60px",
+background:"rgba(2,6,23,0.9)",
+backdropFilter:"blur(8px)",
+display:"flex",
+justifyContent:"space-between",
+alignItems:"center",
+padding:"0 20px",
+zIndex:1000
+},
+
+userHeader:{
+fontWeight:"bold",
+color:"#fff"
+},
+
+langSelector:{},
+
+langSelect:{
+background:"#020617",
+color:"#fff",
+border:"1px solid #1e293b",
+borderRadius:"10px",
+padding:"5px 8px"
+},
+
+timerCard:{
+marginTop:"80px",
+background:"rgba(0,0,0,0.5)",
+padding:"20px",
+borderRadius:"20px",
+width:"100%",
+textAlign:"center",
+boxShadow:"0 10px 30px rgba(0,0,0,0.4)"
 },
 
 exchangeLogo:{width:"24px",height:"24px"}
