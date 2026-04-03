@@ -31,7 +31,8 @@ dashboard:"Capycoin Dashboard",
 balance:"Balance",
 streak:"Streak",
 verified:"Verified",
-claimInfo:"Claim Capycoin every 24 hours and increase your streak."
+claimInfo:"Claim Capycoin every 24 hours and increase your streak.",
+nextClaim:"Next Claim"
 },
 
 es:{
@@ -39,7 +40,8 @@ dashboard:"Panel Capycoin",
 balance:"Balance",
 streak:"Racha",
 verified:"Verificado",
-claimInfo:"Reclama Capycoin cada 24 horas y aumenta tu racha."
+claimInfo:"Reclama Capycoin cada 24 horas y aumenta tu racha.",
+nextClaim:"Próximo Reclamo"
 }
 
 };
@@ -179,6 +181,13 @@ setWallet(user.walletAddress);
 }
 
 },[]);
+
+const totalCooldown = 86400; // 24 horas
+
+const progress =
+remaining > 0
+? ((totalCooldown - remaining) / totalCooldown) * 100
+: 100;
 
 const formatTime = (t:number)=>{
 
@@ -377,12 +386,23 @@ style={styles.langSelect}
 
 <div style={styles.nextClaimCard}>
 
-<div style={styles.nextClaimLabel}>
-Next Claim
-</div>
+<div style={{
+...styles.progressCircle,
+background:`conic-gradient(#0ea5e9 ${progress}%, #1e293b ${progress}%)`
+}}>
+
+<div style={styles.progressInner}>
 
 <div style={styles.nextClaimTimer}>
 {loading ? "..." : formatTime(remaining)}
+</div>
+
+<div style={styles.nextClaimLabel}>
+{text[lang].nextClaim}
+</div>
+
+</div>
+
 </div>
 
 </div>
@@ -948,6 +968,30 @@ color:"#065f46"
 statLabel:{
 fontSize:"14px",
 opacity:0.8
+},
+
+progressCircle:{
+width:"140px",
+height:"140px",
+borderRadius:"50%",
+background:"conic-gradient(#0ea5e9 0%, #1e293b 0%)",
+display:"flex",
+alignItems:"center",
+justifyContent:"center",
+margin:"0 auto",
+boxShadow:"0 10px 25px rgba(0,0,0,0.4)"
+},
+
+progressInner:{
+width:"110px",
+height:"110px",
+borderRadius:"50%",
+background:"#020617",
+display:"flex",
+flexDirection:"column",
+alignItems:"center",
+justifyContent:"center",
+textAlign:"center"
 },
 
 tabs:{
