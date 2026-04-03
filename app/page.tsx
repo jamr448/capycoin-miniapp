@@ -385,7 +385,12 @@ style={styles.langSelect}
 </h2>
 
 <div style={styles.nextClaimCard}>
-
+style={{
+...styles.progressCircle,
+background: remaining === 0
+? `conic-gradient(#22c55e 100%, #1e293b 100%)`
+: `conic-gradient(#0ea5e9 ${progress}%, #1e293b ${progress}%)`
+}}
 <div style={{
 ...styles.progressCircle,
 background:`conic-gradient(#0ea5e9 ${progress}%, #1e293b ${progress}%)`
@@ -398,7 +403,9 @@ background:`conic-gradient(#0ea5e9 ${progress}%, #1e293b ${progress}%)`
 </div>
 
 <div style={styles.nextClaimLabel}>
-{text[lang].nextClaim}
+{remaining === 0
+? (lang==="es" ? "Listo para reclamar" : "Ready to Claim")
+: text[lang].nextClaim}
 </div>
 
 </div>
@@ -507,7 +514,8 @@ remaining === 0
 <button
 style={{
 ...styles.button,
-opacity:remaining>0 || claiming ? 0.6 : 1
+opacity:remaining>0 || claiming ? 0.6 : 1,
+animation: remaining===0 ? "claimPulse 1.6s infinite" : "none"
 }}
 onClick={claimCapycoin}
 disabled={remaining>0 || claiming}
@@ -759,6 +767,25 @@ height:100%;
 overscroll-behavior:none;
 touch-action: manipulation;
 overflow-x: hidden;
+}
+
+@keyframes claimPulse {
+
+0%{
+transform:scale(1);
+box-shadow:0 0 0 rgba(34,197,94,0.6);
+}
+
+50%{
+transform:scale(1.05);
+box-shadow:0 0 20px rgba(34,197,94,0.8);
+}
+
+100%{
+transform:scale(1);
+box-shadow:0 0 0 rgba(34,197,94,0.6);
+}
+
 }
 
 @keyframes coinExplode {
