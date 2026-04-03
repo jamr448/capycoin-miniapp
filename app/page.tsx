@@ -385,16 +385,15 @@ style={styles.langSelect}
 </h2>
 
 <div style={styles.nextClaimCard}>
+
+<div
 style={{
 ...styles.progressCircle,
 background: remaining === 0
 ? `conic-gradient(#22c55e 100%, #1e293b 100%)`
 : `conic-gradient(#0ea5e9 ${progress}%, #1e293b ${progress}%)`
 }}
-<div style={{
-...styles.progressCircle,
-background:`conic-gradient(#0ea5e9 ${progress}%, #1e293b ${progress}%)`
-}}>
+>
 
 <div style={styles.progressInner}>
 
