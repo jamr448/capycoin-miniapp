@@ -287,34 +287,41 @@ style={styles.langSelect}
 
 {tab === "home" && (
 
-<div style={styles.homeCard}>
+<div style={styles.dashboard}>
 
-<h2>🪙 Capycoin Rewards</h2>
+<h2 style={styles.dashboardTitle}>
+🪙 Capycoin Dashboard
+</h2>
 
-<p>
-Welcome to the Capycoin reward system for verified humans.
-Verify your identity and claim daily rewards.
-</p>
+<div style={styles.dashboardCards}>
 
-<p>
-Your current balance:
-<strong> {balance} CAPYCOIN</strong>
+<div style={styles.dashboardCard}>
+<span style={styles.dashboardIcon}>🪙</span>
+<h3>{balance}</h3>
+<p>Balance</p>
+</div>
+
+<div style={styles.dashboardCard}>
+<span style={styles.dashboardIcon}>🔥</span>
+<h3>{streak}</h3>
+<p>Streak</p>
+</div>
+
+<div style={styles.dashboardCard}>
+<span style={styles.dashboardIcon}>✔</span>
+<h3>Verified</h3>
+<p>World ID</p>
+</div>
+
+</div>
+
+<p style={styles.dashboardText}>
+Claim Capycoin every 24 hours and increase your streak to earn
+higher rewards.
 </p>
 
 </div>
 
-)}
-
-{tab === "claim" && (
-<div style={styles.userBox}>
-👋 Hola {
-username
-? username
-: wallet
-? shortAddress(wallet)
-: "Capycoin Holder"
-}
-</div>
 )}
 
 {/* CLAIM TAB */}
@@ -596,15 +603,21 @@ style={styles.telegramButton}
 <div style={styles.bottomNav}>
 
 <button
-style={styles.navButton}
-onClick={()=>setTab("claim")}
+style={{
+...styles.navButton,
+color: tab==="home" ? "#0ea5e9" : "#fff"
+}}
+onClick={()=>setTab("home")}
 >
 🏠
 <span>Home</span>
 </button>
 
 <button
-style={styles.navButton}
+style={{
+...styles.navButton,
+color: tab==="claim" ? "#0ea5e9" : "#fff"
+}}
 onClick={()=>setTab("claim")}
 >
 🪙
@@ -612,7 +625,10 @@ onClick={()=>setTab("claim")}
 </button>
 
 <button
-style={styles.navButton}
+style={{
+...styles.navButton,
+color: tab==="about" ? "#0ea5e9" : "#fff"
+}}
 onClick={()=>setTab("about")}
 >
 ℹ️
@@ -951,6 +967,45 @@ color:"#064e3b",
 boxShadow:"0 4px 12px rgba(0,0,0,0.15)",
 textAlign:"center",
 lineHeight:"1.6"
+},
+
+dashboard:{
+marginTop:"40px",
+width:"100%",
+textAlign:"center"
+},
+
+dashboardTitle:{
+fontSize:"22px",
+marginBottom:"20px"
+},
+
+dashboardCards:{
+display:"flex",
+gap:"10px",
+justifyContent:"space-between",
+marginBottom:"20px"
+},
+
+dashboardCard:{
+flex:1,
+background:"rgba(255,255,255,0.08)",
+borderRadius:"20px",
+padding:"18px",
+backdropFilter:"blur(10px)",
+boxShadow:"0 8px 20px rgba(0,0,0,0.3)",
+textAlign:"center"
+},
+
+dashboardIcon:{
+fontSize:"22px",
+display:"block",
+marginBottom:"8px"
+},
+
+dashboardText:{
+opacity:0.8,
+fontSize:"14px"
 },
 
 contractAddressFull:{
