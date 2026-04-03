@@ -285,31 +285,25 @@ style={styles.langSelect}
 
 </div>
 
-<div style={styles.tabs}>
+{tab === "home" && (
 
-<button
-style={{
-...styles.tab,
-background:tab==="claim"?"#0ea5e9":"#fff",
-color:tab==="claim"?"#fff":"#000"
-}}
-onClick={()=>setTab("claim")}
->
-Reclamar
-</button>
+<div style={styles.homeCard}>
 
-<button
-style={{
-...styles.tab,
-background:tab==="about"?"#0ea5e9":"#fff",
-color:tab==="about"?"#fff":"#000"
-}}
-onClick={()=>setTab("about")}
->
-Acerca de
-</button>
+<h2>🪙 Capycoin Rewards</h2>
+
+<p>
+Welcome to the Capycoin reward system for verified humans.
+Verify your identity and claim daily rewards.
+</p>
+
+<p>
+Your current balance:
+<strong> {balance} CAPYCOIN</strong>
+</p>
 
 </div>
+
+)}
 
 {tab === "claim" && (
 <div style={styles.userBox}>
@@ -946,6 +940,17 @@ borderRadius:"40px",
 border:"none",
 fontSize:"18px",
 width:"80%"
+},
+
+homeCard:{
+marginTop:"40px",
+background:"#ffffff",
+padding:"25px",
+borderRadius:"20px",
+color:"#064e3b",
+boxShadow:"0 4px 12px rgba(0,0,0,0.15)",
+textAlign:"center",
+lineHeight:"1.6"
 },
 
 contractAddressFull:{
