@@ -980,9 +980,8 @@ opacity:0.9
 },
 
 nextClaimTimer:{
-fontSize:"32px",
-fontWeight:"bold",
-marginTop:"5px"
+fontSize:"36px",
+fontWeight:"bold"
 },
 
 statNumber:{
@@ -997,8 +996,8 @@ opacity:0.8
 },
 
 progressCircle:{
-width:"140px",
-height:"140px",
+width:"180px",
+height:"180px",
 borderRadius:"50%",
 background:"conic-gradient(#0ea5e9 0%, #1e293b 0%)",
 display:"flex",
@@ -1009,8 +1008,8 @@ boxShadow:"0 10px 25px rgba(0,0,0,0.4)"
 },
 
 progressInner:{
-width:"110px",
-height:"110px",
+width:"150px",
+height:"150px",
 borderRadius:"50%",
 background:"#020617",
 display:"flex",
