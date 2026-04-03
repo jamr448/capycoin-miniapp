@@ -375,6 +375,18 @@ style={styles.langSelect}
 🪙 {text[lang].dashboard}
 </h2>
 
+<div style={styles.nextClaimCard}>
+
+<div style={styles.nextClaimLabel}>
+Next Claim
+</div>
+
+<div style={styles.nextClaimTimer}>
+{loading ? "..." : formatTime(remaining)}
+</div>
+
+</div>
+
 <div style={styles.dashboardCards}>
 
 <div style={styles.dashboardCard}>
@@ -904,6 +916,27 @@ alignItems:"center"
 userStatus:{
 fontSize:"12px",
 opacity:0.7
+},
+
+nextClaimCard:{
+marginTop:"10px",
+marginBottom:"20px",
+background:"linear-gradient(135deg,#0ea5e9,#2563eb)",
+padding:"20px",
+borderRadius:"20px",
+textAlign:"center",
+boxShadow:"0 10px 25px rgba(0,0,0,0.4)"
+},
+
+nextClaimLabel:{
+fontSize:"14px",
+opacity:0.9
+},
+
+nextClaimTimer:{
+fontSize:"32px",
+fontWeight:"bold",
+marginTop:"5px"
 },
 
 statNumber:{
