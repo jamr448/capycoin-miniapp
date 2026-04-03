@@ -23,7 +23,26 @@ const [wallet,setWallet] = useState<string | null>(null);
 const [copied,setCopied] = useState(false);
 const [streakMessage,setStreakMessage] = useState("");
 const [explode,setExplode] = useState(false);
-const [lang,setLang] = useState("en");
+const [lang,setLang] = useState<"en" | "es">("en");
+const text = {
+
+en:{
+dashboard:"Capycoin Dashboard",
+balance:"Balance",
+streak:"Streak",
+verified:"Verified",
+claimInfo:"Claim Capycoin every 24 hours and increase your streak."
+},
+
+es:{
+dashboard:"Panel Capycoin",
+balance:"Balance",
+streak:"Racha",
+verified:"Verificado",
+claimInfo:"Reclama Capycoin cada 24 horas y aumenta tu racha."
+}
+
+};
 
 useEffect(()=>{
 
@@ -161,6 +180,20 @@ return addr.slice(0,6) + "..." + addr.slice(-4);
 
 };
 
+const loginUser = ()=>{
+
+const user = MiniKit.user;
+
+if(user?.username){
+setUsername(user.username);
+}
+
+if(user?.walletAddress){
+setWallet(user.walletAddress);
+}
+
+};
+
 const claimCapycoin = async ()=>{
 
 if(claiming || remaining > 0) return;
@@ -263,19 +296,30 @@ return(
 <div style={styles.header}>
 
 <div style={styles.userHeader}>
-🟢 {
-username
-? username
-: wallet
-? shortAddress(wallet)
-: "Capycoin Holder"
-}
+
+{username || wallet ? (
+
+<>
+🟢 {username ? username : shortAddress(wallet!)}
+</>
+
+) : (
+
+<button
+style={styles.loginButton}
+onClick={loginUser}
+>
+Login
+</button>
+
+)}
+
 </div>
 
 <div style={styles.langSelector}>
 <select
 value={lang}
-onChange={(e)=>setLang(e.target.value)}
+onChange={(e)=>setLang(e.target.value as "en" | "es")}
 style={styles.langSelect}
 >
 <option value="en">🇺🇸 EN</option>
@@ -290,7 +334,7 @@ style={styles.langSelect}
 <div style={styles.dashboard}>
 
 <h2 style={styles.dashboardTitle}>
-🪙 Capycoin Dashboard
+🪙 {text[lang].dashboard}
 </h2>
 
 <div style={styles.dashboardCards}>
@@ -298,26 +342,25 @@ style={styles.langSelect}
 <div style={styles.dashboardCard}>
 <span style={styles.dashboardIcon}>🪙</span>
 <h3>{balance}</h3>
-<p>Balance</p>
+<p>{text[lang].balance}</p>
 </div>
 
 <div style={styles.dashboardCard}>
 <span style={styles.dashboardIcon}>🔥</span>
 <h3>{streak}</h3>
-<p>Streak</p>
+<p>{text[lang].streak}</p>
 </div>
 
 <div style={styles.dashboardCard}>
 <span style={styles.dashboardIcon}>✔</span>
 <h3>Verified</h3>
-<p>World ID</p>
+<p>{text[lang].verified}</p>
 </div>
 
 </div>
 
 <p style={styles.dashboardText}>
-Claim Capycoin every 24 hours and increase your streak to earn
-higher rewards.
+{text[lang].claimInfo}
 </p>
 
 </div>
