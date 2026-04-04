@@ -11,6 +11,7 @@ const [remaining,setRemaining] = useState<number>(0);
 const [balance,setBalance] = useState<number>(0);
 const [streak,setStreak] = useState<number>(1);
 const [reward,setReward] = useState<number>(0);
+const [animatedReward,setAnimatedReward] = useState(0);
 const [verified,setVerified] = useState(false);
 const [claiming,setClaiming] = useState(false);
 const [clicks,setClicks] = useState(0);
@@ -174,6 +175,30 @@ console.log(err);
 init();
 
 },[]);
+
+useEffect(()=>{
+
+if(!showReward) return;
+
+let current = 0;
+
+setAnimatedReward(0);
+
+const interval = setInterval(()=>{
+
+current++;
+
+setAnimatedReward(current);
+
+if(current >= reward){
+clearInterval(interval);
+}
+
+},200);
+
+return ()=>clearInterval(interval);
+
+},[showReward,reward]);
 
 const loadUser = async (nullifier:string)=>{
 
@@ -377,6 +402,8 @@ setNextClaimTime(data.nextClaim);
 
 setShowReward(true);
 
+setAnimatedReward(0);
+
 setExplode(true);
 
 setTimeout(()=>{
@@ -385,7 +412,7 @@ setExplode(false);
 
 setTimeout(()=>{
 setShowReward(false);
-},2000);
+},5000);
 
 }catch(err){
 
@@ -785,8 +812,17 @@ style={styles.telegramButton}
 <div style={styles.overlay}>
 
 <div style={styles.rewardCard}>
-<h2>🎉 Reclamo exitoso</h2>
-<p>Has recibido <strong>{reward} CAPYCOIN</strong></p>
+<h2>🎉 Claim Successful</h2>
+
+<p style={{
+fontSize:"34px",
+fontWeight:"bold",
+color:"#22c55e",
+textShadow:"0 0 15px gold"
+}}>
++{animatedReward} CAPYCOIN
+</p>
+
 <p>🔥 Streak: {streak}</p>
 </div>
 
@@ -911,9 +947,9 @@ overflow-y:auto;
 
 @keyframes coinReady {
 
-0%{transform:translateY(0px) scale(1);filter:drop-shadow(0 0 0px gold);}
-50%{transform:translateY(-15px) scale(1.08);filter:drop-shadow(0 0 15px gold);}
-100%{transform:translateY(0px) scale(1);filter:drop-shadow(0 0 0px gold);}
+0%{transform:translateY(0px) scale(1);}
+50%{transform:translateY(-8px) scale(1.05);}
+100%{transform:translateY(0px) scale(1);}
 
 }
 
@@ -1012,14 +1048,14 @@ animation:coinFall linear forwards,
 coinGlow 2s ease-in-out infinite;
 }
 
-.coinRain img:nth-child(1){left:5%;animation-duration:4s;}
-.coinRain img:nth-child(2){left:20%;animation-duration:3.5s;}
-.coinRain img:nth-child(3){left:35%;animation-duration:4.5s;}
-.coinRain img:nth-child(4){left:50%;animation-duration:3s;}
-.coinRain img:nth-child(5){left:65%;animation-duration:4s;}
-.coinRain img:nth-child(6){left:75%;animation-duration:3.8s;}
-.coinRain img:nth-child(7){left:85%;animation-duration:4.2s;}
-.coinRain img:nth-child(8){left:95%;animation-duration:3.6s;}
+.coinRain img:nth-child(1){left:5%;animation-duration:7s;}
+.coinRain img:nth-child(2){left:20%;animation-duration:6.5s;}
+.coinRain img:nth-child(3){left:35%;animation-duration:7.5s;}
+.coinRain img:nth-child(4){left:50%;animation-duration:6s;}
+.coinRain img:nth-child(5){left:65%;animation-duration:7s;}
+.coinRain img:nth-child(6){left:75%;animation-duration:6.8s;}
+.coinRain img:nth-child(7){left:85%;animation-duration:7.2s;}
+.coinRain img:nth-child(8){left:95%;animation-duration:6.6s;}
 
 @keyframes coinFall{
 
