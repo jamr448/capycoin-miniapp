@@ -720,7 +720,7 @@ style={styles.telegramButton}
 
 <div style={styles.statItem}>
 <span style={styles.statNumber}>5M+</span>
-<span style={styles.statLabel}><strong>CAPYCOIN distribuidos</strong></span>
+<span style={styles.statLabel}><strong>{text[lang].distributed}</strong></span>
 </div>
 
 </div>
@@ -850,7 +850,7 @@ target="_blank"
 style={styles.telegramButton}
 >
 <img src="/telegram.png" style={styles.socialIcon}/>
-<span>Telegram</span>
+<span>{text[lang].telegram}</span>
 </a>
 
 </div>
@@ -865,18 +865,48 @@ style={styles.telegramButton}
 <div style={styles.overlay}>
 
 <div style={styles.rewardCard}>
-<h2>🎉 Claim Successful</h2>
 
-<p style={{
-fontSize:"34px",
-fontWeight:"bold",
-color:"#22c55e",
-textShadow:"0 0 15px gold"
-}}>
-+{animatedReward} CAPYCOIN
+<h2>
+🎉 {lang==="es"
+? `¡Acabas de reclamar ${animatedReward} Capycoin!`
+: `You just claimed ${animatedReward} Capycoin!`}
+</h2>
+
+<p style={{marginTop:"10px"}}>
+{lang==="es"
+? "🔥 Sigue acumulando Capycoin para desbloquear más recompensas dentro de la app."
+: "🔥 Keep stacking Capycoin to unlock more rewards inside the app."}
 </p>
 
-<p>🔥 Streak: {streak}</p>
+<p style={{
+marginTop:"8px",
+fontSize:"14px",
+opacity:0.8
+}}>
+🔥 Streak: {streak}
+</p>
+<p style={{
+marginTop:"15px",
+fontSize:"12px",
+opacity:0.7
+}}>
+{lang==="es"
+? "O convierte a USD / WLD usando:"
+: "Or convert to USD / WLD using:"}
+</p>
+<a
+href="https://worldcoin.org/mini-app?app_id=app_36b1f21c5c3f8f63e2f4a0f6a6a5b5a0"
+target="_blank"
+style={styles.pufButton}
+>
+<img
+src="/puff.png"
+style={{width:"20px",height:"20px"}}
+/>
+
+<span>Puf Wallet</span>
+
+</a>
 </div>
 
 <div className="coinRain">
@@ -1300,6 +1330,21 @@ fontSize:"14px",
 opacity:0.9
 },
 
+pufButton:{
+marginTop:"10px",
+display:"flex",
+alignItems:"center",
+justifyContent:"center",
+gap:"8px",
+background:"#22c55e",
+color:"#fff",
+padding:"10px 16px",
+borderRadius:"30px",
+textDecoration:"none",
+fontWeight:"bold",
+boxShadow:"0 4px 12px rgba(0,0,0,0.4)"
+},
+
 nextClaimTimer:{
 fontSize:"36px",
 fontWeight:"bold"
@@ -1491,7 +1536,7 @@ fontSize:"14px"
 },
 
 infoContainer:{
-marginTop:"80px",
+marginTop:"90px",
 width:"100%",
 maxWidth:"420px",
 display:"flex",
