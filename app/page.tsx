@@ -694,11 +694,26 @@ style={styles.telegramButton}
 )}
 {showReward && (
 <div style={styles.overlay}>
+
 <div style={styles.rewardCard}>
 <h2>🎉 Reclamo exitoso</h2>
 <p>Has recibido <strong>{reward} CAPYCOIN</strong></p>
 <p>🔥 Streak: {streak}</p>
 </div>
+
+<div className="coinRain">
+
+<img src="/capycoin-drop.png"/>
+<img src="/capycoin-drop.png"/>
+<img src="/capycoin-drop.png"/>
+<img src="/capycoin-drop.png"/>
+<img src="/capycoin-drop.png"/>
+<img src="/capycoin-drop.png"/>
+<img src="/capycoin-drop.png"/>
+<img src="/capycoin-drop.png"/>
+
+</div>
+
 </div>
 )}
 
@@ -876,6 +891,78 @@ transform:rotate(0deg);
 
 100%{
 transform:rotate(360deg);
+}
+
+}
+
+.coinRain{
+position:fixed;
+top:-150px;
+left:0;
+width:100%;
+height:100%;
+pointer-events:none;
+overflow:hidden;
+}
+
+.coinRain img{
+position:absolute;
+width:70px;
+animation:coinFall linear forwards;
+filter:drop-shadow(0 0 6px gold);
+}
+
+.coinRain img:nth-child(2),
+.coinRain img:nth-child(5),
+.coinRain img:nth-child(7){
+
+filter:drop-shadow(0 0 14px gold)
+drop-shadow(0 0 28px gold);
+
+animation:coinFall linear forwards,
+coinGlow 2s ease-in-out infinite;
+}
+
+.coinRain img:nth-child(1){left:5%;animation-duration:4s;}
+.coinRain img:nth-child(2){left:20%;animation-duration:3.5s;}
+.coinRain img:nth-child(3){left:35%;animation-duration:4.5s;}
+.coinRain img:nth-child(4){left:50%;animation-duration:3s;}
+.coinRain img:nth-child(5){left:65%;animation-duration:4s;}
+.coinRain img:nth-child(6){left:75%;animation-duration:3.8s;}
+.coinRain img:nth-child(7){left:85%;animation-duration:4.2s;}
+.coinRain img:nth-child(8){left:95%;animation-duration:3.6s;}
+
+@keyframes coinFall{
+
+0%{
+transform:translateY(-200px) rotate(0deg);
+opacity:0;
+}
+
+20%{
+opacity:1;
+}
+
+100%{
+transform:translateY(900px) rotate(360deg);
+opacity:0;
+}
+
+}
+
+@keyframes coinGlow{
+
+0%{
+filter:drop-shadow(0 0 6px gold);
+}
+
+50%{
+filter:drop-shadow(0 0 20px gold)
+drop-shadow(0 0 40px gold);
+}
+
+100%{
+filter:drop-shadow(0 0 6px gold);
 }
 
 }
