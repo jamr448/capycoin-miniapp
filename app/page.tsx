@@ -1050,12 +1050,14 @@ fontWeight:"bold"
 },
 
 socialCard:{
-marginTop:"40px",
-background:"#ffffff",
-padding:"18px",
-borderRadius:"18px",
-width:"100%",
-boxShadow:"0 4px 10px rgba(0,0,0,0.15)",
+marginTop:"30px",
+background:"rgba(255,255,255,0.08)",
+backdropFilter:"blur(10px)",
+padding:"20px",
+borderRadius:"20px",
+width:"90%",
+maxWidth:"420px",
+boxShadow:"0 8px 20px rgba(0,0,0,0.35)",
 textAlign:"center"
 },
 
@@ -1083,8 +1085,10 @@ fontWeight:"bold"
 socialButtons:{
 display:"flex",
 justifyContent:"center",
-gap:"12px",
-marginTop:"10px"
+alignItems:"center",
+gap:"14px",
+marginTop:"12px",
+flexWrap:"wrap"
 },
 
 xButton:{
@@ -1093,10 +1097,11 @@ alignItems:"center",
 gap:"6px",
 background:"#000",
 color:"#fff",
-padding:"10px 16px",
-borderRadius:"25px",
+padding:"10px 18px",
+borderRadius:"30px",
 textDecoration:"none",
-fontWeight:"bold"
+fontWeight:"bold",
+boxShadow:"0 4px 12px rgba(0,0,0,0.4)"
 },
 
 telegramButton:{
