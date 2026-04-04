@@ -25,8 +25,8 @@ const [copied,setCopied] = useState(false);
 const [streakMessage,setStreakMessage] = useState("");
 const [explode,setExplode] = useState(false);
 const [lang,setLang] = useState<"en" | "es">("en");
-const [totalUsers,setTotalUsers] = useState(17000);
-const [totalClaimed,setTotalClaimed] = useState(5000000);
+const [totalUsers,setTotalUsers] = useState(0);
+const [totalClaimed,setTotalClaimed] = useState(0);
 const text = {
 
 en:{
@@ -175,6 +175,7 @@ console.log(err);
 };
 
 init();
+loadStats();
 
 },[]);
 
@@ -238,7 +239,27 @@ console.log(err);
 setLoading(false);
 
 };
+const loadStats = async ()=>{
 
+try{
+
+const res = await fetch("/api/stats",{cache:"no-store"});
+
+const data = await res.json();
+
+if(data.users){
+setTotalUsers(data.users);
+}
+
+if(data.claimed){
+setTotalClaimed(data.claimed);
+}
+
+}catch(err){
+console.log(err);
+}
+
+};
 useEffect(()=>{
 
 const interval = setInterval(()=>{
@@ -305,7 +326,19 @@ const shortAddress = (addr:string)=>{
 return addr.slice(0,6) + "..." + addr.slice(-4);
 
 };
+const formatNumber = (n:number)=>{
 
+if(n>=1000000){
+return (n/1000000).toFixed(1)+"M+";
+}
+
+if(n>=1000){
+return (n/1000).toFixed(1)+"K+";
+}
+
+return n.toString();
+
+};
 const loginUser = ()=>{
 
 try{
@@ -391,7 +424,7 @@ return;
 }
 
 setBalance(data.balance);
-
+setTotalClaimed(prev => prev + reward);
 if(data.reward !== undefined){
 setReward(data.reward);
 }
@@ -530,7 +563,7 @@ background: remaining === 0
 
 <div style={styles.globalStatItem}>
 <span style={styles.globalStatNumber}>
-{(totalUsers/1000).toFixed(0)}K+
+{formatNumber(totalUsers)}
 </span>
 <span style={styles.globalStatLabel}>
 {lang==="es" ? "Usuarios" : "Users"}
@@ -539,7 +572,7 @@ background: remaining === 0
 
 <div style={styles.globalStatItem}>
 <span style={styles.globalStatNumber}>
-{(totalClaimed/1000000).toFixed(0)}M+
+{formatNumber(totalClaimed)}
 </span>
 <span style={styles.globalStatLabel}>
 CAPYCOIN
