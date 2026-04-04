@@ -32,7 +32,30 @@ balance:"Balance",
 streak:"Streak",
 verified:"Verified",
 claimInfo:"Claim Capycoin every 24 hours and increase your streak.",
-nextClaim:"Next Claim"
+nextClaim:"Next Claim",
+
+aboutTitle:"About Capycoin",
+aboutText:"Capycoin is a community memecoin created for verified humans inside World App. Its goal is to build an active community within the Worldchain ecosystem.",
+
+holders:"Holders",
+distributed:"CAPYCOIN Distributed",
+
+streakSystem:"Streak System",
+streakText:"Claim every day to increase your streak and earn more rewards. The streak can reach up to 10 CAPYCOIN. If you miss a day, it resets.",
+
+tokenomics:"Tokenomics",
+
+contract:"Capycoin Contract",
+copy:"Copy",
+copied:"Copied",
+
+website:"Website",
+
+communityTitle:"Join the Capycoin Community",
+communityText:"Stay up to date with news, announcements and updates from the project.",
+
+follow:"Follow",
+telegram:"Telegram"
 },
 
 es:{
@@ -41,7 +64,30 @@ balance:"Balance",
 streak:"Racha",
 verified:"Verificado",
 claimInfo:"Reclama Capycoin cada 24 horas y aumenta tu racha.",
-nextClaim:"Próximo Reclamo"
+nextClaim:"Próximo Reclamo",
+
+aboutTitle:"Sobre Capycoin",
+aboutText:"Capycoin es una memecoin comunitaria creada para humanos verificados dentro de World App. Su objetivo es construir una comunidad activa dentro del ecosistema Worldchain.",
+
+holders:"Holders",
+distributed:"CAPYCOIN distribuidos",
+
+streakSystem:"Sistema de Racha",
+streakText:"Reclama cada día para aumentar tu racha y ganar más recompensas. La racha puede llegar hasta 10 CAPYCOIN. Si pierdes un día se reinicia.",
+
+tokenomics:"Tokenomics",
+
+contract:"Contrato Capycoin",
+copy:"Copiar",
+copied:"Copiado",
+
+website:"Sitio Web",
+
+communityTitle:"Únete a la comunidad de Capycoin",
+communityText:"Mantente al día con noticias, anuncios y novedades del proyecto.",
+
+follow:"Síguenos",
+telegram:"Telegram"
 }
 
 };
@@ -49,6 +95,24 @@ nextClaim:"Próximo Reclamo"
 useEffect(()=>{
 
 MiniKit.install();
+
+// idioma guardado
+const savedLang = localStorage.getItem("capyLang");
+
+if(savedLang === "es" || savedLang === "en"){
+setLang(savedLang);
+}else{
+
+// detectar idioma del navegador
+const browserLang = navigator.language || "en";
+
+if(browserLang.startsWith("es")){
+setLang("es");
+}else{
+setLang("en");
+}
+
+}
 
 setTimeout(()=>{
 
@@ -361,7 +425,11 @@ Human Verified
 <div style={styles.langSelector}>
 <select
 value={lang}
-onChange={(e)=>setLang(e.target.value as "en" | "es")}
+onChange={(e)=>{
+const newLang = e.target.value as "en" | "es";
+setLang(newLang);
+localStorage.setItem("capyLang",newLang);
+}}
 style={styles.langSelect}
 >
 <option value="en">🇺🇸 EN</option>
@@ -551,12 +619,10 @@ style={styles.telegramButton}
 
 <div style={styles.infoCard}>
 
-<h3>🪙 About Capycoin</h3>
+<h3>🪙 {text[lang].aboutTitle}</h3>
 
 <p>
-Capycoin is a community memecoin created for verified humans
-inside World App. Its goal is to build an active community
-within the Worldchain ecosystem.
+{text[lang].aboutText}
 </p>
 
 </div>
@@ -567,7 +633,7 @@ within the Worldchain ecosystem.
 
 <div style={styles.statItem}>
 <span style={styles.statNumber}>17K+</span>
-<span style={styles.statLabel}><strong>Holders</strong></span>
+<span style={styles.statLabel}><strong>{text[lang].holders}</strong></span>
 </div>
 
 <div style={styles.statItem}>
@@ -611,7 +677,7 @@ If you miss a day, it resets.
 <div style={styles.contractCard}>
 
 <div style={styles.contractHeader}>
-<span style={styles.contractTitle}>📄 Capycoin Contract</span>
+<span style={styles.contractTitle}>📄 {text[lang].contract}</span>
 </div>
 
 <div style={styles.contractRow}>
@@ -635,7 +701,7 @@ setCopied(false);
 
 }}
 >
-{copied ? "✓ Copied" : "Copy"}
+{copied ? `✓ ${text[lang].copied}` : text[lang].copy}
 </button>
 
 </div>
@@ -666,7 +732,7 @@ target="_blank"
 style={styles.exchangeButton}
 >
 <img src="/capycoin.png" style={styles.exchangeLogo}/>
-<span>Website</span>
+<span>{text[lang].website}</span>
 </a>
 
 </div>
@@ -680,12 +746,11 @@ style={styles.exchangeButton}
 <div className="community-glow" style={styles.communityCard}>
 
 <h3 style={{marginBottom:"10px"}}>
-Únete a la comunidad de Capycoin
+{text[lang].communityTitle}
 </h3>
 
 <p style={styles.communityText}>
-Mantente al día con noticias, actualizaciones y novedades del proyecto.
-Síguenos en nuestras redes oficiales y no te pierdas ningún anuncio.
+{text[lang].communityText}
 </p>
 
 <div style={styles.socialButtons}>
@@ -696,7 +761,7 @@ target="_blank"
 style={styles.xButton}
 >
 <img src="/x.png" className="x-anim"/>
-<span>Síguenos</span>
+<span>{text[lang].follow}</span>
 </a>
 
 <a
