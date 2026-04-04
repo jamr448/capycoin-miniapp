@@ -25,6 +25,8 @@ const [copied,setCopied] = useState(false);
 const [streakMessage,setStreakMessage] = useState("");
 const [explode,setExplode] = useState(false);
 const [lang,setLang] = useState<"en" | "es">("en");
+const [totalUsers,setTotalUsers] = useState(17000);
+const [totalClaimed,setTotalClaimed] = useState(5000000);
 const text = {
 
 en:{
@@ -524,7 +526,27 @@ background: remaining === 0
 </div>
 
 </div>
+<div style={styles.globalStatsCard}>
 
+<div style={styles.globalStatItem}>
+<span style={styles.globalStatNumber}>
+{(totalUsers/1000).toFixed(0)}K+
+</span>
+<span style={styles.globalStatLabel}>
+{lang==="es" ? "Usuarios" : "Users"}
+</span>
+</div>
+
+<div style={styles.globalStatItem}>
+<span style={styles.globalStatNumber}>
+{(totalClaimed/1000000).toFixed(0)}M+
+</span>
+<span style={styles.globalStatLabel}>
+CAPYCOIN
+</span>
+</div>
+
+</div>
 <p style={styles.dashboardText}>
 {text[lang].claimInfo}
 </p>
@@ -1171,6 +1193,35 @@ width:"100%",
 height:"calc(100vh - 130px)",
 paddingTop:"10px",
 paddingBottom:"10px"
+},
+
+globalStatsCard:{
+display:"flex",
+justifyContent:"space-around",
+alignItems:"center",
+background:"rgba(255,255,255,0.08)",
+backdropFilter:"blur(10px)",
+borderRadius:"20px",
+padding:"20px",
+marginTop:"10px",
+boxShadow:"0 8px 20px rgba(0,0,0,0.35)"
+},
+
+globalStatItem:{
+display:"flex",
+flexDirection:"column",
+alignItems:"center"
+},
+
+globalStatNumber:{
+fontSize:"28px",
+fontWeight:"bold",
+color:"#22c55e"
+},
+
+globalStatLabel:{
+fontSize:"14px",
+opacity:0.8
 },
 
 energyRing:{
