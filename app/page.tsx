@@ -166,6 +166,8 @@ return ()=>clearInterval(interval);
 
 useEffect(()=>{
 
+const interval = setInterval(()=>{
+
 const user = MiniKit.user;
 
 if(user){
@@ -178,7 +180,13 @@ if(user.walletAddress){
 setWallet(user.walletAddress);
 }
 
+clearInterval(interval);
+
 }
+
+},500);
+
+return ()=>clearInterval(interval);
 
 },[]);
 
