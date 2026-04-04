@@ -442,34 +442,19 @@ background: remaining === 0
 
 {tab==="claim" && (
 
-<>
-
-<div style={styles.topCards}>
-
-{streakMessage && (
-<div style={styles.streakMessage}>
-{streakMessage}
-</div>
-)}
-
-<div style={styles.infoCard}>
-<span style={styles.icon}>🔥</span>
-<span>Streak {streak}</span>
-</div>
-
-<div style={styles.infoCard}>
-<span style={styles.icon}>🪙</span>
-<span>{balance} CAPYCOIN</span>
-</div>
-
-<div style={styles.infoCard}>
-<img src="/verified.png" style={styles.verifiedIcon}/>
-<span>World ID</span>
-</div>
-
-</div>
+<div style={styles.claimContainer}>
 
 <div style={styles.logoBox}>
+
+<div
+style={{
+...styles.energyRing,
+boxShadow:
+remaining === 0
+? "0 0 60px rgba(255,215,0,0.8)"
+: "none"
+}}
+>
 
 <Image
 src="/capycoin.png"
@@ -490,6 +475,8 @@ remaining === 0
 : "drop-shadow(0 0 10px gold)"
 }}
 />
+
+</div>
 
 </div>
 
@@ -552,7 +539,7 @@ style={styles.telegramButton}
 </div>
 
 </div>
-</>
+</div>
 
 )}
 
@@ -881,6 +868,18 @@ box-shadow:0 0 0 rgba(14,165,233,0);
 animation:cardGlow 3s infinite;
 }
 
+@keyframes energySpin {
+
+0%{
+transform:rotate(0deg);
+}
+
+100%{
+transform:rotate(360deg);
+}
+
+}
+
 `}</style>
 
 </main>
@@ -957,6 +956,27 @@ alignItems:"center"
 userStatus:{
 fontSize:"12px",
 opacity:0.7
+},
+
+claimContainer:{
+flex:1,
+display:"flex",
+flexDirection:"column",
+alignItems:"center",
+justifyContent:"center",
+textAlign:"center",
+width:"100%",
+marginTop:"40px"
+},
+
+energyRing:{
+position:"relative",
+borderRadius:"50%",
+padding:"10px",
+display:"flex",
+alignItems:"center",
+justifyContent:"center",
+boxShadow:"0 0 0 rgba(255,215,0,0)"
 },
 
 nextClaimCard:{
@@ -1124,7 +1144,7 @@ icon:{fontSize:"18px"},
 
 verifiedIcon:{width:"18px",height:"18px"},
 
-logoBox:{marginTop:"40px"},
+logoBox:{marginTop:"10px"},
 
 timer:{fontSize:"48px",marginTop:"20px"},
 
@@ -1387,7 +1407,7 @@ padding:"5px 8px"
 },
 
 timerCard:{
-marginTop:"80px",
+marginTop:"20px",
 background:"rgba(0,0,0,0.5)",
 padding:"20px",
 borderRadius:"20px",
