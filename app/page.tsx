@@ -547,15 +547,21 @@ style={styles.telegramButton}
 
 {tab==="about" && (
 
-<div style={styles.aboutBox}>
+<div style={styles.infoContainer}>
 
-<h2>🪙 <strong>¿Qué es Capycoin?</strong></h2>
+<div style={styles.infoCard}>
+
+<h3>🪙 About Capycoin</h3>
 
 <p>
-Capycoin es una memecoin comunitaria creada para humanos verificados
-dentro de World App. Su objetivo es construir una comunidad activa
-dentro del ecosistema de Worldchain.
+Capycoin is a community memecoin created for verified humans
+inside World App. Its goal is to build an active community
+within the Worldchain ecosystem.
 </p>
+
+</div>
+
+<div style={styles.infoCard}>
 
 <div style={styles.statsBox}>
 
@@ -571,28 +577,41 @@ dentro del ecosistema de Worldchain.
 
 </div>
 
-<h3>🔥<strong>Sistema de Streak</strong></h3>
+</div>
+
+<div style={styles.infoCard}>
+
+<h3>🔥 Streak System</h3>
 
 <p>
-Cada día consecutivo aumenta tu recompensa hasta un máximo de
-<strong> 10 CAPYCOIN</strong>. Si pierdes un día, el streak vuelve a comenzar.
+Claim every day to increase your streak and earn more rewards.
+The streak can reach up to <strong>10 CAPYCOIN</strong>.
+If you miss a day, it resets.
 </p>
 
-<h3>📊 <strong>Tokenomics</strong></h3>
+</div>
+
+<div style={styles.infoCard}>
+
+<h3>📊 Tokenomics</h3>
 
 <ul style={styles.tokenList}>
-<li>15% — Distribución de Airdrop</li>
-<li>20% — Reserva</li>
-<li>25% — Comunidad</li>
+<li>15% — Airdrop Distribution</li>
+<li>20% — Reserve</li>
+<li>25% — Community</li>
 <li>5% — Marketing</li>
 <li>5% — Token Burns</li>
-<li>30% — Liquidez</li>
+<li>30% — Liquidity</li>
 </ul>
+
+</div>
+
+<div style={styles.infoCard}>
 
 <div style={styles.contractCard}>
 
 <div style={styles.contractHeader}>
-<span style={styles.contractTitle}>📄 Contrato Capycoin</span>
+<span style={styles.contractTitle}>📄 Capycoin Contract</span>
 </div>
 
 <div style={styles.contractRow}>
@@ -616,7 +635,7 @@ setCopied(false);
 
 }}
 >
-{copied ? "✓ Copiado" : "Copiar"}
+{copied ? "✓ Copied" : "Copy"}
 </button>
 
 </div>
@@ -641,18 +660,22 @@ Swap
 
 </div>
 
-</div>
-
 <a
 href="https://jamr448.github.io/capycoin.io/#home"
 target="_blank"
 style={styles.exchangeButton}
 >
 <img src="/capycoin.png" style={styles.exchangeLogo}/>
-<span>Sitio Web</span>
+<span>Website</span>
 </a>
 
+</div>
+
+</div>
+
 {/* 🔥 TARJETA COMUNIDAD */}
+
+<div style={styles.infoCard}>
 
 <div className="community-glow" style={styles.communityCard}>
 
@@ -691,6 +714,7 @@ style={styles.telegramButton}
 
 </div>
 
+</div>
 )}
 {showReward && (
 <div style={styles.overlay}>
@@ -1007,16 +1031,6 @@ color:"#b45309",
 boxShadow:"0 2px 6px rgba(0,0,0,0.1)"
 },
 
-userBox:{
-marginTop:"10px",
-background:"#ffffff",
-padding:"10px 20px",
-borderRadius:"20px",
-fontWeight:"bold",
-color:"#065f46",
-boxShadow:"0 4px 10px rgba(0,0,0,0.15)"
-},
-
 rewardCard:{
 background:"#111",
 padding:"30px",
@@ -1089,9 +1103,9 @@ fontWeight:"bold"
 },
 
 statNumber:{
-fontSize:"22px",
+fontSize:"28px",
 fontWeight:"bold",
-color:"#065f46"
+color:"#22c55e"
 },
 
 statLabel:{
@@ -1121,21 +1135,6 @@ flexDirection:"column",
 alignItems:"center",
 justifyContent:"center",
 textAlign:"center"
-},
-
-tabs:{
-display:"flex",
-justifyContent:"space-between",
-width:"100%",
-marginTop:"10px",
-marginBottom:"10px"
-},
-
-tab:{
-padding:"10px 20px",
-borderRadius:"20px",
-border:"none",
-fontWeight:"bold"
 },
 
 socialCard:{
@@ -1219,19 +1218,12 @@ marginTop:"10px"
 },
 
 infoCard:{
-flex:1,
-background:"#ffffff",
-borderRadius:"30px",
-padding:"12px 10px",
-display:"flex",
-alignItems:"center",
-justifyContent:"center",
-gap:"6px",
-fontWeight:"bold",
-color:"#065f46",
-boxShadow:"0 4px 10px rgba(0,0,0,0.15)",
-fontSize:"13px",
-textAlign:"center"
+background:"rgba(255,255,255,0.08)",
+backdropFilter:"blur(10px)",
+borderRadius:"20px",
+padding:"18px",
+boxShadow:"0 8px 20px rgba(0,0,0,0.35)",
+lineHeight:"1.6"
 },
 
 icon:{fontSize:"18px"},
@@ -1253,17 +1245,6 @@ borderRadius:"40px",
 border:"none",
 fontSize:"18px",
 width:"80%"
-},
-
-homeCard:{
-marginTop:"40px",
-background:"#ffffff",
-padding:"25px",
-borderRadius:"20px",
-color:"#064e3b",
-boxShadow:"0 4px 12px rgba(0,0,0,0.15)",
-textAlign:"center",
-lineHeight:"1.6"
 },
 
 dashboard:{
@@ -1305,6 +1286,15 @@ opacity:0.8,
 fontSize:"14px"
 },
 
+infoContainer:{
+marginTop:"80px",
+width:"100%",
+maxWidth:"420px",
+display:"flex",
+flexDirection:"column",
+gap:"16px"
+},
+
 contractAddressFull:{
 fontSize:"12px",
 wordBreak:"break-all",
@@ -1314,7 +1304,8 @@ textAlign:"center"
 
 contractCard:{
 marginTop:"20px",
-background:"#f8fafc",
+background:"rgba(255,255,255,0.05)",
+backdropFilter:"blur(8px)",
 padding:"18px",
 borderRadius:"16px",
 width:"100%",
