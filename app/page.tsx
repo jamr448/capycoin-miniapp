@@ -459,8 +459,8 @@ remaining === 0
 <Image
 src="/capycoin.png"
 alt="Capycoin"
-width={260}
-height={260}
+width={200}
+height={200}
 style={{
 animation:
 explode
@@ -963,10 +963,12 @@ flex:1,
 display:"flex",
 flexDirection:"column",
 alignItems:"center",
-justifyContent:"center",
+justifyContent:"space-between",
 textAlign:"center",
 width:"100%",
-marginTop:"40px"
+height:"calc(100vh - 130px)",
+paddingTop:"10px",
+paddingBottom:"10px"
 },
 
 energyRing:{
@@ -1050,7 +1052,7 @@ fontWeight:"bold"
 },
 
 socialCard:{
-marginTop:"30px",
+marginTop:"10px",
 background:"rgba(255,255,255,0.08)",
 backdropFilter:"blur(10px)",
 padding:"20px",
@@ -1151,12 +1153,12 @@ verifiedIcon:{width:"18px",height:"18px"},
 
 logoBox:{marginTop:"20px"},
 
-timer:{fontSize:"48px",marginTop:"20px"},
+timer:{fontSize:"40px",marginTop:"10px"},
 
 message:{marginTop:"10px",fontSize:"18px",textAlign:"center"},
 
 button:{
-marginTop:"30px",
+marginTop:"10px",
 background:"#0ea5e9",
 color:"white",
 padding:"18px 30px",
