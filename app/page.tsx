@@ -683,7 +683,7 @@ target="_blank"
 style={styles.telegramButton}
 >
 <img src="/telegram.png" style={styles.socialIcon}/>
-<span>Telegram</span>
+<span>{text[lang].telegram}</span>
 </a>
 
 </div>
@@ -729,19 +729,17 @@ style={styles.telegramButton}
 
 <div style={styles.infoCard}>
 
-<h3>🔥 Streak System</h3>
+<h3>🔥 {text[lang].streakSystem}</h3>
 
 <p>
-Claim every day to increase your streak and earn more rewards.
-The streak can reach up to <strong>10 CAPYCOIN</strong>.
-If you miss a day, it resets.
+{text[lang].streakText}
 </p>
 
 </div>
 
 <div style={styles.infoCard}>
 
-<h3>📊 Tokenomics</h3>
+<h3>📊 {text[lang].tokenomics}</h3>
 
 <ul style={styles.tokenList}>
 <li>15% — Airdrop Distribution</li>
@@ -756,7 +754,7 @@ If you miss a day, it resets.
 
 <div style={styles.infoCard}>
 
-<div style={styles.contractCard}>
+<div className="contract-glow" style={styles.contractCard}>
 
 <div style={styles.contractHeader}>
 <span style={styles.contractTitle}>📄 {text[lang].contract}</span>
@@ -1059,6 +1057,26 @@ box-shadow:0 0 0 rgba(14,165,233,0);
 
 }
 
+@keyframes contractGlow {
+
+0%{
+box-shadow:0 0 0 rgba(34,197,94,0);
+}
+
+50%{
+box-shadow:0 0 25px rgba(34,197,94,0.6);
+}
+
+100%{
+box-shadow:0 0 0 rgba(34,197,94,0);
+}
+
+}
+
+.contract-glow{
+animation:contractGlow 3s infinite;
+}
+
 .community-glow{
 animation:cardGlow 3s infinite;
 }
@@ -1335,12 +1353,13 @@ textAlign:"center"
 },
 
 communityCard:{
-marginTop:"30px",
-background:"#f8fafc",
+marginTop:"10px",
+background:"rgba(255,255,255,0.08)",
+backdropFilter:"blur(10px)",
 padding:"22px",
-borderRadius:"18px",
+borderRadius:"20px",
 width:"100%",
-boxShadow:"0 4px 10px rgba(0,0,0,0.1)",
+boxShadow:"0 8px 20px rgba(0,0,0,0.35)",
 textAlign:"center"
 },
 
@@ -1500,7 +1519,7 @@ boxShadow:"0 4px 10px rgba(0,0,0,0.1)"
 contractTitle:{
 fontWeight:"bold",
 marginBottom:"10px",
-color:"#065f46"
+color:"#fff"
 },
 
 copyButton:{
@@ -1578,7 +1597,7 @@ marginBottom:"10px"
 contractText:{
 fontSize:"14px",
 fontWeight:"bold",
-color:"#065f46"
+color:"#fff"
 },
 
 contractButtons:{
