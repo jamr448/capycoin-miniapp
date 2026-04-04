@@ -336,30 +336,17 @@ return(
 
 <div style={styles.userHeader}>
 
-{username || wallet ? (
-
 <div>
 
 <div>
-🟢 {username ? username : shortAddress(wallet!)}
+🟢 {username ? `@${username}` : "Loading user..."}
 </div>
 
 <div style={styles.userStatus}>
-Verified Human
+Human Verified
 </div>
 
 </div>
-
-) : (
-
-<button
-style={styles.loginButton}
-onClick={loginUser}
->
-Connect
-</button>
-
-)}
 
 </div>
 
@@ -429,8 +416,8 @@ background: remaining === 0
 
 <div style={styles.dashboardCard}>
 <span style={styles.dashboardIcon}>✔</span>
-<h3>Verified</h3>
-<p>{text[lang].verified}</p>
+<h3>{text[lang].verified}</h3>
+<p>World ID</p>
 </div>
 
 </div>
