@@ -866,6 +866,13 @@ style={styles.telegramButton}
 
 <div style={styles.rewardCard}>
 
+<button
+style={styles.closeReward}
+onClick={()=>setShowReward(false)}
+>
+✕
+</button>
+
 <h2>
 🎉 {lang==="es"
 ? `¡Acabas de reclamar ${animatedReward} Capycoin!`
@@ -1195,6 +1202,11 @@ filter:drop-shadow(0 0 6px gold);
 
 }
 
+.closeReward:hover{
+opacity:1;
+transform:scale(1.2);
+}
+
 `}</style>
 
 </main>
@@ -1236,6 +1248,7 @@ boxShadow:"0 2px 6px rgba(0,0,0,0.1)"
 },
 
 rewardCard:{
+position:"relative",
 background:"#111",
 padding:"30px",
 borderRadius:"20px",
@@ -1323,6 +1336,18 @@ padding:"20px",
 borderRadius:"20px",
 textAlign:"center",
 boxShadow:"0 10px 25px rgba(0,0,0,0.4)"
+},
+
+closeReward:{
+position:"absolute",
+top:"10px",
+right:"12px",
+background:"transparent",
+border:"none",
+color:"#fff",
+fontSize:"20px",
+cursor:"pointer",
+opacity:0.8
 },
 
 nextClaimLabel:{
