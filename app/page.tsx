@@ -1149,7 +1149,7 @@ icon:{fontSize:"18px"},
 
 verifiedIcon:{width:"18px",height:"18px"},
 
-logoBox:{marginTop:"10px"},
+logoBox:{marginTop:"20px"},
 
 timer:{fontSize:"48px",marginTop:"20px"},
 
