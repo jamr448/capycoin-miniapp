@@ -27,6 +27,7 @@ const [explode,setExplode] = useState(false);
 const [lang,setLang] = useState<"en" | "es">("en");
 const [totalUsers,setTotalUsers] = useState(0);
 const [totalClaimed,setTotalClaimed] = useState(0);
+const [leaders,setLeaders] = useState<any[]>([]);
 const text = {
 
 en:{
@@ -176,6 +177,7 @@ console.log(err);
 
 init();
 loadStats();
+loadLeaderboard();
 
 },[]);
 
@@ -203,6 +205,45 @@ return ()=>clearInterval(interval);
 
 },[showReward,reward]);
 
+
+const loadStats = async ()=>{
+
+try{
+
+const res = await fetch("/api/stats",{cache:"no-store"});
+
+const data = await res.json();
+
+if(data.users){
+setTotalUsers(data.users);
+}
+
+if(data.claimed){
+setTotalClaimed(data.claimed);
+}
+
+}catch(err){
+console.log(err);
+}
+
+};
+const loadLeaderboard = async ()=>{
+
+try{
+
+const res = await fetch("/api/leaderboard",{cache:"no-store"});
+
+const data = await res.json();
+
+if(data.leaders){
+setLeaders(data.leaders);
+}
+
+}catch(err){
+console.log(err);
+}
+
+};
 const loadUser = async (nullifier:string)=>{
 
 try{
@@ -237,27 +278,6 @@ console.log(err);
 }
 
 setLoading(false);
-
-};
-const loadStats = async ()=>{
-
-try{
-
-const res = await fetch("/api/stats",{cache:"no-store"});
-
-const data = await res.json();
-
-if(data.users){
-setTotalUsers(data.users);
-}
-
-if(data.claimed){
-setTotalClaimed(data.claimed);
-}
-
-}catch(err){
-console.log(err);
-}
 
 };
 useEffect(()=>{
@@ -424,7 +444,9 @@ return;
 }
 
 setBalance(data.balance);
-setTotalClaimed(prev => prev + reward);
+if(data.reward){
+setTotalClaimed(prev => prev + data.reward);
+}
 if(data.reward !== undefined){
 setReward(data.reward);
 }
@@ -578,6 +600,38 @@ background: remaining === 0
 CAPYCOIN
 </span>
 </div>
+
+</div>
+<div style={styles.leaderboardCard}>
+
+<h3 style={{marginBottom:"10px"}}>
+🏆 {lang==="es" ? "Mejores Rachas" : "Top Claimers"}
+</h3>
+
+{leaders.length === 0 ? (
+
+<p style={{opacity:0.7,fontSize:"14px"}}>
+No claimers yet
+</p>
+
+) : (
+
+leaders.map((u,i)=>{
+
+const medals=["🥇","🥈","🥉","🏅","🏅"];
+
+return(
+
+<div key={i} style={styles.leaderRow}>
+<span>{medals[i]}</span>
+<span>🔥 streak {u.streak}</span>
+</div>
+
+);
+
+})
+
+)}
 
 </div>
 <p style={styles.dashboardText}>
@@ -1263,6 +1317,22 @@ display:"flex",
 justifyContent:"space-around",
 marginTop:"20px",
 marginBottom:"25px"
+},
+
+leaderboardCard:{
+marginTop:"14px",
+background:"rgba(255,255,255,0.08)",
+backdropFilter:"blur(10px)",
+borderRadius:"20px",
+padding:"18px",
+boxShadow:"0 8px 20px rgba(0,0,0,0.35)"
+},
+
+leaderRow:{
+display:"flex",
+justifyContent:"space-between",
+marginBottom:"6px",
+fontSize:"14px"
 },
 
 statItem:{
