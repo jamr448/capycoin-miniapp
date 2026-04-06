@@ -28,6 +28,7 @@ const [lang,setLang] = useState<"en" | "es">("en");
 const [totalUsers,setTotalUsers] = useState(0);
 const [totalClaimed,setTotalClaimed] = useState(0);
 const [leaders,setLeaders] = useState<any[]>([]);
+const [connected,setConnected] = useState(false);
 const text = {
 
 en:{
@@ -359,7 +360,7 @@ return (n/1000).toFixed(1)+"K+";
 return n.toString();
 
 };
-const loginUser = ()=>{
+const connectWallet = async ()=>{
 
 try{
 
@@ -375,12 +376,12 @@ if(user.walletAddress){
 setWallet(user.walletAddress);
 }
 
+setConnected(true);
+
 }
 
 }catch(err){
-
-console.log("World App user not available",err);
-
+console.log(err);
 }
 
 };
@@ -492,17 +493,30 @@ return(
 
 <div style={styles.userHeader}>
 
+{connected ? (
+
 <div>
 
 <div>
-🟢 {username ? `@${username}` : "Loading user..."}
+🟢 {username ? `@${username}` : shortAddress(wallet!)}
 </div>
 
 <div style={styles.userStatus}>
-Human Verified
+{wallet ? shortAddress(wallet) : ""}
 </div>
 
 </div>
+
+) : (
+
+<button
+style={styles.connectButton}
+onClick={connectWallet}
+>
+Connect Wallet
+</button>
+
+)}
 
 </div>
 
@@ -624,7 +638,9 @@ return(
 
 <div key={i} style={styles.leaderRow}>
 <span>{medals[i]}</span>
-<span>🔥 streak {u.streak}</span>
+<span>
+🔥 {lang==="es" ? "racha" : "streak"} {u.streak}
+</span>
 </div>
 
 );
@@ -1806,18 +1822,19 @@ border:"none"
 },
 
 header:{
-position:"fixed",
-top:0,
-left:0,
-width:"100%",
-height:"60px",
-background:"rgba(2,6,23,0.9)",
-backdropFilter:"blur(8px)",
 display:"flex",
 justifyContent:"space-between",
-alignItems:"center",
-padding:"0 20px",
-zIndex:1000
+alignItems:"center"
+},
+
+connectButton:{
+background:"#0ea5e9",
+color:"#fff",
+border:"none",
+padding:"8px 16px",
+borderRadius:"20px",
+fontWeight:"bold",
+cursor:"pointer"
 },
 
 userHeader:{
