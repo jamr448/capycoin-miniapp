@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { MiniKit } from "@worldcoin/minikit-js";
 import Image from "next/image";
 import { ethers } from "ethers";
-
+import { QRCodeSVG } from "qrcode.react";
 export default function Home() {
 
 const [tab,setTab] = useState("home");
@@ -33,7 +33,11 @@ const [totalUsers,setTotalUsers] = useState(0);
 const [totalClaimed,setTotalClaimed] = useState(0);
 const [leaders,setLeaders] = useState<any[]>([]);
 const [connected,setConnected] = useState(false);
-
+const [swapToken,setSwapToken] = useState("WLD");
+const [swapAmount,setSwapAmount] = useState("");
+const [sendAddress,setSendAddress] = useState("");
+const [sendAmount,setSendAmount] = useState("");
+const [showReceive,setShowReceive] = useState(false);
 const text = {
 
 en:{
@@ -509,6 +513,56 @@ setClaiming(false);
 
 };
 
+const sendToken = async ()=>{
+
+if(!wallet) return;
+
+try{
+
+const provider = new ethers.BrowserProvider(window.ethereum);
+
+const signer = await provider.getSigner();
+
+const abi=[
+"function transfer(address to,uint256 amount) returns (bool)",
+"function decimals() view returns (uint8)"
+];
+
+const tokenAddress = "0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2";
+
+const contract = new ethers.Contract(tokenAddress,abi,signer);
+
+const decimals = await contract.decimals();
+
+const amount = ethers.parseUnits(sendAmount,decimals);
+
+const tx = await contract.transfer(sendAddress,amount);
+
+await tx.wait();
+
+alert("Transfer successful");
+
+}catch(err){
+
+console.log(err);
+
+alert("Transfer failed");
+
+}
+
+};
+
+const swapTokenAction = ()=>{
+
+if(!swapAmount) return;
+
+const url =
+"https://worldcoin.org/mini-app?app_id=app_36b1f21c5c3f8f63e2f4a0f6a6a5b5a0";
+
+window.open(url,"_blank");
+
+};
+
 return(
 
 <>
@@ -536,7 +590,7 @@ return(
 </div>
 
 <div style={styles.balanceHeader}>
-🪙 {balance} CAPY
+🪙 {balance} CAPYCOIN
 </div>
 
 <div style={styles.langSelector}>
@@ -795,53 +849,127 @@ style={styles.telegramButton}
 <div style={styles.infoContainer}>
 
 <h2 style={{textAlign:"center"}}>
-💼 My Wallet
+💼 Capycoin Wallet
 </h2>
 
-<div style={styles.infoCard}>
+{/* BALANCES */}
 
-<p style={{textAlign:"center",marginBottom:"10px"}}>
-{wallet ? shortAddress(wallet) : "No wallet connected"}
-</p>
+<div style={styles.infoCard}>
 
 <div style={styles.statsBox}>
 
 <div style={styles.statItem}>
-<span style={styles.statNumber}>{balance}</span>
-<span style={styles.statLabel}><strong>CAPY</strong></span>
+<span style={styles.statNumber}>{capyBalance.toFixed(2)}</span>
+<span style={styles.statLabel}>CAPYCOIN</span>
 </div>
 
 <div style={styles.statItem}>
-<span style={styles.statNumber}>
-{pufBalance.toFixed(4)}
-</span>
-<span style={styles.statLabel}><strong>PUF</strong></span>
+<span style={styles.statNumber}>{pufBalance.toFixed(2)}</span>
+<span style={styles.statLabel}>PUF</span>
 </div>
 
 <div style={styles.statItem}>
-<span style={styles.statNumber}>
-{wldBalance.toFixed(4)}
-</span>
-<span style={styles.statLabel}><strong>WLD</strong></span>
+<span style={styles.statNumber}>{wldBalance.toFixed(4)}</span>
+<span style={styles.statLabel}>WLD</span>
 </div>
 
 </div>
 
 </div>
 
-{wallet && (
+{/* SWAP */}
 
-<a
-href={`https://worldscan.org/address/${wallet}`}
-target="_blank"
-style={styles.exchangeButton}
+<div style={styles.infoCard}>
+
+<h3>🔁 Swap</h3>
+
+<input
+placeholder="Amount CAPYCOIN"
+value={swapAmount}
+onChange={(e)=>setSwapAmount(e.target.value)}
+style={styles.input}
+/>
+
+<select
+value={swapToken}
+onChange={(e)=>setSwapToken(e.target.value)}
+style={styles.input}
 >
 
-<span>View on Worldscan</span>
+<option value="WLD">WLD</option>
+<option value="PUF">PUF</option>
 
-</a>
+</select>
+
+<button
+style={styles.button}
+onClick={swapTokenAction}
+>
+Swap
+</button>
+
+</div>
+
+{/* SEND */}
+
+<div style={styles.infoCard}>
+
+<h3>📤 Send</h3>
+
+<input
+placeholder="Wallet address"
+value={sendAddress}
+onChange={(e)=>setSendAddress(e.target.value)}
+style={styles.input}
+/>
+
+<input
+placeholder="Amount CAPYCOIN"
+value={sendAmount}
+onChange={(e)=>setSendAmount(e.target.value)}
+style={styles.input}
+/>
+
+<button
+style={styles.button}
+onClick={sendToken}
+>
+Send
+</button>
+
+</div>
+
+{/* RECEIVE */}
+
+<div style={styles.infoCard}>
+
+<h3>📥 Receive</h3>
+
+<button
+style={styles.button}
+onClick={()=>setShowReceive(!showReceive)}
+>
+Show QR
+</button>
+
+{showReceive && wallet && (
+
+<div style={{marginTop:"15px"}}>
+
+<QRCodeSVG
+value={wallet}
+size={180}
+/>
+
+<p style={{fontSize:"12px",marginTop:"10px"}}>
+{wallet}
+</p>
+
+</div>
 
 )}
+
+</div>
 
 </div>
 
@@ -872,7 +1000,7 @@ style={styles.exchangeButton}
 <span style={styles.statNumber}>
 {capyBalance.toFixed(2)}
 </span>
-<span style={styles.statLabel}>CAPY</span>
+<span style={styles.statLabel}>CAPYCOIN</span>
 </div>
 
 <div style={styles.statItem}>
@@ -1851,6 +1979,14 @@ textAlign:"center",
 fontSize:"12px",
 marginTop:"6px",
 opacity:0.7
+},
+
+input:{
+width:"100%",
+padding:"10px",
+borderRadius:"12px",
+border:"none",
+marginTop:"10px"
 },
 
 contractHeader:{
