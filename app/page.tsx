@@ -465,7 +465,7 @@ return(
 </div>
 
 <div style={styles.userStatus}>
-{wallet ? shortAddress(wallet) : "No wallet"}
+{wallet ? shortAddress(wallet) : ""}
 </div>
 
 </div>
