@@ -7,7 +7,7 @@ try{
 
 const { data } = await supabase
 .from("claims")
-.select("nullifier, streak")
+.select("wallet, streak")
 .order("streak",{ascending:false})
 .limit(5);
 

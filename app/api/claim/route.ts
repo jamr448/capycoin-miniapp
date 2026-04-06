@@ -7,7 +7,11 @@ export async function POST(req: Request) {
 
 try{
 
-const { nullifier } = await req.json();
+const { nullifier, wallet } = await req.json();
+
+if(!nullifier){
+return NextResponse.json({success:false});
+}
 
 if(!nullifier){
 return NextResponse.json({success:false});
@@ -40,6 +44,7 @@ await supabase
 .from("claims")
 .insert([{
 nullifier,
+wallet,
 last_claim:new Date(now).toISOString(),
 balance:reward,
 next_claim_timestamp:nextClaim,
@@ -109,6 +114,7 @@ const nextClaim = now + COOLDOWN * 1000;
 await supabase
 .from("claims")
 .update({
+wallet,
 last_claim:new Date(now).toISOString(),
 balance:newBalance,
 next_claim_timestamp:nextClaim,

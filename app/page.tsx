@@ -384,7 +384,10 @@ method:"POST",
 headers:{
 "Content-Type":"application/json"
 },
-body:JSON.stringify({nullifier})
+body:JSON.stringify({
+nullifier,
+wallet
+})
 });
 
 const data = await res.json();
@@ -452,11 +455,17 @@ return(
 <div>
 
 <div style={styles.userHeader}>
-🟢 {connected ? (username ? `@${username}` : shortAddress(wallet)) : "Connecting..."}
+🟢 {connected
+  ? username
+    ? `@${username}`
+    : wallet
+      ? shortAddress(wallet)
+      : "Connected"
+  : "Connecting..."}
 </div>
 
 <div style={styles.userStatus}>
-{wallet ? shortAddress(wallet) : ""}
+{wallet ? shortAddress(wallet) : "No wallet"}
 </div>
 
 </div>
