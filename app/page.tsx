@@ -268,7 +268,7 @@ const loadWalletBalances = async (wallet:string)=>{
 try{
 
 const provider = new ethers.JsonRpcProvider(
-"https://eth.llamarpc.com"
+"https://worldchain-mainnet.g.alchemy.com/public"
 );
 
 // ABI mínima ERC20
@@ -809,6 +809,13 @@ style={styles.telegramButton}
 <div style={styles.statItem}>
 <span style={styles.statNumber}>{balance}</span>
 <span style={styles.statLabel}><strong>CAPY</strong></span>
+</div>
+
+<div style={styles.statItem}>
+<span style={styles.statNumber}>
+{pufBalance.toFixed(4)}
+</span>
+<span style={styles.statLabel}><strong>PUF</strong></span>
 </div>
 
 <div style={styles.statItem}>
