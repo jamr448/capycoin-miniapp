@@ -137,9 +137,19 @@ setConnected(true);
 return;
 }
 
-if(user.walletAddress){
-setWallet(user.walletAddress);
-loadWalletBalances(user.walletAddress);
+const address =
+user?.walletAddress ||
+user?.wallet?.address ||
+null;
+
+console.log("World wallet:",address);
+
+if(address){
+
+setWallet(address);
+
+loadWalletBalances(address);
+
 }
 
 if(user.username){
@@ -272,7 +282,7 @@ const loadWalletBalances = async (wallet:string)=>{
 try{
 
 const provider = new ethers.JsonRpcProvider(
-"https://worldchain-mainnet.g.alchemy.com/public"
+"https://rpc.worldchain.org"
 );
 
 // ABI mínima ERC20
@@ -513,40 +523,50 @@ setClaiming(false);
 
 };
 
-const sendToken = async ()=>{
+const sendCapycoin = async () => {
 
-if(!wallet) return;
+if(!sendAddress || !sendAmount){
+alert("Enter address and amount");
+return;
+}
 
 try{
 
-const provider = new ethers.BrowserProvider(window.ethereum);
-
-const signer = await provider.getSigner();
-
-const abi=[
-"function transfer(address to,uint256 amount) returns (bool)",
-"function decimals() view returns (uint8)"
-];
-
 const tokenAddress = "0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2";
 
-const contract = new ethers.Contract(tokenAddress,abi,signer);
+const abi = [
+"function transfer(address to,uint256 amount)"
+];
 
-const decimals = await contract.decimals();
+const iface = new ethers.Interface(abi);
 
-const amount = ethers.parseUnits(sendAmount,decimals);
+const amount = ethers.parseUnits(sendAmount,18);
 
-const tx = await contract.transfer(sendAddress,amount);
+const calldata = iface.encodeFunctionData(
+"transfer",
+[sendAddress,amount]
+);
 
-await tx.wait();
+await MiniKit.commandsAsync.sendTransaction({
+transaction: [
+{
+address: tokenAddress,
+data: calldata,
+value: "0"
+}
+]
+} as any);
 
-alert("Transfer successful");
+alert("Transaction sent");
+
+if(wallet){
+loadWalletBalances(wallet);
+}
 
 }catch(err){
 
 console.log(err);
-
-alert("Transfer failed");
+alert("Transaction failed");
 
 }
 
@@ -932,9 +952,9 @@ style={styles.input}
 
 <button
 style={styles.button}
-onClick={sendToken}
+onClick={sendCapycoin}
 >
-Send
+Send Capycoin
 </button>
 
 </div>
