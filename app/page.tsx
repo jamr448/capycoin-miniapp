@@ -572,12 +572,6 @@ background: remaining === 0
 <div style={styles.dashboardCards}>
 
 <div style={styles.dashboardCard}>
-<span style={styles.dashboardIcon}>🪙</span>
-<h3>{balance}</h3>
-<p>{text[lang].balance}</p>
-</div>
-
-<div style={styles.dashboardCard}>
 <span style={styles.dashboardIcon}>🔥</span>
 <h3>{streak}</h3>
 <p>{text[lang].streak}</p>
@@ -589,13 +583,8 @@ background: remaining === 0
 <p>World ID</p>
 </div>
 
-<div style={styles.dashboardCard}>
-<span style={styles.dashboardIcon}>🌍</span>
-<h3>{wldBalance.toFixed(2)}</h3>
-<p>WLD</p>
 </div>
 
-</div>
 <div style={styles.globalStatsCard}>
 
 <div style={styles.globalStatItem}>
@@ -1704,7 +1693,7 @@ marginBottom:"20px"
 dashboardCards:{
 display:"flex",
 gap:"10px",
-justifyContent:"space-between",
+justifyContent:"center",
 marginBottom:"20px"
 },
 
