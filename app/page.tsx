@@ -11,6 +11,8 @@ const [tab,setTab] = useState("home");
 const [remaining,setRemaining] = useState<number>(0);
 const [balance,setBalance] = useState<number>(0);
 const [wldBalance,setWldBalance] = useState(0);
+const [capyBalance,setCapyBalance] = useState(0);
+const [pufBalance,setPufBalance] = useState(0);
 const [streak,setStreak] = useState<number>(1);
 const [reward,setReward] = useState<number>(0);
 const [animatedReward,setAnimatedReward] = useState(0);
@@ -269,22 +271,45 @@ const provider = new ethers.JsonRpcProvider(
 "https://eth.llamarpc.com"
 );
 
-const wldContract = new ethers.Contract(
-"0x163f8C2467924be0ae7B5347228CABF260318753",
-[
+// ABI mínima ERC20
+const abi=[
 "function balanceOf(address owner) view returns (uint256)",
 "function decimals() view returns (uint8)"
-],
+];
+
+// contratos
+const capyContract = new ethers.Contract(
+"0xe55BA4Ea7835c221a521e43BA05bC1a9508928B2",
+abi,
 provider
 );
 
-const raw = await wldContract.balanceOf(wallet);
+const pufContract = new ethers.Contract(
+"0x1aE3498f1B417fe31BE544B04B711F27Ba437bd3",
+abi,
+provider
+);
 
-const decimals = await wldContract.decimals();
+const wldContract = new ethers.Contract(
+"0x2cFc85d8E48F8EAB294be644d9E25C3030863003",
+abi,
+provider
+);
 
-const wldBalance = Number(ethers.formatUnits(raw,decimals));
+// balances
+const capyRaw = await capyContract.balanceOf(wallet);
+const pufRaw = await pufContract.balanceOf(wallet);
+const wldRaw = await wldContract.balanceOf(wallet);
 
-setWldBalance(wldBalance);
+// decimals
+const capyDecimals = await capyContract.decimals();
+const pufDecimals = await pufContract.decimals();
+const wldDecimals = await wldContract.decimals();
+
+// convertir
+setCapyBalance(Number(ethers.formatUnits(capyRaw,capyDecimals)));
+setPufBalance(Number(ethers.formatUnits(pufRaw,pufDecimals)));
+setWldBalance(Number(ethers.formatUnits(wldRaw,wldDecimals)));
 
 }catch(err){
 console.log(err);
@@ -836,13 +861,27 @@ style={styles.exchangeButton}
 <div style={styles.statsBox}>
 
 <div style={styles.statItem}>
-<span style={styles.statNumber}>17K+</span>
-<span style={styles.statLabel}><strong>{text[lang].holders}</strong></span>
+<img src="/capycoin.png" width="28"/>
+<span style={styles.statNumber}>
+{capyBalance.toFixed(2)}
+</span>
+<span style={styles.statLabel}>CAPY</span>
 </div>
 
 <div style={styles.statItem}>
-<span style={styles.statNumber}>5M+</span>
-<span style={styles.statLabel}><strong>{text[lang].distributed}</strong></span>
+<img src="/puf.png" width="28"/>
+<span style={styles.statNumber}>
+{pufBalance.toFixed(2)}
+</span>
+<span style={styles.statLabel}>PUF</span>
+</div>
+
+<div style={styles.statItem}>
+<img src="/wld.png" width="28"/>
+<span style={styles.statNumber}>
+{wldBalance.toFixed(4)}
+</span>
+<span style={styles.statLabel}>WLD</span>
 </div>
 
 </div>
