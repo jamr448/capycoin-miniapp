@@ -343,45 +343,6 @@ return (n/1000).toFixed(1)+"K+";
 return n.toString();
 
 };
-const connectWallet = async ()=>{
-
-try{
-
-let attempts = 0;
-
-const interval = setInterval(()=>{
-
-const user = MiniKit.user;
-
-if(user){
-
-if(user.username){
-setUsername(user.username);
-}
-
-if(user.walletAddress){
-setWallet(user.walletAddress);
-}
-
-setConnected(true);
-
-clearInterval(interval);
-
-}
-
-attempts++;
-
-if(attempts > 10){
-clearInterval(interval);
-}
-
-},300);
-
-}catch(err){
-console.log(err);
-}
-
-};
 
 const claimCapycoin = async ()=>{
 
