@@ -110,6 +110,59 @@ useEffect(()=>{
 
 MiniKit.install();
 
+const loadWorldUser = () => {
+
+const user = MiniKit.user;
+
+console.log("World user:", MiniKit.user);
+
+if(!user){
+setConnected(true);
+return;
+}
+
+if(!user) return;
+
+const address =
+user?.walletAddress ||
+user?.wallet?.address ||
+null;
+
+const name =
+user?.username ||
+user?.profile?.username ||
+null;
+
+if(address){
+
+setWallet(address);
+loadWalletBalances(address);
+
+}
+
+if(name){
+setUsername(name);
+}
+
+setConnected(true);
+
+};
+
+// intentar varias veces porque World App tarda en cargar
+let attempts = 0;
+
+const interval = setInterval(()=>{
+
+loadWorldUser();
+
+attempts++;
+
+if(attempts > 10){
+clearInterval(interval);
+}
+
+},500);
+
 // idioma guardado
 const savedLang = localStorage.getItem("capyLang");
 
@@ -128,39 +181,7 @@ setLang("en");
 }
 
 // cargar usuario de World App
-const loadWorldUser = ()=>{
 
-const user = MiniKit.user;
-
-if(!user){
-setConnected(true);
-return;
-}
-
-const address =
-user?.walletAddress ||
-user?.wallet?.address ||
-null;
-
-console.log("World wallet:",address);
-
-if(address){
-
-setWallet(address);
-
-loadWalletBalances(address);
-
-}
-
-if(user.username){
-setUsername(user.username);
-}else{
-setUsername(null);
-}
-
-setConnected(true);
-
-};
 
 setTimeout(loadWorldUser,1200);
 
@@ -1258,7 +1279,7 @@ color: tab==="home" ? "#0ea5e9" : "#fff"
 onClick={()=>setTab("home")}
 >
 🏠
-<span>wallet</span>
+<span>Home</span>
 </button>
 
 <button
