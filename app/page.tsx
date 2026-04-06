@@ -630,11 +630,8 @@ return(
 
 </div>
 
-<div style={styles.balanceHeader}>
-🪙 {balance} CAPYCOIN
-</div>
-
 <div style={styles.langSelector}>
+
 <select
 value={lang}
 onChange={(e)=>{
@@ -695,6 +692,12 @@ background: remaining === 0
 <span style={styles.dashboardIcon}>🔥</span>
 <h3>{streak}</h3>
 <p>{text[lang].streak}</p>
+</div>
+
+<div style={styles.dashboardCard}>
+<span style={styles.dashboardIcon}>🪙</span>
+<h3>{balance}</h3>
+<p>{lang==="es" ? "Reclamados" : "Rewards"}</p>
 </div>
 
 <div style={styles.dashboardCard}>
