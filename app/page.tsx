@@ -366,6 +366,10 @@ const connectWallet = async ()=>{
 
 try{
 
+let attempts = 0;
+
+const interval = setInterval(()=>{
+
 const user = MiniKit.user;
 
 if(user){
@@ -380,7 +384,17 @@ setWallet(user.walletAddress);
 
 setConnected(true);
 
+clearInterval(interval);
+
 }
+
+attempts++;
+
+if(attempts > 10){
+clearInterval(interval);
+}
+
+},300);
 
 }catch(err){
 console.log(err);
@@ -493,13 +507,9 @@ return(
 
 <div style={styles.header}>
 
+<div>
+
 <div style={styles.userHeader}>
-
-{connected ? (
-
-<div>
-
-<div>
 🟢 {username ? `@${username}` : wallet ? shortAddress(wallet) : "Connecting..."}
 </div>
 
@@ -509,17 +519,8 @@ return(
 
 </div>
 
-) : (
-
-<button
-style={styles.connectButton}
-onClick={connectWallet}
->
-Connect Wallet
-</button>
-
-)}
-
+<div style={styles.balanceHeader}>
+🪙 {balance} CAPY
 </div>
 
 <div style={styles.langSelector}>
@@ -1424,6 +1425,15 @@ padding:"20px",
 borderRadius:"20px",
 textAlign:"center",
 boxShadow:"0 10px 25px rgba(0,0,0,0.4)"
+},
+
+balanceHeader:{
+fontWeight:"bold",
+fontSize:"14px",
+background:"rgba(255,255,255,0.08)",
+padding:"6px 12px",
+borderRadius:"20px",
+backdropFilter:"blur(8px)"
 },
 
 closeReward:{
