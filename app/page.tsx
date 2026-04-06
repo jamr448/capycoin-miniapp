@@ -282,7 +282,7 @@ const raw = await wldContract.balanceOf(wallet);
 
 const decimals = await wldContract.decimals();
 
-const wldBalance = Number(raw) / 10 ** decimals;
+const wldBalance = Number(ethers.formatUnits(raw,decimals));
 
 setWldBalance(wldBalance);
 
