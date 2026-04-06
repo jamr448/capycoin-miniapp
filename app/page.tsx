@@ -108,7 +108,6 @@ if(savedLang === "es" || savedLang === "en"){
 setLang(savedLang);
 }else{
 
-// detectar idioma del navegador
 const browserLang = navigator.language || "en";
 
 if(browserLang.startsWith("es")){
@@ -119,20 +118,28 @@ setLang("en");
 
 }
 
-setTimeout(()=>{
+// cargar usuario de World App
+const loadWorldUser = ()=>{
 
 const user = MiniKit.user;
 
-if(user?.username){
+if(!user) return;
+
+if(user.username){
 setUsername(user.username);
 }
 
-if(user?.walletAddress){
+if(user.walletAddress){
 setWallet(user.walletAddress);
 }
 
-},500);
+setConnected(true);
 
+};
+
+setTimeout(loadWorldUser,1200);
+
+// iniciar verificación
 const init = async ()=>{
 
 const saved = localStorage.getItem("capyNullifier");
@@ -296,32 +303,6 @@ setRemaining(diff > 0 ? diff : 0);
 return ()=>clearInterval(interval);
 
 },[nextClaimTime]);
-
-useEffect(()=>{
-
-const interval = setInterval(()=>{
-
-const user = MiniKit.user;
-
-if(user){
-
-if(user.username){
-setUsername(user.username);
-}
-
-if(user.walletAddress){
-setWallet(user.walletAddress);
-}
-
-clearInterval(interval);
-
-}
-
-},500);
-
-return ()=>clearInterval(interval);
-
-},[]);
 
 const totalCooldown = 86400; // 24 horas
 
@@ -510,7 +491,7 @@ return(
 <div>
 
 <div style={styles.userHeader}>
-🟢 {username ? `@${username}` : wallet ? shortAddress(wallet) : "Connecting..."}
+🟢 {connected ? (username ? `@${username}` : shortAddress(wallet)) : "Connecting..."}
 </div>
 
 <div style={styles.userStatus}>
