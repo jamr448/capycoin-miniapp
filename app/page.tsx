@@ -342,7 +342,9 @@ return `${h.toString().padStart(2,"0")}:${m
 
 };
 
-const shortAddress = (addr:string)=>{
+const shortAddress = (addr?:string | null)=>{
+
+if(!addr) return "";
 
 return addr.slice(0,6) + "..." + addr.slice(-4);
 
@@ -498,7 +500,7 @@ return(
 <div>
 
 <div>
-🟢 {username ? `@${username}` : shortAddress(wallet!)}
+🟢 {username ? `@${username}` : wallet ? shortAddress(wallet) : "Connecting..."}
 </div>
 
 <div style={styles.userStatus}>
