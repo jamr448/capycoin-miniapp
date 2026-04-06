@@ -266,11 +266,11 @@ const loadWalletBalances = async (wallet:string)=>{
 try{
 
 const provider = new ethers.JsonRpcProvider(
-"https://worldchain-mainnet.g.alchemy.com/v2/demo"
+"https://eth.llamarpc.com"
 );
 
 const wldContract = new ethers.Contract(
-"0x2cFc85d8E48F8EAB294be644d9E25C3030863003",
+"0x163f8C2467924be0ae7B5347228CABF260318753",
 [
 "function balanceOf(address owner) view returns (uint256)",
 "function decimals() view returns (uint8)"
@@ -530,6 +530,7 @@ style={styles.langSelect}
 </div>
 
 </div>
+{/* home TAB */}
 
 {tab === "home" && (
 
@@ -769,6 +770,58 @@ style={styles.telegramButton}
 </div>
 
 </div>
+</div>
+
+)}
+
+{/* WALLET TAB */}
+
+{tab==="wallet" && (
+
+<div style={styles.infoContainer}>
+
+<h2 style={{textAlign:"center"}}>
+💼 My Wallet
+</h2>
+
+<div style={styles.infoCard}>
+
+<p style={{textAlign:"center",marginBottom:"10px"}}>
+{wallet ? shortAddress(wallet) : "No wallet connected"}
+</p>
+
+<div style={styles.statsBox}>
+
+<div style={styles.statItem}>
+<span style={styles.statNumber}>{balance}</span>
+<span style={styles.statLabel}><strong>CAPY</strong></span>
+</div>
+
+<div style={styles.statItem}>
+<span style={styles.statNumber}>
+{wldBalance.toFixed(4)}
+</span>
+<span style={styles.statLabel}><strong>WLD</strong></span>
+</div>
+
+</div>
+
+</div>
+
+{wallet && (
+
+<a
+href={`https://worldscan.org/address/${wallet}`}
+target="_blank"
+style={styles.exchangeButton}
+>
+
+<span>View on Worldscan</span>
+
+</a>
+
+)}
+
 </div>
 
 )}
@@ -1022,7 +1075,7 @@ color: tab==="home" ? "#0ea5e9" : "#fff"
 onClick={()=>setTab("home")}
 >
 🏠
-<span>Home</span>
+<span>wallet</span>
 </button>
 
 <button
@@ -1034,6 +1087,17 @@ onClick={()=>setTab("claim")}
 >
 🪙
 <span>Claim</span>
+</button>
+
+<button
+style={{
+...styles.navButton,
+color: tab==="wallet" ? "#0ea5e9" : "#fff"
+}}
+onClick={()=>setTab("wallet")}
+>
+💼
+<span>Wallet</span>
 </button>
 
 <button
