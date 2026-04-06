@@ -637,13 +637,23 @@ leaders.map((u,i)=>{
 
 const medals=["🥇","🥈","🥉","🏅","🏅"];
 
+const name =
+u.username
+? `@${u.username}`
+: u.wallet
+? shortAddress(u.wallet)
+: "anonymous";
+
 return(
 
 <div key={i} style={styles.leaderRow}>
+
 <span>{medals[i]}</span>
+
 <span>
-🔥 {lang==="es" ? "racha" : "streak"} {u.streak}
+{name} — 🔥 {u.streak}
 </span>
+
 </div>
 
 );
