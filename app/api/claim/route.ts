@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { ethers } from "ethers";
 
 const COOLDOWN = 86400; // 24 horas
 

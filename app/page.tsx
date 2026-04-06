@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import { MiniKit } from "@worldcoin/minikit-js";
 import Image from "next/image";
+import { ethers } from "ethers";
 
 export default function Home() {
 
 const [tab,setTab] = useState("home");
 const [remaining,setRemaining] = useState<number>(0);
 const [balance,setBalance] = useState<number>(0);
+const [wldBalance,setWldBalance] = useState(0);
 const [streak,setStreak] = useState<number>(1);
 const [reward,setReward] = useState<number>(0);
 const [animatedReward,setAnimatedReward] = useState(0);
@@ -29,6 +31,7 @@ const [totalUsers,setTotalUsers] = useState(0);
 const [totalClaimed,setTotalClaimed] = useState(0);
 const [leaders,setLeaders] = useState<any[]>([]);
 const [connected,setConnected] = useState(false);
+
 const text = {
 
 en:{
@@ -131,6 +134,7 @@ setUsername(user.username);
 
 if(user.walletAddress){
 setWallet(user.walletAddress);
+loadWalletBalances(user.walletAddress);
 }
 
 setConnected(true);
@@ -252,6 +256,37 @@ console.log(err);
 }
 
 };
+const loadWalletBalances = async (wallet:string)=>{
+
+try{
+
+const provider = new ethers.JsonRpcProvider(
+"https://worldchain-mainnet.g.alchemy.com/v2/demo"
+);
+
+const wldContract = new ethers.Contract(
+"0x163f8C2467924be0ae7B5347228CABF260318753",
+[
+"function balanceOf(address owner) view returns (uint256)",
+"function decimals() view returns (uint8)"
+],
+provider
+);
+
+const raw = await wldContract.balanceOf(wallet);
+
+const decimals = await wldContract.decimals();
+
+const wldBalance = Number(raw) / 10 ** decimals;
+
+setWldBalance(wldBalance);
+
+}catch(err){
+console.log(err);
+}
+
+};
+
 const loadUser = async (nullifier:string)=>{
 
 try{
@@ -546,6 +581,12 @@ background: remaining === 0
 <span style={styles.dashboardIcon}>✔</span>
 <h3>{text[lang].verified}</h3>
 <p>World ID</p>
+</div>
+
+<div style={styles.dashboardCard}>
+<span style={styles.dashboardIcon}>🌍</span>
+<h3>{wldBalance.toFixed(2)}</h3>
+<p>WLD</p>
 </div>
 
 </div>
@@ -1795,9 +1836,15 @@ border:"none"
 },
 
 header:{
+position:"sticky",
+top:0,
+zIndex:1000,
 display:"flex",
 justifyContent:"space-between",
-alignItems:"center"
+alignItems:"center",
+background:"#020617",
+padding:"10px 14px",
+borderBottom:"1px solid #1e293b"
 },
 
 connectButton:{
