@@ -115,12 +115,12 @@ const nextClaim = now + COOLDOWN * 1000;
 await supabase
 .from("claims")
 .update({
-wallet,
 last_claim:new Date(now).toISOString(),
 balance:newBalance,
 next_claim_timestamp:nextClaim,
 streak:streak,
-last_claim_day:today
+last_claim_day:today,
+wallet
 })
 .eq("nullifier",nullifier);
 

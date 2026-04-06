@@ -126,15 +126,20 @@ const loadWorldUser = ()=>{
 
 const user = MiniKit.user;
 
-if(!user) return;
-
-if(user.username){
-setUsername(user.username);
+if(!user){
+setConnected(true);
+return;
 }
 
 if(user.walletAddress){
 setWallet(user.walletAddress);
 loadWalletBalances(user.walletAddress);
+}
+
+if(user.username){
+setUsername(user.username);
+}else{
+setUsername(null);
 }
 
 setConnected(true);
@@ -265,7 +270,7 @@ const provider = new ethers.JsonRpcProvider(
 );
 
 const wldContract = new ethers.Contract(
-"0x163f8C2467924be0ae7B5347228CABF260318753",
+"0x2cFc85d8E48F8EAB294be644d9E25C3030863003",
 [
 "function balanceOf(address owner) view returns (uint256)",
 "function decimals() view returns (uint8)"
@@ -490,12 +495,12 @@ return(
 <div>
 
 <div style={styles.userHeader}>
-🟢 {connected
-  ? username
-    ? `@${username}`
-    : wallet
-      ? shortAddress(wallet)
-      : "Connected"
+🟢 {username
+  ? `@${username}`
+  : wallet
+  ? shortAddress(wallet)
+  : connected
+  ? "Connected"
   : "Connecting..."}
 </div>
 
