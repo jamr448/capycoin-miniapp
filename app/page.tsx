@@ -20,17 +20,13 @@ const [verified,setVerified] = useState(false);
 const [claiming,setClaiming] = useState(false);
 const [clicks,setClicks] = useState(0);
 const [loading,setLoading] = useState(true);
-const [showClaiming,setShowClaiming] = useState(false);
 const [showReward,setShowReward] = useState(false);
 const [nextClaimTime,setNextClaimTime] = useState<number>(0);
 const [username,setUsername] = useState<string | null>(null);
 const [wallet,setWallet] = useState<string | null>(null);
 const [copied,setCopied] = useState(false);
-const [streakMessage,setStreakMessage] = useState("");
 const [explode,setExplode] = useState(false);
 const [lang,setLang] = useState<"en" | "es">("en");
-const [totalUsers,setTotalUsers] = useState(0);
-const [totalClaimed,setTotalClaimed] = useState(0);
 const [leaders,setLeaders] = useState<any[]>([]);
 const [connected,setConnected] = useState(false);
 const [swapToken,setSwapToken] = useState("WLD");
@@ -121,8 +117,6 @@ setConnected(true);
 return;
 }
 
-if(!user) return;
-
 const address =
 user?.walletAddress ||
 user?.wallet?.address ||
@@ -180,11 +174,6 @@ setLang("en");
 
 }
 
-// cargar usuario de World App
-
-
-setTimeout(loadWorldUser,1200);
-
 // iniciar verificación
 const init = async ()=>{
 
@@ -230,7 +219,6 @@ console.log(err);
 };
 
 init();
-loadStats();
 loadLeaderboard();
 
 },[]);
@@ -259,28 +247,6 @@ return ()=>clearInterval(interval);
 
 },[showReward,reward]);
 
-
-const loadStats = async ()=>{
-
-try{
-
-const res = await fetch("/api/stats",{cache:"no-store"});
-
-const data = await res.json();
-
-if(data.users){
-setTotalUsers(data.users);
-}
-
-if(data.claimed){
-setTotalClaimed(data.claimed);
-}
-
-}catch(err){
-console.log(err);
-}
-
-};
 const loadLeaderboard = async ()=>{
 
 try{
@@ -378,9 +344,7 @@ setReward(data.reward);
 if(data.streak !== undefined){
 setStreak(data.streak);
 }
-if(data.streakMessage){
-setStreakMessage(data.streakMessage);
-}
+
 }catch(err){
 console.log(err);
 }
@@ -430,20 +394,6 @@ if(!addr) return "";
 return addr.slice(0,6) + "..." + addr.slice(-4);
 
 };
-const formatNumber = (n:number)=>{
-
-if(n>=1000000){
-return (n/1000000).toFixed(1)+"M+";
-}
-
-if(n>=1000){
-return (n/1000).toFixed(1)+"K+";
-}
-
-return n.toString();
-
-};
-
 const claimCapycoin = async ()=>{
 
 if(claiming || remaining > 0) return;
@@ -458,7 +408,7 @@ if(nextClicks < 3) return;
 
 setClicks(0);
 
-// 🔐 verificación adicional
+// verificación
 try{
 
 const verify = await MiniKit.commandsAsync.verify({
@@ -475,7 +425,6 @@ return;
 }
 
 setClaiming(true);
-setShowClaiming(true);
 
 try{
 
@@ -492,8 +441,6 @@ wallet
 
 const data = await res.json();
 
-setShowClaiming(false);
-
 if(!data.success){
 
 if(data.remaining !== undefined){
@@ -506,9 +453,7 @@ return;
 }
 
 setBalance(data.balance);
-if(data.reward){
-setTotalClaimed(prev => prev + data.reward);
-}
+
 if(data.reward !== undefined){
 setReward(data.reward);
 }
@@ -520,7 +465,6 @@ setStreak(data.streak);
 setNextClaimTime(data.nextClaim);
 
 setShowReward(true);
-
 setAnimatedReward(0);
 
 setExplode(true);
@@ -536,7 +480,6 @@ setShowReward(false);
 }catch(err){
 
 console.log(err);
-setShowClaiming(false);
 
 }
 
@@ -708,27 +651,6 @@ background: remaining === 0
 
 </div>
 
-<div style={styles.globalStatsCard}>
-
-<div style={styles.globalStatItem}>
-<span style={styles.globalStatNumber}>
-{formatNumber(totalUsers)}
-</span>
-<span style={styles.globalStatLabel}>
-{lang==="es" ? "Usuarios" : "Users"}
-</span>
-</div>
-
-<div style={styles.globalStatItem}>
-<span style={styles.globalStatNumber}>
-{formatNumber(totalClaimed)}
-</span>
-<span style={styles.globalStatLabel}>
-CAPYCOIN
-</span>
-</div>
-
-</div>
 <div style={styles.leaderboardCard}>
 
 <h3 style={{marginBottom:"10px"}}>
@@ -1654,35 +1576,6 @@ width:"100%",
 height:"calc(100vh - 130px)",
 paddingTop:"10px",
 paddingBottom:"10px"
-},
-
-globalStatsCard:{
-display:"flex",
-justifyContent:"space-around",
-alignItems:"center",
-background:"rgba(255,255,255,0.08)",
-backdropFilter:"blur(10px)",
-borderRadius:"20px",
-padding:"20px",
-marginTop:"10px",
-boxShadow:"0 8px 20px rgba(0,0,0,0.35)"
-},
-
-globalStatItem:{
-display:"flex",
-flexDirection:"column",
-alignItems:"center"
-},
-
-globalStatNumber:{
-fontSize:"28px",
-fontWeight:"bold",
-color:"#22c55e"
-},
-
-globalStatLabel:{
-fontSize:"14px",
-opacity:0.8
 },
 
 energyRing:{
