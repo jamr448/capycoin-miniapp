@@ -305,23 +305,23 @@ const connectWallet = async () => {
 
 try{
 
-// asegurar que MiniKit esté activo
-await MiniKit.install();
+const res = await MiniKit.commandsAsync.verify({
+action:"connectwallet"
+});
 
-const user = MiniKit.user;
-
-if(!user){
-alert("Please open this app inside World App");
+if(!res?.finalPayload){
 return;
 }
 
+const user = MiniKit.user;
+
 const address =
-user.walletAddress ||
+user?.walletAddress ||
 user?.wallet?.address ||
 null;
 
 const name =
-user.username ||
+user?.username ||
 user?.profile?.username ||
 null;
 
