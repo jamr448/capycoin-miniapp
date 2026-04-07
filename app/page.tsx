@@ -106,24 +106,12 @@ useEffect(()=>{
 
 MiniKit.install();
 
-// idioma guardado
 const savedLang = localStorage.getItem("capyLang");
 
 if(savedLang === "es" || savedLang === "en"){
 setLang(savedLang);
-}else{
-
-const browserLang = navigator.language || "en";
-
-if(browserLang.startsWith("es")){
-setLang("es");
-}else{
-setLang("en");
 }
 
-}
-
-// iniciar verificación
 const init = async ()=>{
 
 const saved = localStorage.getItem("capyNullifier");
@@ -131,38 +119,6 @@ const saved = localStorage.getItem("capyNullifier");
 if(saved){
 setVerified(true);
 loadUser(saved);
-return;
-}
-
-try{
-
-const res = await MiniKit.commandsAsync.verify({
-action:"claimcapycoin"
-});
-
-if(!res?.finalPayload) return;
-
-let nullifier="";
-
-if("nullifier_hash" in res.finalPayload){
-nullifier=res.finalPayload.nullifier_hash;
-}else if("proofs" in res.finalPayload){
-const proofs=res.finalPayload.proofs as any[];
-if(proofs?.length>0){
-nullifier=proofs[0].nullifier_hash;
-}
-}
-
-if(!nullifier) return;
-
-localStorage.setItem("capyNullifier",nullifier);
-
-setVerified(true);
-
-loadUser(nullifier);
-
-}catch(err){
-console.log(err);
 }
 
 };
@@ -305,26 +261,21 @@ const connectWallet = async () => {
 
 try{
 
-const res = await MiniKit.commandsAsync.verify({
-action:"connectwallet"
-});
+let attempts = 0;
 
-if(!res?.finalPayload){
-return;
-}
-
-// esperar a que World App entregue el usuario
-setTimeout(()=>{
+const interval = setInterval(()=>{
 
 const user = MiniKit.user;
 
+if(user){
+
 const address =
-user?.walletAddress ||
+user.walletAddress ||
 user?.wallet?.address ||
 null;
 
 const name =
-user?.username ||
+user.username ||
 user?.profile?.username ||
 null;
 
@@ -339,7 +290,17 @@ setUsername(name);
 
 setConnected(true);
 
-},800);
+clearInterval(interval);
+
+}
+
+attempts++;
+
+if(attempts > 10){
+clearInterval(interval);
+}
+
+},300);
 
 }catch(err){
 
