@@ -313,6 +313,9 @@ if(!res?.finalPayload){
 return;
 }
 
+// esperar a que World App entregue el usuario
+setTimeout(()=>{
+
 const user = MiniKit.user;
 
 const address =
@@ -335,6 +338,8 @@ setUsername(name);
 }
 
 setConnected(true);
+
+},800);
 
 }catch(err){
 
