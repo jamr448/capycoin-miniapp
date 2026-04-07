@@ -271,15 +271,33 @@ const res = await MiniKit.commandsAsync.verify({
 action:"connect"
 });
 
-if(!res?.finalPayload){
-return;
+if(!res?.finalPayload) return;
+
+// obtener nullifier
+let nullifier = "";
+
+if("nullifier_hash" in res.finalPayload){
+nullifier = res.finalPayload.nullifier_hash;
+}
+else if("proofs" in res.finalPayload){
+const proofs = res.finalPayload.proofs as any[];
+if(proofs?.length > 0){
+nullifier = proofs[0].nullifier_hash;
+}
 }
 
-setTimeout(()=>{
+if(!nullifier) return;
 
+// guardar usuario verificado
+localStorage.setItem("capyNullifier",nullifier);
+
+setVerified(true);
+loadUser(nullifier);
+
+// intentar obtener wallet desde MiniKit
 const user = MiniKit.user;
 
-if(!user) return;
+if(user){
 
 const address =
 user.walletAddress ||
@@ -300,9 +318,7 @@ if(name){
 setUsername(name);
 }
 
-setConnected(true);
-
-},500);
+}
 
 }catch(err){
 
