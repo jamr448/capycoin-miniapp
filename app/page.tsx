@@ -104,7 +104,13 @@ telegram:"Telegram"
 
 useEffect(()=>{
 
-MiniKit.install();
+const initMiniKit = async ()=>{
+
+await MiniKit.install();
+
+};
+
+initMiniKit();
 
 const savedLang = localStorage.getItem("capyLang");
 
@@ -261,13 +267,19 @@ const connectWallet = async () => {
 
 try{
 
-let attempts = 0;
+const res = await MiniKit.commandsAsync.verify({
+action:"connect"
+});
 
-const interval = setInterval(()=>{
+if(!res?.finalPayload){
+return;
+}
+
+setTimeout(()=>{
 
 const user = MiniKit.user;
 
-if(user){
+if(!user) return;
 
 const address =
 user.walletAddress ||
@@ -290,17 +302,7 @@ setUsername(name);
 
 setConnected(true);
 
-clearInterval(interval);
-
-}
-
-attempts++;
-
-if(attempts > 10){
-clearInterval(interval);
-}
-
-},300);
+},500);
 
 }catch(err){
 
