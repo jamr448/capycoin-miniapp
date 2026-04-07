@@ -538,7 +538,7 @@ return(
 {wallet ? (
 
 <>
-🟢 {username ? `@${username}` : shortAddress(wallet)}
+🟢 Verified Human
 </>
 
 ) : (
