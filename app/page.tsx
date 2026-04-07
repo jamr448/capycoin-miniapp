@@ -305,10 +305,13 @@ const connectWallet = async () => {
 
 try{
 
+// asegurar que MiniKit esté activo
+await MiniKit.install();
+
 const user = MiniKit.user;
 
 if(!user){
-alert("Wallet not available");
+alert("Please open this app inside World App");
 return;
 }
 
@@ -340,6 +343,7 @@ console.log(err);
 }
 
 };
+
 useEffect(()=>{
 
 const interval = setInterval(()=>{
